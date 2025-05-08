@@ -2,5 +2,24 @@
   { "id": "greet", "title": "Greeting", "text": "Hello! How are you today?" },
   { "id": "help", "title": "Ask for Help", "text": "Can you help me with my homework?" },
   { "id": "joke", "title": "Tell a Joke", "text": "Tell me a joke!" },
-  { "id": "fact", "title": "Random Fact", "text": "Give me a random fact." }
+  { "id": "fact", "title": "Random Fact", "text": "Give me a random fact." },
+  {
+    "id": "custom_help",
+    "title": "Generate tests",
+    "text": "Please generate tests for {subject}. Generate {number_of_questions} questions.",
+    "parameters": [
+      {
+        "name": "subject",
+        "label": "Subject",
+        "type": "text",
+        "placeholder": "e.g., Mathematics"
+      },
+      {
+        "name": "number_of_questions",
+        "label": "Number of Questions",
+        "type": "number",
+        "placeholder": "e.g., 10"
+      }
+    ]
+  }
 ] 
