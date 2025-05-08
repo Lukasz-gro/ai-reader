@@ -1,0 +1,6 @@
+[
+  { "id": "greet", "title": "Greeting", "text": "Hello! How are you today?" },
+  { "id": "help", "title": "Ask for Help", "text": "Can you help me with my homework?" },
+  { "id": "joke", "title": "Tell a Joke", "text": "Tell me a joke!" },
+  { "id": "fact", "title": "Random Fact", "text": "Give me a random fact." }
+] 
