@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+mkdir -p ./docs
+
 depcruise src \
   --include-only '^src' \
   --output-type mermaid > docs/deps.mmd && \

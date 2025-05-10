@@ -12,7 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "diagram:classes": "./generate_class_diagram.sh",
     "diagram:deps": "./generate_deps_diagram.sh",
-    "diagram:all": "npm run diagram:classes && npm run diagram:deps"
+    "diagram:all": "pnpm run diagram:classes && npm run diagram:deps"
   },
   "dependencies": {
     "next": "15.3.2",

@@ -1,15 +1,15 @@
 export interface LLMProvider {
-    query: (conversation: LLMMessage[]) => Promise<LLMMessage>;
+    query: (conversation: Message[]) => Promise<Message>;
 }
 
-export interface LLMMessage {
+export interface Message {
     id: string;
-    role: LLMRole
+    role: Role
     previousId: string | null;
     content: string
 }
 
-export enum LLMRole {
+export enum Role {
     SYSTEM = 'SYSTEM',
     ASSISTANT = 'ASSISTANT',
     USER = 'USER',

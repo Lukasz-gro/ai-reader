@@ -2,13 +2,13 @@
 classDiagram
 
 
-class LLMConversation {
+class Conversation {
             <<interface>>
             id
 messages
             
         }
-LLMConversation  -- "0..*" LLMMessage
+Conversation  -- "0..*" Message
 class Material {
             <<interface>>
             id
@@ -41,7 +41,7 @@ conversations
         }
 Course  --  Project
 Course  --  LearningRoadmap
-Course  -- "0..*" LLMConversation
+Course  -- "0..*" Conversation
 class LearningCheckpoint {
             <<interface>>
             id
@@ -128,7 +128,7 @@ class LLMProvider {
             query
             
         }
-class LLMMessage {
+class Message {
             <<interface>>
             id
 role
@@ -136,13 +136,13 @@ previousId
 content
             
         }
-class LLMRole {
+class Role {
         <<enumeration>>
         SYSTEM
 ASSISTANT
 USER
       }
-LLMMessage  --  LLMRole
+Message  --  Role
 class StartCourseConversation {
             <<interface>>
             

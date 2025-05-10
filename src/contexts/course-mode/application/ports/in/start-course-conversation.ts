@@ -2,7 +2,7 @@ import { IdProvider } from "../../../../../shared/application/ports/out/id-provi
 import { LLMProvider } from "../../../../../shared/application/ports/out/llm-provider";
 import { CourseRepo } from "../out/course-repo";
 import { Course } from "../../../entities/course";
-import { LLMConversation } from "../../../../../shared/entities/llm-conversation";
+import { Conversation } from "../../../../../shared/entities/conversation";
 
 export interface StartCourseConversation {
     execute(
@@ -10,5 +10,5 @@ export interface StartCourseConversation {
         llmProvider: LLMProvider,
         idProvider: IdProvider,
         courseRepo: CourseRepo,
-    ): Promise<LLMConversation>;
+    ): Promise<Conversation>;
 }

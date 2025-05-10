@@ -1,10 +1,10 @@
-import { LLMMessage, LLMProvider, LLMRole } from "../../application/ports/out/llm-provider";
+import { Message, LLMProvider, Role } from "../../application/ports/out/llm-provider";
 
 export class MockLLMProvider implements LLMProvider {
-    query(conversation: LLMMessage[]): Promise<LLMMessage> {
-        const newMessage: LLMMessage = {
+    query(conversation: Message[]): Promise<Message> {
+        const newMessage: Message = {
             id: 'some-id',
-            role: LLMRole.ASSISTANT,
+            role: Role.ASSISTANT,
             previousId: conversation[-1]?.id ?? null,
             content: 'Hello World',
         }

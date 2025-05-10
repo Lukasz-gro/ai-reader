@@ -1,11 +1,11 @@
 import { LearningRoadmap } from "./learning-roadmap";
 import { Project } from "../../../shared/entities/project";
-import { LLMConversation } from "../../../shared/entities/llm-conversation";
+import { Conversation } from "../../../shared/entities/conversation";
 
 export interface Course {
     id: string;
     name: string;
     project: Project;
     roadmap: LearningRoadmap;
-    conversations: LLMConversation[];
+    conversations: Conversation[];
 }

@@ -6,9 +6,9 @@
         "primaryTextColor": "#1F2937",
         "lineColor": "#9CA3AF",
         "fontFamily": "Fira Sans, Inter, sans-serif",
-        "fontSize": "14px",
+        "fontSize": "12px",
         "padding": "8px",
-        "htmlLabels": true,
+        "htmlLabels": false,
 
         "clusterBkg": "#FFFFFF",
         "clusterBorder": "#BBC5D1",
@@ -16,7 +16,7 @@
     },
 
     "flowchart": {
-        "htmlLabels": true,
+        "htmlLabels": false,
         "curve": "basis",
         "useMaxWidth": true,
         "nodeSpacing": 70,

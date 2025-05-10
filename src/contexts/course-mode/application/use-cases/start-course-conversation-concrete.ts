@@ -1,11 +1,11 @@
-import { LLMMessage, LLMProvider, LLMRole } from "../../../../shared/application/ports/out/llm-provider";
+import { Message, LLMProvider, Role } from "../../../../shared/application/ports/out/llm-provider";
 import { IdProvider } from "../../../../shared/application/ports/out/id-provider";
 import { StartCourseConversation } from "../ports/in/start-course-conversation";
 import { Course } from "../../entities/course";
 import { CourseRepo } from "../ports/out/course-repo";
 import { LearningCheckpoint } from "../../entities/learning-checkpoint";
 import { Material } from "../../../../shared/entities/material";
-import { LLMConversation } from "../../../../shared/entities/llm-conversation";
+import { Conversation } from "../../../../shared/entities/conversation";
 
 export class StartCourseConversationConcrete implements StartCourseConversation {
     async execute(
@@ -27,7 +27,7 @@ export class StartCourseConversationConcrete implements StartCourseConversation 
 function generateCourseConversation(
     course: Course,
     idProvider: IdProvider
-): LLMConversation {
+): Conversation {
     const firstMessage = generateFirstMessage(course, idProvider);
     return {
         id: `COURSE-${idProvider.getId()}`,
@@ -36,9 +36,9 @@ function generateCourseConversation(
 }
 
 function generateFirstMessage(course: Course, idProvider: IdProvider) {
-    const firstMessage: LLMMessage = {
+    const firstMessage: Message = {
         id: `COURSE_MSG-${idProvider.getId()}`,
-        role: LLMRole.SYSTEM,
+        role: Role.SYSTEM,
         previousId: null,
         content: getCourseSystemPrompt(course),
     }
