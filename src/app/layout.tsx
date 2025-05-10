@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "AI Reader - Interactive Learning Platform",
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   },
   themeColor: '#4299E1',
 };
+
+// initialize concrete components
 
 export default function RootLayout({
   children,
