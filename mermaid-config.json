@@ -1,0 +1,30 @@
+{
+    "layout": "elk",
+    "theme": "base",
+    "themeVariables": {
+        "primaryColor": "#FFFFFF",
+        "primaryTextColor": "#1F2937",
+        "lineColor": "#9CA3AF",
+        "fontFamily": "Fira Sans, Inter, sans-serif",
+        "fontSize": "14px",
+        "padding": "8px",
+        "htmlLabels": true,
+
+        "clusterBkg": "#FFFFFF",
+        "clusterBorder": "#BBC5D1",
+        "tertiaryColor": "#E8F0FF"
+    },
+
+    "flowchart": {
+        "htmlLabels": true,
+        "curve": "basis",
+        "useMaxWidth": true,
+        "nodeSpacing": 70,
+        "rankSpacing": 100,
+        "layoutOptions": {
+            "elk.algorithm": "layered",
+            "elk.direction": "RIGHT",
+            "elk.edgeRouting": "ORTHOGONAL"
+        }
+    }
+}

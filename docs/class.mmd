@@ -1,0 +1,157 @@
+
+classDiagram
+
+
+class LLMConversation {
+            <<interface>>
+            id
+messages
+            
+        }
+LLMConversation  -- "0..*" LLMMessage
+class Material {
+            <<interface>>
+            id
+title
+content
+            
+        }
+class Project {
+            <<interface>>
+            id
+title
+materials
+            
+        }
+Project  -- "0..*" Material
+class User {
+            <<interface>>
+            username
+email
+            
+        }
+class Course {
+            <<interface>>
+            id
+name
+project
+roadmap
+conversations
+            
+        }
+Course  --  Project
+Course  --  LearningRoadmap
+Course  -- "0..*" LLMConversation
+class LearningCheckpoint {
+            <<interface>>
+            id
+title
+description
+completedTimestamp
+            
+        }
+class LearningRoadmap {
+            <<interface>>
+            id
+title
+checkpoints
+            
+        }
+LearningRoadmap  -- "0..*" LearningCheckpoint
+class UuidProvider{
+            
+            getId()
+        }
+IdProvider<|..UuidProvider
+class MockLLMProvider{
+            
+            query()
+        }
+LLMProvider<|..MockLLMProvider
+class Prompt {
+            <<interface>>
+            id
+title
+text
+parameters
+            
+        }
+class Parameter {
+            <<interface>>
+            name
+label
+type
+placeholder
+            
+        }
+class ParameterInputProps {
+            <<interface>>
+            parameters
+onComplete
+onCancel
+            
+        }
+ParameterInputProps  -- "0..*" Parameter
+class StartCourseConversationConcrete{
+            
+            execute()
+        }
+StartCourseConversation<|..StartCourseConversationConcrete
+class InMemoryCourseRepo{
+            courses
+            upsert()
+clear()
+getAll()
+        }
+CourseRepo<|..InMemoryCourseRepo
+InMemoryCourseRepo  -- "0..*" Course
+class CourseModeController{
+            onCreateNewCourseConversation
+onLoadCourses
+llmProvider
+courseRepo
+idProvider
+startCourseConversation
+            
+        }
+CourseModeController  --  LLMProvider
+CourseModeController  --  CourseRepo
+CourseModeController  --  IdProvider
+CourseModeController  --  StartCourseConversation
+class IdProvider {
+            <<interface>>
+            
+            getId()
+        }
+class LLMProvider {
+            <<interface>>
+            query
+            
+        }
+class LLMMessage {
+            <<interface>>
+            id
+role
+previousId
+content
+            
+        }
+class LLMRole {
+        <<enumeration>>
+        SYSTEM
+ASSISTANT
+USER
+      }
+LLMMessage  --  LLMRole
+class StartCourseConversation {
+            <<interface>>
+            
+            execute()
+        }
+class CourseRepo {
+            <<interface>>
+            
+            upsert()
+clear()
+getAll()
+        }
