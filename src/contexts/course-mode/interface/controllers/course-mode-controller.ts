@@ -13,7 +13,7 @@ export class CourseModeController {
     ) { }
 
     onCreateNewCourseConversation = async (course: Course) => {
-        await this.startCourseConversation.execute(course, this.llmProvider, this.idProvider, this.courseRepo)
+        return await this.startCourseConversation.execute(course, this.llmProvider, this.idProvider, this.courseRepo)
     }
 
     onLoadCourses = async () => {
