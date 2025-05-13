@@ -114,6 +114,30 @@
   transform: translateY(-2px) scale(1.03);
 }
 
+.messageForm {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 18px 18px;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.messageInput:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
 @media (prefers-color-scheme: dark) {
   .home {
     background: #15181c;
@@ -149,5 +173,20 @@
   .modernButton:hover, .modernButton:focus {
     background: #2563eb;
     box-shadow: 0 4px 16px rgba(56,135,194,0.28);
+  }
+  .messageForm {
+    background: #181b20;
+    border-top: 1px solid #23272f;
+  }
+  
+  .messageInput {
+    background: #23272f;
+    border-color: #353a45;
+    color: #e2e8f0;
+  }
+  
+  .messageInput:focus {
+    border-color: #3887c2;
+    box-shadow: 0 0 0 3px rgba(56, 135, 194, 0.1);
   }
 } 

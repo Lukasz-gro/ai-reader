@@ -1,10 +1,10 @@
 'use client'
-import { useCourseContext } from "@/contexts/course-mode/interface/web/react/course-context/CourseContext";
 import styles from "./page.module.css";
 import { Course } from "@/contexts/course-mode/entities/course";
 import { useState } from "react";
 import { Conversation } from "@/shared/entities/conversation";
-import { ChatView } from "./components/ChatView";
+import { Chat } from "./components/chat/Chat";
+import { createNewCourseConversation } from "./components/chat/actions";
 
 const mockCourse: Course = {
   id: "1",
@@ -23,11 +23,10 @@ const mockCourse: Course = {
 };
 
 export default function Home() {
-  const { controller: courseController } = useCourseContext();
   const [conversation, setConversation] = useState<Conversation | null>(null);
   
   const handleCreateConversation = async () => {
-    const newConversation = await courseController.onCreateNewCourseConversation(mockCourse);
+    const newConversation = await createNewCourseConversation(mockCourse);
     setConversation(newConversation);
   };
   
@@ -38,7 +37,7 @@ export default function Home() {
           <button className={styles.modernButton} onClick={handleCreateConversation}>Create new course</button>
         </section>
       ) : (
-        <ChatView conversation={conversation} />
+        <Chat conversation={conversation} />
       )}
     </div>
   );
