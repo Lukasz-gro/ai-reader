@@ -3,8 +3,8 @@ import styles from "./page.module.css";
 import { Course } from "@/contexts/course-mode/entities/course";
 import { useState } from "react";
 import { Conversation } from "@/shared/entities/conversation";
-import { Chat } from "./components/chat/Chat";
-import { createNewCourseConversation } from "./components/chat/actions";
+import { Chat } from "@/contexts/course-mode/interface/web/react/chat/client/Chat";
+import { createNewCourseConversation } from "@/contexts/course-mode/interface/web/react/chat/server/chat-actions";
 
 const mockCourse: Course = {
   id: "1",

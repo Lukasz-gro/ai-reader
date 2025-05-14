@@ -3,7 +3,7 @@ import { AddUserMessageToChat } from "../ports/in/add-user-message-to-chat";
 import { Conversation } from "@/shared/entities/conversation";
 import { Message, Role } from "@/shared/application/ports/out/llm-provider";
 
-export class AddUserMessageToChatConcrete implements AddUserMessageToChat {
+export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
     async execute(conversation: Conversation, idProvider: IdProvider, message: string): Promise<Conversation> {
         const previousMessage = (conversation.messages.length > 0) ? conversation.messages[conversation.messages.length - 1] : null;
 

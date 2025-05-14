@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { MessageView } from "./MessageView";
 import { Conversation } from "@/shared/entities/conversation";
-import styles from "../../page.module.css";
-import { addUserMessageToChat } from "./actions";
+import { MessageView } from "./MessageView";
+import { addUserMessageToChat } from "../server/chat-actions";
+import styles from "./page.module.css";
 
 interface ChatProps {
   conversation: Conversation;

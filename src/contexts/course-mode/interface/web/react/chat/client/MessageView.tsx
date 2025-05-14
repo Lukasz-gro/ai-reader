@@ -1,5 +1,5 @@
 "use client";
-import styles from "../../page.module.css";
+import styles from "./page.module.css";
 import { Conversation } from "@/shared/entities/conversation";
 
 interface ChatViewProps {
