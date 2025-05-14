@@ -13,8 +13,6 @@ export const metadata: Metadata = {
   themeColor: '#4299E1',
 };
 
-// initialize concrete components
-
 export default function RootLayout({
   children,
 }: {
