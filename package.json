@@ -15,7 +15,10 @@
     "diagram:all": "pnpm run diagram:classes && npm run diagram:deps"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
+    "@tailwindcss/vite": "^4.1.6",
     "next": "15.3.2",
+    "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "uuid": "^11.1.0"
@@ -37,6 +40,7 @@
     "mermaid": "10.9.1",
     "mmdc": "^0.0.1",
     "puppeteer": "^24.8.2",
+    "tailwindcss": "^4.1.6",
     "tsuml2": "^0.17.1",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
