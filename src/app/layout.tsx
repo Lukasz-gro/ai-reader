@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     icon: '/favicon.svg',
     apple: '/favicon.svg',
   },
-  themeColor: '#4299E1',
 };
 
 export default function RootLayout({
