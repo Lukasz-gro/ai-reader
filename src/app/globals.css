@@ -13,15 +13,15 @@
   --span: 1rem/1.0em var(--font-primary);
 
   /* Primary color */
-  --color-p-10: hsl(187, 33%, 10%);
-  --color-p-20: hsl(187, 33%, 20%);
-  --color-p-30: hsl(187, 33%, 30%);
-  --color-p-40: hsl(187, 33%, 40%);
-  --color-p-50: hsl(187, 33%, 50%);
-  --color-p-60: hsl(187, 33%, 60%);
-  --color-p-70: hsl(187, 33%, 70%);
-  --color-p-80: hsl(187, 33%, 80%);
-  --color-p-90: hsl(187, 33%, 90%);
+  --color-p-10: hsl(75, 4.88%, 10%);
+  --color-p-20: hsl(75, 4.88%, 20%);
+  --color-p-30: hsl(75, 4.88%, 30%);
+  --color-p-40: hsl(75, 4.88%, 40%);
+  --color-p-50: hsl(75, 4.88%, 50%);
+  --color-p-60: hsl(75, 4.88%, 60%);
+  --color-p-70: hsl(75, 4.88%, 70%);
+  --color-p-80: hsl(75, 4.88%, 80%);
+  --color-p-90: hsl(75, 4.88%, 90%);
 
   /* Secondary color */
   --color-s-10: hsl(206, 55%, 10%);
@@ -44,15 +44,15 @@
 
 .dark {
   /* Primary color */
-  --color-p-10: hsl(187, 33%, 90%);
-  --color-p-20: hsl(187, 33%, 80%);
-  --color-p-30: hsl(187, 33%, 70%);
-  --color-p-40: hsl(187, 33%, 60%);
-  --color-p-50: hsl(187, 33%, 50%);
-  --color-p-60: hsl(187, 33%, 40%);
-  --color-p-70: hsl(187, 33%, 30%);
-  --color-p-80: hsl(187, 33%, 20%);
-  --color-p-90: hsl(187, 33%, 10%);
+  --color-p-10: hsl(75, 4.88%, 90%);
+  --color-p-20: hsl(75, 4.88%, 80%);
+  --color-p-30: hsl(75, 4.88%, 70%);
+  --color-p-40: hsl(75, 4.88%, 60%);
+  --color-p-50: hsl(75, 4.88%, 50%);
+  --color-p-60: hsl(75, 4.88%, 40%);
+  --color-p-70: hsl(75, 4.88%, 30%);
+  --color-p-80: hsl(75, 4.88%, 20%);
+  --color-p-90: hsl(75, 4.88%, 10%);
 
   /* Secondary color */
   --color-s-10: hsl(206, 55%, 90%);

@@ -7,7 +7,7 @@ export class MockLLMProvider implements LLMProvider {
             role: Role.ASSISTANT,
             previousId: conversation[-1]?.id ?? null,
             content: 'Hello World',
-        }
-        return Promise.resolve(newMessage)
+        };
+        return Promise.resolve(newMessage);
     }
 }

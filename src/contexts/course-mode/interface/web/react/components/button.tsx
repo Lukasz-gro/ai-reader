@@ -5,10 +5,11 @@ export interface ButtonProps {
     children: React.ReactNode;
 }
 
-export const ButtonPrimary: React.FC<ButtonProps> = (props) => {
+export const Button: React.FC<ButtonProps> = (props) => {
+
     return (
-        <button className={'bg-p-90 border-1 border-p-70/80 rounded-md hover:bg-a-50 focus:bg-a-50 transition-colors shadow-lg'} onClick={props.onClick}>
+        <button className={'bg-p-90 border-1 border-p-70/80 rounded-md font-semibold hover:bg-a-50 focus:bg-a-50 transition-colors shadow-lg'} onClick={props.onClick}>
             { props.children }
         </button>
     );
-}
+};

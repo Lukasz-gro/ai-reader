@@ -12,7 +12,7 @@ export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
             role: Role.USER,
             content: message,
             previousId: previousMessage?.id ?? null
-        }
+        };
         
         return {
             ...conversation,

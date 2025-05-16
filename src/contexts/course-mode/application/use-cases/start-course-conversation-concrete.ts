@@ -16,11 +16,11 @@ export class StartCourseConversationConcrete implements StartCourseConversation 
     ) {
         const newConversation = generateCourseConversation(course, idProvider);
         const llmResponse = await llmProvider.query(newConversation.messages);
-        newConversation.messages.push(llmResponse)
+        newConversation.messages.push(llmResponse);
 
         course.conversations.push(newConversation);
-        void courseRepo.upsert(course)
-        return newConversation
+        void courseRepo.upsert(course);
+        return newConversation;
     }
 }
 
@@ -32,7 +32,7 @@ function generateCourseConversation(
     return {
         id: `COURSE-${idProvider.getId()}`,
         messages: [firstMessage],
-    }
+    };
 }
 
 function generateFirstMessage(course: Course, idProvider: IdProvider) {
@@ -41,14 +41,14 @@ function generateFirstMessage(course: Course, idProvider: IdProvider) {
         role: Role.SYSTEM,
         previousId: null,
         content: getCourseSystemPrompt(course),
-    }
+    };
 
     return firstMessage;
 }
 
 function getCourseSystemPrompt(course: Course) {
     const projectTitle = course.project.title;
-    const courseProgress = generateUserProgressString(course.roadmap.checkpoints)
+    const courseProgress = generateUserProgressString(course.roadmap.checkpoints);
     const courseContext = generateCourseContextString(course.project.materials);
 
     return  `You are a teacher responsible for teaching the user about ${projectTitle}. 
@@ -59,7 +59,7 @@ function getCourseSystemPrompt(course: Course) {
 }
 
 function generateUserProgressString(checkpoints: LearningCheckpoint[]): string {
-    const incomplete = checkpoints.filter(checkpoint => !checkpoint.completedTimestamp)
+    const incomplete = checkpoints.filter(checkpoint => !checkpoint.completedTimestamp);
     const incompleteString = incomplete
         .map(checkpoint => `${checkpoint.title} - ${checkpoint.description}`)
         .join('\n');

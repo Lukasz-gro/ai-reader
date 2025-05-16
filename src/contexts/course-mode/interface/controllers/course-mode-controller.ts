@@ -22,15 +22,15 @@ export class CourseModeController {
 
     onCreateNewCourseConversation = async (course: Course) => {
         return await this.startCourseConversation.execute(course, this.llmProvider, this.idProvider, this.courseRepo);
-    }
+    };
 
     onLoadCourses = async () => {
         // something
-    }
+    };
 
     onNewUserMessage = async (conversation: Conversation, message: string) => {
         return await this.addUserMessageToChat.execute(conversation, this.idProvider, message);
-    }
+    };
 }
 
 const startCourseConversation = new StartCourseConversationConcrete();

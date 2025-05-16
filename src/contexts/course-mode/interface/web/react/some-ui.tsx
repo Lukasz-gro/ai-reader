@@ -11,4 +11,4 @@ export const SomeCourseUI: React.FC<{course: Course, controller: CourseModeContr
             {/*<NewCourseConversationButton onClick={() => controller.onCreateNewCourseConversation(course)} />*/}
         </div>
     );
-}
+};
