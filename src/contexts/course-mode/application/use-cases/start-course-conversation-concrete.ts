@@ -1,11 +1,11 @@
-import { Message, LLMProvider, Role } from "../../../../shared/application/ports/out/llm-provider";
-import { IdProvider } from "../../../../shared/application/ports/out/id-provider";
-import { StartCourseConversation } from "../ports/in/start-course-conversation";
-import { Course } from "../../entities/course";
-import { CourseRepo } from "../ports/out/course-repo";
-import { LearningCheckpoint } from "../../entities/learning-checkpoint";
-import { Material } from "../../../../shared/entities/material";
-import { Conversation } from "../../../../shared/entities/conversation";
+import { Message, LLMProvider, Role } from '../../../../shared/application/ports/out/llm-provider';
+import { IdProvider } from '../../../../shared/application/ports/out/id-provider';
+import { StartCourseConversation } from '../ports/in/start-course-conversation';
+import { Course } from '../../entities/course';
+import { CourseRepo } from '../ports/out/course-repo';
+import { LearningCheckpoint } from '../../entities/learning-checkpoint';
+import { Material } from '../../../../shared/entities/material';
+import { Conversation } from '../../../../shared/entities/conversation';
 
 export class StartCourseConversationConcrete implements StartCourseConversation {
     async execute(

@@ -1,11 +1,11 @@
-import { expect, afterEach, describe, it } from "vitest";
-import { InMemoryCourseRepo } from "../../infra/repo/in-memory-course-repo";
-import { StartCourseConversationConcrete } from "./start-course-conversation-concrete";
-import { Course } from "../../entities/course";
-import { LearningRoadmap } from "../../entities/learning-roadmap";
-import { Project } from "../../../../shared/entities/project";
-import { MockLLMProvider } from "../../../../shared/infra/llms/mock-llm-provider";
-import { UuidProvider } from "../../../../shared/infra/id/uuid-provider";
+import { expect, afterEach, describe, it } from 'vitest';
+import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
+import { StartCourseConversationConcrete } from './start-course-conversation-concrete';
+import { Course } from '../../entities/course';
+import { LearningRoadmap } from '../../entities/learning-roadmap';
+import { Project } from '../../../../shared/entities/project';
+import { MockLLMProvider } from '../../../../shared/infra/llms/mock-llm-provider';
+import { UuidProvider } from '../../../../shared/infra/id/uuid-provider';
 
 describe('StartCourseConversationConcrete Use Case', () => {
     const useCase = new StartCourseConversationConcrete();

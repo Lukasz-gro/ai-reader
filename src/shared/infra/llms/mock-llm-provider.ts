@@ -1,4 +1,4 @@
-import { Message, LLMProvider, Role } from "../../application/ports/out/llm-provider";
+import { Message, LLMProvider, Role } from '../../application/ports/out/llm-provider';
 
 export class MockLLMProvider implements LLMProvider {
     query(conversation: Message[]): Promise<Message> {

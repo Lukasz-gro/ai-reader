@@ -1,5 +1,5 @@
-import { CourseRepo } from "../../application/ports/out/course-repo";
-import { Course } from "../../entities/course";
+import { CourseRepo } from '../../application/ports/out/course-repo';
+import { Course } from '../../entities/course';
 
 export class InMemoryCourseRepo implements CourseRepo {
     private courses: Course[] = [];
