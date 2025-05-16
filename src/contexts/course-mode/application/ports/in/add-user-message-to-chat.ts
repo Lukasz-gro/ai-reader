@@ -1,6 +1,5 @@
-import { IdProvider } from "@/shared/application/ports/out/id-provider";
-import { Conversation } from "@/shared/entities/conversation";
-
+import { IdProvider } from '@/shared/application/ports/out/id-provider';
+import { Conversation } from '@/shared/entities/conversation';
 
 export interface AddUserMessageToChat {
     execute(

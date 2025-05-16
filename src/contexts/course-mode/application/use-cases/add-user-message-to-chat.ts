@@ -1,7 +1,7 @@
-import { IdProvider } from "@/shared/application/ports/out/id-provider";
-import { AddUserMessageToChat } from "../ports/in/add-user-message-to-chat";
-import { Conversation } from "@/shared/entities/conversation";
-import { Message, Role } from "@/shared/application/ports/out/llm-provider";
+import { IdProvider } from '@/shared/application/ports/out/id-provider';
+import { AddUserMessageToChat } from '../ports/in/add-user-message-to-chat';
+import { Conversation } from '@/shared/entities/conversation';
+import { Message, Role } from '@/shared/application/ports/out/llm-provider';
 
 export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
     async execute(conversation: Conversation, idProvider: IdProvider, message: string): Promise<Conversation> {
@@ -12,7 +12,7 @@ export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
             role: Role.USER,
             content: message,
             previousId: previousMessage?.id ?? null
-        }
+        };
         
         return {
             ...conversation,

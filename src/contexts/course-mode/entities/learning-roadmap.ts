@@ -1,4 +1,4 @@
-import { LearningCheckpoint } from "./learning-checkpoint";
+import { LearningCheckpoint } from './learning-checkpoint';
 
 export interface LearningRoadmap {
     id: string;
