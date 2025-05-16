@@ -3,22 +3,20 @@ import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
 import { StartCourseConversationConcrete } from './start-course-conversation-concrete';
 import { Course } from '../../entities/course';
 import { LearningRoadmap } from '../../entities/learning-roadmap';
-import { Project } from '../../../../shared/entities/project';
-import { MockLLMProvider } from '../../../../shared/infra/llms/mock-llm-provider';
-import { UuidProvider } from '../../../../shared/infra/id/uuid-provider';
+import { Project } from '@/shared/entities/project';
+import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';
 
 describe('StartCourseConversationConcrete Use Case', () => {
     const useCase = new StartCourseConversationConcrete();
     const mockCourseRepo = new InMemoryCourseRepo();
     const mockLLMProvider = new MockLLMProvider();
-    const idProvider = new UuidProvider();
 
     afterEach(() => {
         mockCourseRepo.clear();
     });
 
     it('should generate a new conversation', async () => {
-        await useCase.execute(getMockCourse(), mockLLMProvider, idProvider, mockCourseRepo);
+        await useCase.execute(getMockCourse(), mockLLMProvider, mockCourseRepo);
 
         const courses = await mockCourseRepo.getAll();
 
