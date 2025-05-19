@@ -1,20 +1,19 @@
-import { Message, LLMProvider, Role } from '../../../../shared/application/ports/out/llm-provider';
-import { IdProvider } from '../../../../shared/application/ports/out/id-provider';
+import { Message, LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
 import { StartCourseConversation } from '../ports/in/start-course-conversation';
 import { Course } from '../../entities/course';
 import { CourseRepo } from '../ports/out/course-repo';
 import { LearningCheckpoint } from '../../entities/learning-checkpoint';
-import { Material } from '../../../../shared/entities/material';
-import { Conversation } from '../../../../shared/entities/conversation';
+import { Material } from '@/shared/entities/material';
+import { Conversation } from '@/shared/entities/conversation';
+import { v4 as uuidv4 } from 'uuid';
 
 export class StartCourseConversationConcrete implements StartCourseConversation {
     async execute(
         course: Course,
         llmProvider: LLMProvider,
-        idProvider: IdProvider,
         courseRepo: CourseRepo,
     ) {
-        const newConversation = generateCourseConversation(course, idProvider);
+        const newConversation = generateCourseConversation(course);
         const llmResponse = await llmProvider.query(newConversation.messages);
         newConversation.messages.push(llmResponse);
 
@@ -26,18 +25,17 @@ export class StartCourseConversationConcrete implements StartCourseConversation 
 
 function generateCourseConversation(
     course: Course,
-    idProvider: IdProvider
 ): Conversation {
-    const firstMessage = generateFirstMessage(course, idProvider);
+    const firstMessage = generateFirstMessage(course);
     return {
-        id: `COURSE-${idProvider.getId()}`,
+        id: uuidv4(),
         messages: [firstMessage],
     };
 }
 
-function generateFirstMessage(course: Course, idProvider: IdProvider) {
+function generateFirstMessage(course: Course) {
     const firstMessage: Message = {
-        id: `COURSE_MSG-${idProvider.getId()}`,
+        id: uuidv4(),
         role: Role.SYSTEM,
         previousId: null,
         content: getCourseSystemPrompt(course),
@@ -64,7 +62,7 @@ function generateUserProgressString(checkpoints: LearningCheckpoint[]): string {
         .map(checkpoint => `${checkpoint.title} - ${checkpoint.description}`)
         .join('\n');
 
-    return `The user this has the following material to learn:\n${incompleteString}`;
+    return `The user has the following material to learn:\n${incompleteString}`;
 }
 
 function generateCourseContextString(materials: Material[]) {
