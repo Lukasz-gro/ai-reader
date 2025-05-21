@@ -25,20 +25,34 @@ const mockCourse: Course = {
 
 export default function Home() {
     const [conversation, setConversation] = useState<Conversation | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleCreateConversation = async () => {
-        const newConversation = await createNewCourseConversation(mockCourse);
-        setConversation(newConversation);
+        setIsLoading(true);
+        try {
+            const newConversation = await createNewCourseConversation(mockCourse);
+            setConversation(newConversation);
+        } catch (error) {
+            console.error('Failed to create conversation:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div className={'flex min-h-[80vh] justify-center items-center'}> {conversation ? (
-            <Chat conversation={conversation} />
-        ) : (
-            <section>
-                <PrimaryButton onClick={handleCreateConversation}>Create new course</PrimaryButton>
-            </section>
-        )}
+        <div className={'flex min-h-[80vh] justify-center items-center'}>
+            {conversation ? (
+                <Chat conversation={conversation} />
+            ) : (
+                <section>
+                    <PrimaryButton 
+                        onClick={handleCreateConversation}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Creating...' : 'Create new course'}
+                    </PrimaryButton>
+                </section>
+            )}
         </div>
     );
 }
