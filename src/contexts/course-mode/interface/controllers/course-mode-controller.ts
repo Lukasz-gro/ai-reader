@@ -7,7 +7,7 @@ import { AddUserMessageToChat } from '../../application/ports/in/add-user-messag
 import { StartCourseConversationConcrete } from '../../application/use-cases/start-course-conversation-concrete';
 import { AddUserMessageToChatUseCase } from '../../application/use-cases/add-user-message-to-chat';
 import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
-import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
+import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';
 
 export class CourseModeController {
     constructor(
@@ -26,14 +26,11 @@ export class CourseModeController {
     };
 }
 
-const llmApiKey = process.env.OPENAI_API_KEY;
-if (!llmApiKey) { throw new Error('OPENAI_API_KEY is required'); }
-
 const startCourseConversation = new StartCourseConversationConcrete();
 const addUserMessageToChat = new AddUserMessageToChatUseCase();
 const courseRepo = new InMemoryCourseRepo();
 
-const llmProvider = new OpenAIProvider(llmApiKey);
+const llmProvider = new MockLLMProvider()
 
 const courseController = new CourseModeController(llmProvider, courseRepo, startCourseConversation, addUserMessageToChat);
 
