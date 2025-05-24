@@ -26,15 +26,15 @@
   --color-p-90: hsl(75, 4.88%, 90%);
 
   /* Secondary color */
-  --color-s-10: hsl(206, 55%, 10%);
-  --color-s-20: hsl(206, 55%, 20%);
-  --color-s-30: hsl(206, 55%, 30%);
-  --color-s-40: hsl(206, 55%, 40%);
-  --color-s-50: hsl(206, 55%, 50%);
-  --color-s-60: hsl(206, 55%, 60%);
-  --color-s-70: hsl(206, 55%, 70%);
-  --color-s-80: hsl(206, 55%, 80%);
-  --color-s-90: hsl(206, 55%, 90%);
+  --color-sd-10: hsl(206, 55%, 10%);
+  --color-sd-20: hsl(206, 55%, 20%);
+  --color-sd-30: hsl(206, 55%, 30%);
+  --color-sd-40: hsl(206, 55%, 40%);
+  --color-sd-50: hsl(206, 55%, 50%);
+  --color-sd-60: hsl(206, 55%, 60%);
+  --color-sd-70: hsl(206, 55%, 70%);
+  --color-sd-80: hsl(206, 55%, 80%);
+  --color-sd-90: hsl(206, 55%, 90%);
 
   /* Accent color */
   --color-a-10: hsl(7, 76%, 10%);
@@ -57,15 +57,15 @@
   --color-p-90: hsl(75, 4.88%, 10%);
 
   /* Secondary color */
-  --color-s-10: hsl(206, 55%, 90%);
-  --color-s-20: hsl(206, 55%, 80%);
-  --color-s-30: hsl(206, 55%, 70%);
-  --color-s-40: hsl(206, 55%, 70%);
-  --color-s-50: hsl(206, 55%, 50%);
-  --color-s-60: hsl(206, 55%, 40%);
-  --color-s-70: hsl(206, 55%, 30%);
-  --color-s-80: hsl(206, 55%, 20%);
-  --color-s-90: hsl(206, 55%, 10%);
+  --color-sd-10: hsl(206, 55%, 90%);
+  --color-sd-20: hsl(206, 55%, 80%);
+  --color-sd-30: hsl(206, 55%, 70%);
+  --color-sd-40: hsl(206, 55%, 70%);
+  --color-sd-50: hsl(206, 55%, 50%);
+  --color-sd-60: hsl(206, 55%, 40%);
+  --color-sd-70: hsl(206, 55%, 30%);
+  --color-sd-80: hsl(206, 55%, 20%);
+  --color-sd-90: hsl(206, 55%, 10%);
 
   /* Accent color */
   --color-a-10: hsl(7, 76%, 90%);

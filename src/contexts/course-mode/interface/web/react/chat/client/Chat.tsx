@@ -58,7 +58,7 @@ const MessageInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (pro
         {...props}
         className={`
         flex-1 px-4 py-3 border border-p-70 rounded text-base bg-p-90 text-p-10 outline-none transition-all duration-200
-        focus:border-s-50 focus:shadow-md focus:shadow-s-50/30
+        focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
         ${props.className}` }
     />
 );

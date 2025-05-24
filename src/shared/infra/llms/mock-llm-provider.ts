@@ -1,13 +1,21 @@
 import { Message, LLMProvider, Role } from '../../application/ports/out/llm-provider';
+import { v4 as uuidv4 } from 'uuid';
+import { RandomMessage } from '@/shared/infra/mocks/mock-message';
 
 export class MockLLMProvider implements LLMProvider {
     query(conversation: Message[]): Promise<Message> {
+        const lastMessage = conversation[conversation.length - 1];
         const newMessage: Message = {
-            id: 'some-id',
+            id: uuidv4(),
             role: Role.ASSISTANT,
-            previousId: conversation[-1]?.id ?? null,
-            content: 'Hello World',
+            previousId: lastMessage?.id ?? null,
+            content: RandomMessage.content(),
         };
-        return Promise.resolve(newMessage);
+        return new Promise(
+            resolve => setTimeout(
+                ()=> resolve(newMessage),
+                300
+            )
+        );
     }
 }
