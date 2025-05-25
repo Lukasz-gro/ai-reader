@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 import { LLMQueryError } from '@/shared/entities/llm-query-error';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions/completions';
 import { LLMHttpError } from '@/shared/entities/llm-http-error';
-import { v4 as uuidv4 } from 'uuid';
 
 export class OpenAIProvider implements LLMProvider {
     client: OpenAI;
@@ -12,15 +11,17 @@ export class OpenAIProvider implements LLMProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    query = async (conversation: Message[]): Promise<Message> => {
+    query = async (conversation: Message[]): Promise<string> => {
         try {
-            const completionString = await this.generateCompletion(conversation);
-            return {
-                id: uuidv4(),
-                previousId: conversation.at(-1)?.id ?? null,
-                role: Role.ASSISTANT,
-                content: completionString,
-            };
+            return await this.generateCompletion(conversation);
+        } catch (error) {
+            this.handleCompletionError(error);
+        }
+    };
+
+    streamQuery = (conversation: Message[]): AsyncGenerator<string, void, unknown> => {
+        try {
+            return this.generateStreamingCompletion(conversation);
         } catch (error) {
             this.handleCompletionError(error);
         }
@@ -38,7 +39,25 @@ export class OpenAIProvider implements LLMProvider {
         return completionString;
     };
 
+    private async *generateStreamingCompletion(conversation: Message[]) {
+        const stream = await this.client.chat.completions.create({
+            model: 'gpt-4.1',
+            messages: conversation.map(this.messageToOpenAI),
+            stream: true,
+        });
+
+        for await (const part of stream) {
+            const content = part.choices?.[0]?.delta?.content;
+            if (content) {
+                yield content;
+            }
+        }
+    }
+
     private messageToOpenAI(message: Message): ChatCompletionMessageParam {
+        if (Array.isArray(message.content)) {
+            throw Error('Message should not be chunked in this context');
+        }
         switch (message.role) {
             case Role.SYSTEM:
                 return {

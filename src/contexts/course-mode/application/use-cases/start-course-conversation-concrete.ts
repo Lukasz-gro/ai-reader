@@ -1,4 +1,4 @@
-import { Message, LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
+import { LLMProvider, Message, Role } from '@/shared/application/ports/out/llm-provider';
 import { StartCourseConversation } from '../ports/in/start-course-conversation';
 import { Course } from '../../entities/course';
 import { CourseRepo } from '../ports/out/course-repo';
@@ -14,8 +14,15 @@ export class StartCourseConversationConcrete implements StartCourseConversation 
         courseRepo: CourseRepo,
     ) {
         const newConversation = generateCourseConversation(course);
+        // TODO move somewhere else, show spinner while awaiting initial response / show streaming response
         const llmResponse = await llmProvider.query(newConversation.messages);
-        newConversation.messages.push(llmResponse);
+        const newMessage: Message = {
+            id: uuidv4(),
+            previousId: newConversation.messages.at(-1)!.id,
+            role: Role.ASSISTANT,
+            content: llmResponse,
+        };
+        newConversation.messages.push(newMessage);
 
         course.conversations.push(newConversation);
         void courseRepo.upsert(course);

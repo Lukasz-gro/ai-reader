@@ -1,12 +1,13 @@
 export interface LLMProvider {
-    query: (conversation: Message[]) => Promise<Message>;
+    query(conversation: Message[]): Promise<string>;
+    streamQuery: (conversation: Message[]) => AsyncGenerator<string, void, unknown>;
 }
 
 export interface Message {
     id: string;
     role: Role
     previousId: string | null;
-    content: string
+    content: string | string[];
 }
 
 export enum Role {
