@@ -1,4 +1,4 @@
-import { Answer, Question, QuestionId, QuestionServices, ValidationResult } from './question';
+import { Answer, Question, QuestionServices, ValidationResult } from './question';
 
 export interface Choice {
     id: string;
@@ -6,14 +6,14 @@ export interface Choice {
 }
 
 export class MultipleChoiceQuestion implements Question {
-    readonly id: QuestionId;
-    readonly type = 'multiple_choice' as const;
+    readonly id: string;
+    readonly type = 'multiple_choice';
     readonly choices: Choice[];
     readonly correctChoiceId: string;
     readonly content: string;
 
     constructor(
-        id: QuestionId,
+        id: string,
         content: string,
         choices: Choice[],
         correctChoiceId: string
