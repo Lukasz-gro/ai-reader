@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { Conversation } from "@/shared/entities/conversation";
-import { MessageView } from "./MessageView";
-import { addUserMessageToChat } from "../server/chat-actions";
-import { PrimaryButton } from "../../components/primary-button";
-import { PendingAssistantMessage } from "@/contexts/course-mode/interface/web/react/chat/client/PendingAssistantMessage";
+import React, { useState } from 'react';
+import { Conversation } from '@/shared/entities/conversation';
+import { MessageView } from './MessageView';
+import { addUserMessageToChat } from '../server/chat-actions';
+import { PrimaryButton } from '../../components/primary-button';
+import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/client/PendingAssistantMessage';
 
 interface ChatProps {
     conversation: Conversation;
 }
 
 export function Chat({ conversation }: ChatProps) {
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState('');
     const [currentConversation, setCurrentConversation] = useState<Conversation>(conversation);
 
-    const [streamConversation, setStreamConversation] = useState<Conversation | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [streamKey, setStreamKey] = useState(0);
 
@@ -25,10 +24,7 @@ export function Chat({ conversation }: ChatProps) {
 
         const updatedConversation = await addUserMessageToChat(currentConversation, message);
         setCurrentConversation(updatedConversation);
-
-        setStreamConversation(updatedConversation);
-        setMessage("");
-
+        setMessage('');
         setIsGenerating(true);
         setStreamKey(Date.now());
     };
@@ -36,28 +32,26 @@ export function Chat({ conversation }: ChatProps) {
     return (
         <ChatBox>
             <MessageView conversation={currentConversation} />
-            {isGenerating && streamConversation && (
+            {isGenerating && (
                 <PendingAssistantMessage
                     key={streamKey}
-                    conversation={streamConversation}
+                    conversation={currentConversation}
                     onConversationUpdate={setCurrentConversation}
                     onDone={() => {
                         setIsGenerating(false);
-                        setStreamConversation(null);
                     }}
                 />
             )}
-
             <MessageForm onSubmitAction={handleSubmit}>
                 <MessageInput
-                    type="text"
+                    type='text'
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Ask about anything..."
+                    placeholder='Ask about anything...'
                     disabled={isGenerating}
                 />
-                <PrimaryButton type="submit" disabled={isGenerating}>
-                    {isGenerating ? "Generating..." : "Send"}
+                <PrimaryButton type='submit' disabled={isGenerating}>
+                    {isGenerating ? 'Generating...' : 'Send'}
                 </PrimaryButton>
             </MessageForm>
         </ChatBox>
@@ -65,13 +59,13 @@ export function Chat({ conversation }: ChatProps) {
 }
 
 const ChatBox: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className="bg-p-90 rounded-lg shadow-lg shadow-black/30 border-1 border-p-80 px-8 py-10 max-w-[700px] w-full my-8 flex flex-col">
+    <div className='bg-p-90 rounded-lg shadow-lg shadow-black/30 border-1 border-p-80 px-8 py-10 max-w-[700px] w-full my-8 flex flex-col'>
         {children}
     </div>
 );
 
 const MessageForm: React.FC<{ onSubmitAction: (e: React.FormEvent) => void; children: React.ReactNode }> = ({ onSubmitAction, children }) => (
-    <form onSubmit={onSubmitAction} className="flex gap-4 p-4 border-t-1 border-p-70">
+    <form onSubmit={onSubmitAction} className='flex gap-4 p-4 border-t-1 border-p-70'>
         {children}
     </form>
 );

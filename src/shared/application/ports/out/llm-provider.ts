@@ -7,7 +7,7 @@ export interface Message {
     id: string;
     role: Role
     previousId: string | null;
-    content: string
+    content: string | string[];
 }
 
 export enum Role {
