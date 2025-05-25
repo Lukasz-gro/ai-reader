@@ -20,8 +20,11 @@ export class OpenAIProvider implements LLMProvider {
     };
 
     streamQuery = (conversation: Message[]): AsyncGenerator<string, void, unknown> => {
-        void conversation;
-        throw new Error('Not yet implemented');
+        try {
+            return this.generateStreamingCompletion(conversation);
+        } catch (error) {
+            this.handleCompletionError(error);
+        }
     };
 
     private generateCompletion = async (conversation: Message[]): Promise<string> => {
@@ -35,6 +38,21 @@ export class OpenAIProvider implements LLMProvider {
         }
         return completionString;
     };
+
+    private async *generateStreamingCompletion(conversation: Message[]) {
+        const stream = await this.client.chat.completions.create({
+            model: 'gpt-4.1',
+            messages: conversation.map(this.messageToOpenAI),
+            stream: true,
+        });
+
+        for await (const part of stream) {
+            const content = part.choices?.[0]?.delta?.content;
+            if (content) {
+                yield content;
+            }
+        }
+    }
 
     private messageToOpenAI(message: Message): ChatCompletionMessageParam {
         if (Array.isArray(message.content)) {

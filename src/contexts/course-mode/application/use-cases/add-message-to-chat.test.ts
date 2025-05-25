@@ -16,9 +16,10 @@ describe('add user message to chat use case', () => {
 
             const addedMessage = newConv.messages.at(-1);
             expect(newConv.messages.length).to.equal(ogConv.messages.length + 1);
-            expect(addedMessage?.content).to.equal(newMessage);
-            expect(addedMessage?.role).to.equal(role);
-            expect(addedMessage?.previousId).to.equal(ogConv.messages.at(-1)?.id);
+            expect(addedMessage).toBeDefined();
+            expect(addedMessage!.content).to.equal(newMessage);
+            expect(addedMessage!.role).to.equal(role);
+            expect(addedMessage!.previousId).to.equal(ogConv.messages.at(-1)?.id);
         });
     }
 });

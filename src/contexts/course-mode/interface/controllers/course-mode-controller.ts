@@ -7,7 +7,7 @@ import { AddMessageToChat } from '../../application/ports/in/add-message-to-chat
 import { StartCourseConversationConcrete } from '../../application/use-cases/start-course-conversation-concrete';
 import { AddMessageToChatUseCase } from '../../application/use-cases/add-message-to-chat';
 import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
-import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';
+import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
 
 export class CourseModeController {
     constructor(
@@ -22,7 +22,7 @@ export class CourseModeController {
     };
 
     onNewUserMessage = async (conversation: Conversation, message: string): Promise<Conversation> => {
-        return await this.addMessageToChat.execute(conversation, message, Role.USER, undefined);
+        return await this.addMessageToChat.execute(conversation, message, Role.USER);
     };
 
     onNewAssistantMessage = async (conversation: Conversation, message: string, id: string): Promise<Conversation> => {
@@ -38,7 +38,9 @@ const startCourseConversation = new StartCourseConversationConcrete();
 const addUserMessageToChat = new AddMessageToChatUseCase();
 const courseRepo = new InMemoryCourseRepo();
 
-const llmProvider = new MockLLMProvider();
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
+const llmProvider = new OpenAIProvider(apiKey);
 
 const courseController = new CourseModeController(llmProvider, courseRepo, startCourseConversation, addUserMessageToChat);
 

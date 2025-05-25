@@ -6,6 +6,6 @@ export interface AddMessageToChat {
         conversation: Conversation,
         message: string,
         role: Role,
-        id: string | undefined
+        id?: string,
     ): Promise<Conversation>;
 }

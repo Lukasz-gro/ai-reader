@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Conversation } from '@/shared/entities/conversation';
-import { addAssistantMessageToChat, streamLLMResponse } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
+import {
+    addAssistantMessageToChat,
+    streamLLMResponse
+} from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
 
 interface PendingAssistantMessageProps {
@@ -11,8 +14,8 @@ interface PendingAssistantMessageProps {
 }
 
 export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = ({ conversation, onConversationUpdate, onDone, }) => {
-    const [messageId] = useState(() => uuidv4());
-    const previousMessageId = useRef(conversation.messages.at(-1)?.id ?? null);
+    const messageId = uuidv4();
+    const previousMessageId = conversation.messages.at(-1)?.id ?? null;
 
     useEffect(() => {
         let isCancelled = false;
@@ -29,7 +32,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
                 }
 
                 if (!isCancelled) {
-                    await finalizeMessage(chunks.join(' '));
+                    await finalizeMessage(chunks.join(''));
                 }
             } catch (error) {
                 console.error('LLM streaming failed:', error);
@@ -41,7 +44,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
             const assistantMessage: Message = {
                 id: messageId,
                 role: Role.ASSISTANT,
-                previousId: previousMessageId.current,
+                previousId: previousMessageId,
                 content: chunks,
             };
 
