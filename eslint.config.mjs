@@ -29,6 +29,7 @@ const config = [
             "@/indent": ["error", 4, { SwitchCase: 1 }],
             "@/quotes": ["error", "single", { "avoidEscape": true }],
             "@/jsx-quotes": ["error", "prefer-single"],
+            "eol-last": ["error", "always"]
         }
     },
     {
