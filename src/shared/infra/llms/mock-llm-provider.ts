@@ -11,11 +11,9 @@ export class MockLLMProvider implements LLMProvider {
             .build();
 
         const streamedChunks = this.chunkWords(newMessage.content)
-        let currentContent = "";
         for (const chunk of streamedChunks) {
-            currentContent += chunk;
-            yield currentContent;
-            await new Promise(res => setTimeout(res, Random.int(200, 800)));
+            yield chunk;
+            await new Promise(res => setTimeout(res, Random.int(400, 1000)));
         }
     }
 
@@ -28,7 +26,7 @@ export class MockLLMProvider implements LLMProvider {
         );
     }
 
-    chunkWords(text: string, size = 8): string[] {
+    chunkWords(text: string, size = 4): string[] {
         const words = text.trim().split(/\s+/);
         const chunks: string[] = [];
 
