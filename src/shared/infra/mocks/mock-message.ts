@@ -10,15 +10,19 @@ export class MockMessage {
 
     withId(id: string) {
         this.id = id;
+        return this;
     }
     withRole(role: Role) {
         this.role = role;
+        return this;
     }
     withPreviousId(previousId: string | null) {
         this.previousId = previousId;
+        return this;
     }
     withContent(content: string) {
         this.content = content;
+        return this;
     }
 
     build(): Message {

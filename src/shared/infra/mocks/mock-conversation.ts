@@ -10,9 +10,11 @@ export class MockConversation {
 
     withId(id: string) {
         this.id = id;
+        return this;
     }
     withMessages(messages: Message[]) {
         this.messages = messages;
+        return this;
     }
 
     build(): Conversation {

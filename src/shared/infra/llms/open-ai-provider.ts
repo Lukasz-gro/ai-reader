@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 import { LLMQueryError } from '@/shared/entities/llm-query-error';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions/completions';
 import { LLMHttpError } from '@/shared/entities/llm-http-error';
-import { v4 as uuidv4 } from 'uuid';
 
 export class OpenAIProvider implements LLMProvider {
     client: OpenAI;
@@ -12,19 +11,17 @@ export class OpenAIProvider implements LLMProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    query = async (conversation: Message[]): Promise<Message> => {
+    query = async (conversation: Message[]): Promise<string> => {
         try {
-            const completionString = await this.generateCompletion(conversation);
-            return {
-                id: uuidv4(),
-                previousId: conversation.at(-1)?.id ?? null,
-                role: Role.ASSISTANT,
-                content: completionString,
-            };
+            return await this.generateCompletion(conversation)
         } catch (error) {
             this.handleCompletionError(error);
         }
     };
+
+    streamQuery = (conversation: Message[]): AsyncGenerator<string, void, unknown> => {
+        throw new Error('Not yet implemented');
+    }
 
     private generateCompletion = async (conversation: Message[]): Promise<string> => {
         const completion = await this.client.chat.completions.create({

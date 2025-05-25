@@ -1,7 +1,7 @@
-import { LLMProvider } from '../../../../../shared/application/ports/out/llm-provider';
+import { LLMProvider } from '@/shared/application/ports/out/llm-provider';
 import { CourseRepo } from '../out/course-repo';
 import { Course } from '../../../entities/course';
-import { Conversation } from '../../../../../shared/entities/conversation';
+import { Conversation } from '@/shared/entities/conversation';
 
 export interface StartCourseConversation {
     execute(

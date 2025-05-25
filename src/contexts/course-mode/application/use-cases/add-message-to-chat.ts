@@ -1,14 +1,21 @@
-import { AddUserMessageToChat } from '../ports/in/add-user-message-to-chat';
+import { AddMessageToChat } from '../ports/in/add-message-to-chat';
 import { Conversation } from '@/shared/entities/conversation';
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
 import { v4 as uuidv4 } from 'uuid';
 
-export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
+export class AddMessageToChatUseCase implements AddMessageToChat {
     async execute(
         conversation: Conversation,
-        message: string
+        message: string,
+        role: Role,
+        id: string | undefined
     ): Promise<Conversation> {
-        const newMessage = this.newUserMessageFrom(message);
+        const newMessage = {
+            id: id ?? uuidv4(),
+            role: role,
+            content: message,
+            previousId: null,
+        }
         return this.appendMessage(conversation, newMessage);
     }
 
@@ -20,14 +27,5 @@ export class AddUserMessageToChatUseCase implements AddUserMessageToChat {
 
     private lastMessage(conversation: Conversation): Message | null {
         return (conversation.messages.length == 0) ? null : conversation.messages[conversation.messages.length - 1];
-    }
-
-    private newUserMessageFrom(message: string): Message {
-        return {
-            id: uuidv4(),
-            role: Role.USER,
-            content: message,
-            previousId: null
-        };
     }
 }

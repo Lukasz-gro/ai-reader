@@ -26,7 +26,7 @@ export const AnimatedChatMessage: React.FC<{ message: Message }> = ({ message })
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) =>
     message.role === 'USER'
         ? <UserMessage>{message.content}</UserMessage>
-        : <BotMessage>{message.content}</BotMessage>;
+        : <AssistantMessage>{message.content}</AssistantMessage>;
 
 
 const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
@@ -34,7 +34,7 @@ const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         {children}
     </div>
 
-const BotMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+const AssistantMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <div className='bg-p-90 text-p-20 px-5 py-3 rounded-[18px_18px_18px_6px] max-w-[70%] break-words text-base shadow-xl shadow-black/30 border-1 border-p-80 my-1 mr-auto'>
         {children}
     </div>

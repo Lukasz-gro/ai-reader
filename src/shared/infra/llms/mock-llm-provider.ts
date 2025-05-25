@@ -1,21 +1,40 @@
-import { Message, LLMProvider, Role } from '../../application/ports/out/llm-provider';
-import { v4 as uuidv4 } from 'uuid';
-import { RandomMessage } from '@/shared/infra/mocks/mock-message';
+import { LLMProvider, Message, Role } from '../../application/ports/out/llm-provider';
+import { MockMessage, RandomMessage } from '@/shared/infra/mocks/mock-message';
+import { Random } from '@/shared/infra/mocks/random';
 
 export class MockLLMProvider implements LLMProvider {
-    query(conversation: Message[]): Promise<Message> {
+    async *streamQuery(conversation: Message[]): AsyncGenerator<string, void, unknown> {
         const lastMessage = conversation[conversation.length - 1];
-        const newMessage: Message = {
-            id: uuidv4(),
-            role: Role.ASSISTANT,
-            previousId: lastMessage?.id ?? null,
-            content: RandomMessage.content(),
-        };
+        const newMessage = new MockMessage()
+            .withRole(Role.ASSISTANT)
+            .withPreviousId(lastMessage.id)
+            .build();
+
+        const streamedChunks = this.chunkWords(newMessage.content)
+        let currentContent = "";
+        for (const chunk of streamedChunks) {
+            currentContent += chunk;
+            yield currentContent;
+            await new Promise(res => setTimeout(res, Random.int(200, 800)));
+        }
+    }
+
+    query(conversation: Message[]): Promise<string> {
         return new Promise(
             resolve => setTimeout(
-                ()=> resolve(newMessage),
-                300
+                ()=> resolve(RandomMessage.content()),
+                1000
             )
         );
+    }
+
+    chunkWords(text: string, size = 8): string[] {
+        const words = text.trim().split(/\s+/);
+        const chunks: string[] = [];
+
+        for (let i = 0; i < words.length; i += size) {
+            chunks.push(words.slice(i, i + size).join(' ') + ' ');
+        }
+        return chunks;
     }
 }

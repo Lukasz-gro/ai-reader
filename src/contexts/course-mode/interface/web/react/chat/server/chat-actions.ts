@@ -8,6 +8,14 @@ export async function addUserMessageToChat(conversation: Conversation, message: 
     return await courseController.onNewUserMessage(conversation, message);
 }
 
+export async function addAssistantMessageToChat(conversation: Conversation, message: string, id: string) {
+    return await courseController.onNewAssistantMessage(conversation, message, id);
+}
+
+export async function streamLLMResponse(conversation: Conversation) {
+    return courseController.onStreamLLMResponse(conversation);
+}
+
 export async function createNewCourseConversation(course: Course) {
     return await courseController.onCreateNewCourseConversation(course);
 }
