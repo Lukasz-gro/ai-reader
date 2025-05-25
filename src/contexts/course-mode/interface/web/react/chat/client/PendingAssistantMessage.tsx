@@ -20,7 +20,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
         const startStreaming = async () => {
             try {
                 const stream = await streamLLMResponse(conversation);
-                let chunks: string[] = [];
+                const chunks: string[] = [];
 
                 for await (const chunk of stream) {
                     if (isCancelled) break;
@@ -71,6 +71,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
         return () => {
             isCancelled = true;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return null;

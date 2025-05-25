@@ -21,7 +21,7 @@ export class StartCourseConversationConcrete implements StartCourseConversation 
             previousId: newConversation.messages.at(-1)!.id,
             role: Role.ASSISTANT,
             content: llmResponse,
-        }
+        };
         newConversation.messages.push(newMessage);
 
         course.conversations.push(newConversation);

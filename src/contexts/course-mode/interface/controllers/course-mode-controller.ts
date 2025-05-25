@@ -1,5 +1,5 @@
 import { CourseRepo } from '../../application/ports/out/course-repo';
-import { LLMProvider, Message, Role } from '@/shared/application/ports/out/llm-provider';
+import { LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
 import { StartCourseConversation } from '../../application/ports/in/start-course-conversation';
 import { Course } from '../../entities/course';
 import { Conversation } from '@/shared/entities/conversation';
@@ -38,7 +38,7 @@ const startCourseConversation = new StartCourseConversationConcrete();
 const addUserMessageToChat = new AddMessageToChatUseCase();
 const courseRepo = new InMemoryCourseRepo();
 
-const llmProvider = new MockLLMProvider()
+const llmProvider = new MockLLMProvider();
 
 const courseController = new CourseModeController(llmProvider, courseRepo, startCourseConversation, addUserMessageToChat);
 

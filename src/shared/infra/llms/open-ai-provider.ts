@@ -13,15 +13,16 @@ export class OpenAIProvider implements LLMProvider {
 
     query = async (conversation: Message[]): Promise<string> => {
         try {
-            return await this.generateCompletion(conversation)
+            return await this.generateCompletion(conversation);
         } catch (error) {
             this.handleCompletionError(error);
         }
     };
 
     streamQuery = (conversation: Message[]): AsyncGenerator<string, void, unknown> => {
+        void conversation;
         throw new Error('Not yet implemented');
-    }
+    };
 
     private generateCompletion = async (conversation: Message[]): Promise<string> => {
         const completion = await this.client.chat.completions.create({
@@ -36,6 +37,9 @@ export class OpenAIProvider implements LLMProvider {
     };
 
     private messageToOpenAI(message: Message): ChatCompletionMessageParam {
+        if (Array.isArray(message.content)) {
+            throw Error('Message should not be chunked in this context');
+        }
         switch (message.role) {
             case Role.SYSTEM:
                 return {

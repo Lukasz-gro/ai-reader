@@ -21,7 +21,7 @@ export class MockConversation {
         return {
             id: this.id ?? RandomConversation.id(),
             messages: this.messages ?? RandomConversation.messages(),
-        }
+        };
     }
 }
 

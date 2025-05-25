@@ -9,12 +9,12 @@ describe('add user message to chat use case', () => {
 
     for (const role of [Role.USER, Role.ASSISTANT]) {
         it(`should return conversation with added ${role} message`, async () => {
-            const ogConv: Conversation = new MockConversation().build()
+            const ogConv: Conversation = new MockConversation().build();
             const newMessage = 'i\'ve seen things you people wouldn\'t believe';
 
             const newConv = await useCase.execute(ogConv, newMessage, role);
 
-            const addedMessage = newConv.messages.at(-1)
+            const addedMessage = newConv.messages.at(-1);
             expect(newConv.messages.length).to.equal(ogConv.messages.length + 1);
             expect(addedMessage?.content).to.equal(newMessage);
             expect(addedMessage?.role).to.equal(role);

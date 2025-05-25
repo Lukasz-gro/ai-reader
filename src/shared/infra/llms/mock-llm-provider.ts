@@ -10,7 +10,8 @@ export class MockLLMProvider implements LLMProvider {
             .withPreviousId(lastMessage.id)
             .build();
 
-        const streamedChunks = this.chunkWords(newMessage.content)
+        const content = Array.isArray(newMessage.content) ? newMessage.content.join(' ') : newMessage.content;
+        const streamedChunks = this.chunkWords(content);
         for (const chunk of streamedChunks) {
             yield chunk;
             await new Promise(res => setTimeout(res, Random.int(400, 1000)));
@@ -18,6 +19,7 @@ export class MockLLMProvider implements LLMProvider {
     }
 
     query(conversation: Message[]): Promise<string> {
+        void conversation;
         return new Promise(
             resolve => setTimeout(
                 ()=> resolve(RandomMessage.content()),

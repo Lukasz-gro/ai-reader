@@ -31,7 +31,7 @@ export class MockMessage {
             role: this.role ?? RandomMessage.role(),
             previousId: this.previousId,
             content: this.content ?? RandomMessage.content(),
-        }
+        };
     }
 }
 
@@ -54,7 +54,7 @@ export class RandomMessage {
             role: this.role(),
             previousId: null,
             content: this.content(),
-        }
+        };
     }
 
     static generateMany(n: number) {
@@ -76,38 +76,38 @@ export class RandomMessage {
     private static getCompositeResponse(): string {
         const openers = [
             "Absolutely! Let's",
-            "Mocking LLM responses can be tricky -",
-            "When simulating LLMs, one common pitfall is",
+            'Mocking LLM responses can be tricky -',
+            'When simulating LLMs, one common pitfall is',
             "For robust tests, it's useful to",
-            "Interesting point! In a typical mock implementation,",
-            "Good catch — sometimes, developers forget to",
-            "Pro tip for test coverage:",
-            "You might want to consider",
-            "Quick tip:",
-            "Fun fact about LLM mocking:",
+            'Interesting point! In a typical mock implementation,',
+            'Good catch — sometimes, developers forget to',
+            'Pro tip for test coverage:',
+            'You might want to consider',
+            'Quick tip:',
+            'Fun fact about LLM mocking:',
         ];
 
         const middles = [
-            "ensure deterministic outputs by seeding your random generator.",
-            "return different results for repeated queries to test retry logic.",
-            "simulate latency to mimic real-world conditions.",
-            "include subtle errors or hallucinations in mock outputs.",
-            "vary the response length to catch UI edge cases.",
-            "track each request for later assertions.",
-            "mimic streaming responses, not just static ones.",
-            "assert that roles and IDs are handled as in production.",
-            "test for interruption and resume in conversation history.",
+            'ensure deterministic outputs by seeding your random generator.',
+            'return different results for repeated queries to test retry logic.',
+            'simulate latency to mimic real-world conditions.',
+            'include subtle errors or hallucinations in mock outputs.',
+            'vary the response length to catch UI edge cases.',
+            'track each request for later assertions.',
+            'mimic streaming responses, not just static ones.',
+            'assert that roles and IDs are handled as in production.',
+            'test for interruption and resume in conversation history.',
         ];
 
         const closers = [
-            "This makes your tests much closer to production reality.",
-            "It helps uncover bugs that only appear with real LLM behavior.",
-            "This approach saves time when debugging flaky tests.",
+            'This makes your tests much closer to production reality.',
+            'It helps uncover bugs that only appear with real LLM behavior.',
+            'This approach saves time when debugging flaky tests.',
             "It's an easy win for catching silent failures.",
-            "Highly recommended for CI pipelines.",
+            'Highly recommended for CI pipelines.',
             "I've seen this catch lots of subtle issues.",
-            "You can automate this pattern with a utility function.",
-            "It’s always good to have some randomness for coverage.",
+            'You can automate this pattern with a utility function.',
+            'It’s always good to have some randomness for coverage.',
             "Don't forget to document your mock behavior for your team.",
         ];
 

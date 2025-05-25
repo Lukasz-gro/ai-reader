@@ -15,14 +15,14 @@ export class AddMessageToChatUseCase implements AddMessageToChat {
             role: role,
             content: message,
             previousId: null,
-        }
+        };
         return this.appendMessage(conversation, newMessage);
     }
 
     private appendMessage(conversation: Conversation, message: Message): Conversation {
         const previousMessage = this.lastMessage(conversation);
-        const appendedMessage: Message = { ...message, previousId: previousMessage?.id ?? null }
-        return {...conversation, messages: [...conversation.messages, appendedMessage] }
+        const appendedMessage: Message = { ...message, previousId: previousMessage?.id ?? null };
+        return {...conversation, messages: [...conversation.messages, appendedMessage] };
     }
 
     private lastMessage(conversation: Conversation): Message | null {
