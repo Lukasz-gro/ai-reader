@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class OpenAIProvider implements LLMProvider {
     client: OpenAI;
 
-    constructor(private apiKey: string) {
+    constructor(private readonly apiKey: string) {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
