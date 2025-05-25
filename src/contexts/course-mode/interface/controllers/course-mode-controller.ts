@@ -41,6 +41,7 @@ const courseRepo = new InMemoryCourseRepo();
 const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
 const llmProvider = new OpenAIProvider(apiKey);
+// const llmProvider = new MockLLMProvider();
 
 const courseController = new CourseModeController(llmProvider, courseRepo, startCourseConversation, addUserMessageToChat);
 

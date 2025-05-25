@@ -31,7 +31,10 @@ export function Chat({ conversation }: ChatProps) {
 
     return (
         <ChatBox>
-            <MessageView conversation={currentConversation} />
+            <MessageView
+                conversation={currentConversation}
+                isGenerating={isGenerating}
+            />
             {isGenerating && (
                 <PendingAssistantMessage
                     key={streamKey}
