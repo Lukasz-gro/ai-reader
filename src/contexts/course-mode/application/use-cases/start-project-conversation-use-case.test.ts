@@ -1,13 +1,13 @@
 import { expect, afterEach, describe, it } from 'vitest';
 import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
-import { StartCourseConversationConcrete } from './start-course-conversation-concrete';
+import { StartProjectConversationUseCase } from './start-project-conversation-use-case';
 import { Course } from '../../entities/course';
 import { LearningRoadmap } from '../../entities/learning-roadmap';
 import { Project } from '@/shared/entities/project';
 import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';
 
 describe('StartCourseConversationConcrete Use Case', () => {
-    const useCase = new StartCourseConversationConcrete();
+    const useCase = new StartProjectConversationUseCase();
     const mockCourseRepo = new InMemoryCourseRepo();
     const mockLLMProvider = new MockLLMProvider();
 

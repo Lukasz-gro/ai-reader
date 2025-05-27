@@ -29,7 +29,7 @@ const ChatHistory: React.FC<{
     }, [conversation.messages.length, isGenerating]);
 
     return (
-        <div className='flex-1 overflow-y-auto mb-4 flex flex-col gap-3 px-4 py-6 min-h-[50vh] max-h-[70vh]'>
+        <div className='flex-1 overflow-y-auto mb-4 flex flex-col gap-3 px-4 py-6'>
             <AnimatePresence initial={false}>
                 {conversation.messages.map((msg) => (
                     <AnimatedChatMessage message={msg} key={msg.id} />

@@ -30,7 +30,7 @@ export function Chat({ conversation }: ChatProps) {
     };
 
     return (
-        <ChatBox>
+        <div>
             <MessageView
                 conversation={currentConversation}
                 isGenerating={isGenerating}
@@ -57,15 +57,9 @@ export function Chat({ conversation }: ChatProps) {
                     {isGenerating ? 'Generating...' : 'Send'}
                 </PrimaryButton>
             </MessageForm>
-        </ChatBox>
+        </div>
     );
 }
-
-const ChatBox: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className='bg-p-90 rounded-lg shadow-lg shadow-black/30 border-1 border-p-80 px-8 py-10 max-w-[700px] w-full my-8 flex flex-col'>
-        {children}
-    </div>
-);
 
 const MessageForm: React.FC<{ onSubmitAction: (e: React.FormEvent) => void; children: React.ReactNode }> = ({ onSubmitAction, children }) => (
     <form onSubmit={onSubmitAction} className='flex gap-4 p-4 border-t-1 border-p-70'>

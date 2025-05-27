@@ -37,11 +37,11 @@
   --color-sd-90: hsl(206, 55%, 90%);
 
   /* Accent color */
-  --color-a-10: hsl(7, 76%, 10%);
-  --color-a-30: hsl(7, 76%, 30%);
-  --color-a-50: hsl(7, 76%, 50%);
-  --color-a-70: hsl(7, 76%, 70%);
-  --color-a-90: hsl(7, 76%, 90%);
+  --color-a-10: hsl(33.9, 87.19%, 10%);
+  --color-a-30: hsl(33.9, 87.19%, 30%);
+  --color-a-50: hsl(33.9, 87.19%, 50%);
+  --color-a-70: hsl(33.9, 87.19%, 70%);
+  --color-a-90: hsl(33.9, 87.19%, 90%);
 }
 
 .dark {
@@ -68,11 +68,11 @@
   --color-sd-90: hsl(206, 55%, 10%);
 
   /* Accent color */
-  --color-a-10: hsl(7, 76%, 90%);
-  --color-a-30: hsl(7, 76%, 70%);
-  --color-a-50: hsl(7, 76%, 50%);
-  --color-a-70: hsl(7, 76%, 30%);
-  --color-a-90: hsl(7, 76%, 10%);
+  --color-a-10: hsl(33.9, 87.19%, 90%);
+  --color-a-30: hsl(33.9, 87.19%, 70%);
+  --color-a-50: hsl(33.9, 87.19%, 50%);
+  --color-a-70: hsl(33.9, 87.19%, 30%);
+  --color-a-90: hsl(33.9, 87.19%, 10%);
 }
 
 @layer base {
@@ -87,7 +87,6 @@
     font: var(--p);
     display: flex;
     flex-direction: column;
-    align-items: center;
     min-height: 100vh;
   }
 
@@ -103,6 +102,8 @@
 
   p {
     @apply my-2;
+    white-space: normal;
+    word-break: break-word;
   }
 
   a {

@@ -1,8 +1,8 @@
 'use server';
 
-import { Course } from '@/contexts/course-mode/entities/course';
 import { courseController } from '@/contexts/course-mode/interface/controllers/course-mode-controller';
-import { Conversation } from '@/shared/entities/conversation';
+import { Conversation, Mode } from '@/shared/entities/conversation';
+import { Project } from '@/shared/entities/project';
 
 export async function addUserMessageToChat(conversation: Conversation, message: string) {
     return await courseController.onNewUserMessage(conversation, message);
@@ -16,6 +16,6 @@ export async function streamLLMResponse(conversation: Conversation) {
     return courseController.onStreamLLMResponse(conversation);
 }
 
-export async function createNewCourseConversation(course: Course) {
-    return await courseController.onCreateNewCourseConversation(course);
+export async function createNewProjectConversation(project: Project, mode: Mode) {
+    return await courseController.onCreateNewProjectConversation(project, mode);
 }

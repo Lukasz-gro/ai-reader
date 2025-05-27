@@ -1,7 +1,7 @@
-import { CourseRepo } from '../../application/ports/out/course-repo';
+import { ProjectRepo } from '../../application/ports/out/project-repo';
 import { Course } from '../../entities/course';
 
-export class InMemoryCourseRepo implements CourseRepo {
+export class InMemoryCourseRepo implements ProjectRepo {
     private courses: Course[] = [];
 
     upsert(course: Course): Promise<void> {
