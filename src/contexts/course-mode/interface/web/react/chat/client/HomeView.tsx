@@ -7,21 +7,17 @@ import { FileIcon, MessageCircleIcon } from 'lucide-react';
 
 export interface HomeViewProps {
     projects: Project[];
-    onProjectSelect: (project: Project) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
     const [activeTab, setActiveTab] = useState<Mode>('course');
     const [activeProject, setActiveProject] = useState<Project | null>(projects.at(0) ?? null);
     const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
-    const onProjectSelect = (project: Project) => { void project; };
-
-    void setActiveProject;
 
     return (
         <div className='flex w-full h-screen bg-p-90 text-p-10'>
             <aside className='w-56 border-r border-p-80'>
-                <LeftSideSection projects={projects} onProjectSelect={onProjectSelect} />
+                <LeftSideSection projects={projects} onProjectSelect={setActiveProject} />
             </aside>
             <main className='flex-1 flex flex-col'>
                 <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => setActiveTab(newMode)} />
