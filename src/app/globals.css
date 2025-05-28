@@ -11,68 +11,69 @@
   --font-secondary: 'Fira Sans', sans-serif;
   --h1: 600 3rem/1.2em var(--font-secondary);
   --h2: 600 2rem/1.2em var(--font-secondary);
+  --h3: 600 1.2rem/1.3em var(--font-secondary);
   --p: 1rem/1.5em var(--font-primary);
   --span: 1rem/1.0em var(--font-primary);
 
   /* Primary color */
-  --color-p-10: hsl(75, 4.88%, 10%);
-  --color-p-20: hsl(75, 4.88%, 20%);
-  --color-p-30: hsl(75, 4.88%, 30%);
-  --color-p-40: hsl(75, 4.88%, 40%);
-  --color-p-50: hsl(75, 4.88%, 50%);
-  --color-p-60: hsl(75, 4.88%, 60%);
-  --color-p-70: hsl(75, 4.88%, 70%);
-  --color-p-80: hsl(75, 4.88%, 80%);
-  --color-p-90: hsl(75, 4.88%, 90%);
+  --color-p-10: hsl(227.65, 15.18%, 10%);
+  --color-p-20: hsl(227.65, 15.18%, 20%);
+  --color-p-30: hsl(227.65, 15.18%, 30%);
+  --color-p-40: hsl(227.65, 15.18%, 40%);
+  --color-p-50: hsl(227.65, 15.18%, 50%);
+  --color-p-60: hsl(227.65, 15.18%, 60%);
+  --color-p-70: hsl(227.65, 15.18%, 70%);
+  --color-p-80: hsl(227.65, 15.18%, 80%);
+  --color-p-90: hsl(227.65, 15.18%, 90%);
 
   /* Secondary color */
-  --color-sd-10: hsl(206, 55%, 10%);
-  --color-sd-20: hsl(206, 55%, 20%);
-  --color-sd-30: hsl(206, 55%, 30%);
-  --color-sd-40: hsl(206, 55%, 40%);
-  --color-sd-50: hsl(206, 55%, 50%);
-  --color-sd-60: hsl(206, 55%, 60%);
-  --color-sd-70: hsl(206, 55%, 70%);
-  --color-sd-80: hsl(206, 55%, 80%);
-  --color-sd-90: hsl(206, 55%, 90%);
+  --color-sd-10: hsl(145, 16.07%, 10%);
+  --color-sd-20: hsl(145, 16.07%, 20%);
+  --color-sd-30: hsl(145, 16.07%, 30%);
+  --color-sd-40: hsl(145, 16.07%, 40%);
+  --color-sd-50: hsl(145, 16.07%, 50%);
+  --color-sd-60: hsl(145, 16.07%, 60%);
+  --color-sd-70: hsl(145, 16.07%, 70%);
+  --color-sd-80: hsl(145, 16.07%, 80%);
+  --color-sd-90: hsl(145, 16.07%, 90%);
 
   /* Accent color */
-  --color-a-10: hsl(33.9, 87.19%, 10%);
-  --color-a-30: hsl(33.9, 87.19%, 30%);
-  --color-a-50: hsl(33.9, 87.19%, 50%);
-  --color-a-70: hsl(33.9, 87.19%, 70%);
-  --color-a-90: hsl(33.9, 87.19%, 90%);
+  --color-a-10: hsl(354, 65.79%, 10%);
+  --color-a-30: hsl(354, 65.79%, 30%);
+  --color-a-50: hsl(354, 65.79%, 50%);
+  --color-a-70: hsl(354, 65.79%, 70%);
+  --color-a-90: hsl(354, 65.79%, 90%);
 }
 
 .dark {
   /* Primary color */
-  --color-p-10: hsl(75, 4.88%, 90%);
-  --color-p-20: hsl(75, 4.88%, 80%);
-  --color-p-30: hsl(75, 4.88%, 70%);
-  --color-p-40: hsl(75, 4.88%, 60%);
-  --color-p-50: hsl(75, 4.88%, 50%);
-  --color-p-60: hsl(75, 4.88%, 40%);
-  --color-p-70: hsl(75, 4.88%, 30%);
-  --color-p-80: hsl(75, 4.88%, 20%);
-  --color-p-90: hsl(75, 4.88%, 10%);
+  --color-p-10: hsl(227.65, 15.18%, 90%);
+  --color-p-20: hsl(227.65, 15.18%, 80%);
+  --color-p-30: hsl(227.65, 15.18%, 70%);
+  --color-p-40: hsl(227.65, 15.18%, 60%);
+  --color-p-50: hsl(227.65, 15.18%, 50%);
+  --color-p-60: hsl(227.65, 15.18%, 40%);
+  --color-p-70: hsl(227.65, 15.18%, 30%);
+  --color-p-80: hsl(227.65, 15.18%, 20%);
+  --color-p-90: hsl(227.65, 15.18%, 10%);
 
   /* Secondary color */
-  --color-sd-10: hsl(206, 55%, 90%);
-  --color-sd-20: hsl(206, 55%, 80%);
-  --color-sd-30: hsl(206, 55%, 70%);
-  --color-sd-40: hsl(206, 55%, 70%);
-  --color-sd-50: hsl(206, 55%, 50%);
-  --color-sd-60: hsl(206, 55%, 40%);
-  --color-sd-70: hsl(206, 55%, 30%);
-  --color-sd-80: hsl(206, 55%, 20%);
-  --color-sd-90: hsl(206, 55%, 10%);
+  --color-sd-10: hsl(145, 16.07%, 90%);
+  --color-sd-20: hsl(145, 16.07%, 80%);
+  --color-sd-30: hsl(145, 16.07%, 70%);
+  --color-sd-40: hsl(145, 16.07%, 60%);
+  --color-sd-50: hsl(145, 16.07%, 50%);
+  --color-sd-60: hsl(145, 16.07%, 40%);
+  --color-sd-70: hsl(145, 16.07%, 30%);
+  --color-sd-80: hsl(145, 16.07%, 20%);
+  --color-sd-90: hsl(145, 16.07%, 10%);
 
   /* Accent color */
-  --color-a-10: hsl(33.9, 87.19%, 90%);
-  --color-a-30: hsl(33.9, 87.19%, 70%);
-  --color-a-50: hsl(33.9, 87.19%, 50%);
-  --color-a-70: hsl(33.9, 87.19%, 30%);
-  --color-a-90: hsl(33.9, 87.19%, 10%);
+  --color-a-10: hsl(354, 65.79%, 90%);
+  --color-a-30: hsl(354, 65.79%, 70%);
+  --color-a-50: hsl(354, 65.79%, 50%);
+  --color-a-70: hsl(354, 65.79%, 30%);
+  --color-a-90: hsl(354, 65.79%, 10%);
 }
 
 @layer base {
@@ -97,6 +98,11 @@
 
   h2 {
     font: var(--h2);
+    @apply my-2;
+  }
+
+  h3 {
+    font: var(--h3);
     @apply my-2;
   }
 

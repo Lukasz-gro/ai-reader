@@ -35,13 +35,17 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
 };
 
 const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
-        <div className='bg-sd-70 text-p-10 px-5 py-3 rounded-[18px_18px_6px_18px] text-base shadow-xl shadow-black/30 my-1 ml-auto'>
+    <div className={'max-w-[85%] ml-auto'}>
+        <div className='bg-sd-70 text-p-10 px-5 py-3 rounded-[18px_18px_6px_18px] text-base shadow-xl shadow-black/30'>
             {children}
-        </div>;
+        </div>
+    </div>;
 
 const AssistantMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
-    <div className='w-full bg-p-90 text-p-20 px-5 py-3 rounded-[18px_18px_18px_6px] text-base shadow-xl shadow-black/30 border-1 border-p-80 my-1 mr-auto'>
-        {children}
+    <div className={'max-w-[85%] mr-auto'}>
+        <div className='bg-p-90 text-p-20 px-5 py-3 rounded-[18px_18px_18px_6px] text-base shadow-xl shadow-black/30 border-1 border-p-80 my-1'>
+            {children}
+        </div>
     </div>;
 
 const AnimatedText: React.FC<{ content: string }> = ({ content }) => (
@@ -52,4 +56,4 @@ const AnimatedText: React.FC<{ content: string }> = ({ content }) => (
     >
         {content}
     </motion.span>
-);
+)

@@ -18,19 +18,5 @@ const mockProject: Project = {
 export default function Home() {
     return (
         <HomeView projects={[mockProject]}/>
-        // <div className={'flex min-h-[80vh] justify-center items-center'}>
-        //     {conversation ? (
-        //         <Chat conversation={conversation} />
-        //     ) : (
-        //         <section>
-        //             <PrimaryButton
-        //                 onClick={handleCreateConversation}
-        //                 disabled={isLoading}
-        //             >
-        //                 {isLoading ? 'Creating...' : 'Create new course'}
-        //             </PrimaryButton>
-        //         </section>
-        //     )}
-        // </div>
     );
 }
