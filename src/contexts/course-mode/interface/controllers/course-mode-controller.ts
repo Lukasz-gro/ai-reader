@@ -6,7 +6,6 @@ import { AddMessageToChat } from '../../application/ports/in/add-message-to-chat
 import { StartProjectConversationUseCase } from '../../application/use-cases/start-project-conversation-use-case';
 import { AddMessageToChatUseCase } from '../../application/use-cases/add-message-to-chat';
 import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
-import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';
 import { Project } from '@/shared/entities/project';
 import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
 

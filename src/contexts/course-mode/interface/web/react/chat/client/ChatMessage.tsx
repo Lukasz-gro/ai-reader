@@ -56,4 +56,4 @@ const AnimatedText: React.FC<{ content: string }> = ({ content }) => (
     >
         {content}
     </motion.span>
-)
+);

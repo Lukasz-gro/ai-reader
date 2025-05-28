@@ -30,21 +30,21 @@ export function Chat({ conversation }: ChatProps) {
     };
 
     return (
-        <div>
-            <MessageView
-                conversation={currentConversation}
-                isGenerating={isGenerating}
-            />
-            {isGenerating && (
-                <PendingAssistantMessage
-                    key={streamKey}
+        <div className='flex flex-col h-full max-h-screen'>
+            <div className='flex-1 overflow-y-auto'>
+                <MessageView
                     conversation={currentConversation}
-                    onConversationUpdate={setCurrentConversation}
-                    onDone={() => {
-                        setIsGenerating(false);
-                    }}
+                    isGenerating={isGenerating}
                 />
-            )}
+                {isGenerating && (
+                    <PendingAssistantMessage
+                        key={streamKey}
+                        conversation={currentConversation}
+                        onConversationUpdate={setCurrentConversation}
+                        onDone={() => setIsGenerating(false)}
+                    />
+                )}
+            </div>
             <MessageForm onSubmitAction={handleSubmit}>
                 <MessageInput
                     type='text'
