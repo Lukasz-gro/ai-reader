@@ -31,7 +31,7 @@ export function Chat({ conversation }: ChatProps) {
 
     return (
         <div className='flex flex-col h-full max-h-screen'>
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-1 overflow-y-auto custom-scrollbar'>
                 <MessageView
                     conversation={currentConversation}
                     isGenerating={isGenerating}

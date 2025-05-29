@@ -1,0 +1,22 @@
+.custom-scrollbar {
+    @apply scrollbar-thin;
+    scrollbar-color: theme(colors.sd.50) transparent;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    @apply w-2 h-2;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-sd-40;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button{
+    display:none;
+}
