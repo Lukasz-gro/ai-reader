@@ -3,7 +3,7 @@ import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
 import { Conversation, Mode } from '@/shared/entities/conversation';
-import { FileIcon, MessageCircleIcon, PlusIcon } from 'lucide-react';
+import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -20,7 +20,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
                 <LeftSideSection projects={projects} onProjectSelect={setActiveProject} />
             </aside>
             <main className='flex-1 flex flex-col'>
-                <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => setActiveTab(newMode)} />
+                <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} />
                 <section className='flex-1 overflow-y-auto p-6'>
                     <CenterSection activeTab={activeTab} activeProject={activeProject} activeConversation={activeConversation} setActiveConversation={setActiveConversation} />
                 </section>
@@ -102,9 +102,25 @@ const ProjectPicker: React.FC<{
     );
 };
 
+const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void}> = ({ activeTab, onSelectActiveTab }) => {
+    return (
+        <div className={'flex justify-between items-center border-b border-p-80'}>
+            <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => onSelectActiveTab(newMode)} />
+            <div className={'flex gap-4 mr-8'}>
+                <button>
+                    <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                </button>
+                <button>
+                    <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
+                </button>
+            </div>
+        </div>
+    );
+};
+
 const ConversationModeSelector: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void}> = ({ activeTab, onSelectActiveTab }) => {
     return (
-        <nav className='flex border-b border-p-80'>
+        <nav className='flex'>
             {(['course', 'explain', 'quiz'] as Mode[]).map((mode) => (
                 <button
                     key={mode}
@@ -112,7 +128,7 @@ const ConversationModeSelector: React.FC<{activeTab: Mode, onSelectActiveTab: (m
                     className={`transition-colors duration-200 focus:outline-none hover:bg-p-80 cursor-pointer border-y-4 border-t-transparent
                     ${ activeTab === mode ? 'border-b-a-50' : 'border-transparent' }`}
                 >
-                    <h3 className={'p-[12px] px-8 tracking-wider uppercase'}>{mode} mode</h3>
+                    <h3 className={'p-[12px] px-8 tracking-wider text-nowrap uppercase'}>{mode} mode</h3>
                 </button>
             ))}
         </nav>
