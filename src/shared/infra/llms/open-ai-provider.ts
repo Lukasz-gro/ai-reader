@@ -39,18 +39,31 @@ export class OpenAIProvider implements LLMProvider {
         return completionString;
     };
 
-    private async *generateStreamingCompletion(conversation: Message[]) {
+    private async *generateStreamingCompletion(conversation: Message[], batchSize = 20) {
         const stream = await this.client.chat.completions.create({
             model: 'gpt-4.1',
             messages: conversation.map(this.messageToOpenAI),
             stream: true,
         });
 
+        let buffer = '';
+        let tokenCount = 0;
+
         for await (const part of stream) {
             const content = part.choices?.[0]?.delta?.content;
             if (content) {
-                yield content;
+                buffer += content;
+                tokenCount += 1;
+                if (tokenCount >= batchSize) {
+                    yield buffer;
+                    buffer = '';
+                    tokenCount = 0;
+                }
             }
+        }
+
+        if (buffer.length > 0) {
+            yield buffer;
         }
     }
 

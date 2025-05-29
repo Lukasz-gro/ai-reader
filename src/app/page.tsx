@@ -1,6 +1,6 @@
 'use client';
 
-import { HomeView } from '@/contexts/course-mode/interface/web/react/chat/client/HomeView';
+import { HomeView } from '@/app/HomeView';
 import { Project } from '@/shared/entities/project';
 
 const mockProject: Project = {
