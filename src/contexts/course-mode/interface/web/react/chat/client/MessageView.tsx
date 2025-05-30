@@ -17,7 +17,7 @@ export function MessageView({ conversation, isGenerating }: ChatViewProps) {
     }, []);
 
     if (!isClient) {
-        return null; // Or a loading spinner
+        return null;
     }
 
     return <ChatHistory conversation={conversation} isGenerating={isGenerating} />;
