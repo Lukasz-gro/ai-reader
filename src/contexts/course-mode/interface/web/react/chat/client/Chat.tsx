@@ -30,21 +30,21 @@ export function Chat({ conversation }: ChatProps) {
     };
 
     return (
-        <ChatBox>
-            <MessageView
-                conversation={currentConversation}
-                isGenerating={isGenerating}
-            />
-            {isGenerating && (
-                <PendingAssistantMessage
-                    key={streamKey}
+        <div className='flex flex-col h-full max-h-screen'>
+            <div className='flex-1 overflow-y-auto custom-scrollbar'>
+                <MessageView
                     conversation={currentConversation}
-                    onConversationUpdate={setCurrentConversation}
-                    onDone={() => {
-                        setIsGenerating(false);
-                    }}
+                    isGenerating={isGenerating}
                 />
-            )}
+                {isGenerating && (
+                    <PendingAssistantMessage
+                        key={streamKey}
+                        conversation={currentConversation}
+                        onConversationUpdate={setCurrentConversation}
+                        onDone={() => setIsGenerating(false)}
+                    />
+                )}
+            </div>
             <MessageForm onSubmitAction={handleSubmit}>
                 <MessageInput
                     type='text'
@@ -57,15 +57,9 @@ export function Chat({ conversation }: ChatProps) {
                     {isGenerating ? 'Generating...' : 'Send'}
                 </PrimaryButton>
             </MessageForm>
-        </ChatBox>
+        </div>
     );
 }
-
-const ChatBox: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className='bg-p-90 rounded-lg shadow-lg shadow-black/30 border-1 border-p-80 px-8 py-10 max-w-[700px] w-full my-8 flex flex-col'>
-        {children}
-    </div>
-);
 
 const MessageForm: React.FC<{ onSubmitAction: (e: React.FormEvent) => void; children: React.ReactNode }> = ({ onSubmitAction, children }) => (
     <form onSubmit={onSubmitAction} className='flex gap-4 p-4 border-t-1 border-p-70'>

@@ -1,24 +1,24 @@
-import { CourseRepo } from '../../application/ports/out/course-repo';
+import { ProjectRepo } from '../../application/ports/out/project-repo';
 import { LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
-import { StartCourseConversation } from '../../application/ports/in/start-course-conversation';
-import { Course } from '../../entities/course';
-import { Conversation } from '@/shared/entities/conversation';
+import { StartProjectConversation } from '../../application/ports/in/start-project-conversation';
+import { Conversation, Mode } from '@/shared/entities/conversation';
 import { AddMessageToChat } from '../../application/ports/in/add-message-to-chat';
-import { StartCourseConversationConcrete } from '../../application/use-cases/start-course-conversation-concrete';
+import { StartProjectConversationUseCase } from '../../application/use-cases/start-project-conversation-use-case';
 import { AddMessageToChatUseCase } from '../../application/use-cases/add-message-to-chat';
-import { InMemoryCourseRepo } from '../../infra/repo/in-memory-course-repo';
+import { InMemoryProjectRepo } from '../../infra/repo/in-memory-project-repo';
+import { Project } from '@/shared/entities/project';
 import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
 
 export class CourseModeController {
     constructor(
         private readonly llmProvider: LLMProvider,
-        private readonly courseRepo: CourseRepo,
-        private readonly startCourseConversation: StartCourseConversation,
+        private readonly courseRepo: ProjectRepo,
+        private readonly startCourseConversation: StartProjectConversation,
         private readonly addMessageToChat: AddMessageToChat,
     ) { }
 
-    onCreateNewCourseConversation = async (course: Course) => {
-        return await this.startCourseConversation.execute(course, this.llmProvider, this.courseRepo);
+    onCreateNewProjectConversation = async (project: Project, mode: Mode) => {
+        return await this.startCourseConversation.execute(project, mode, this.llmProvider, this.courseRepo);
     };
 
     onNewUserMessage = async (conversation: Conversation, message: string): Promise<Conversation> => {
@@ -34,16 +34,16 @@ export class CourseModeController {
     };
 }
 
-const startCourseConversation = new StartCourseConversationConcrete();
+const startCourseConversation = new StartProjectConversationUseCase();
 const addUserMessageToChat = new AddMessageToChatUseCase();
-const courseRepo = new InMemoryCourseRepo();
+const projectRepo = new InMemoryProjectRepo();
 
 const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
 const llmProvider = new OpenAIProvider(apiKey);
 // const llmProvider = new MockLLMProvider();
 
-const courseController = new CourseModeController(llmProvider, courseRepo, startCourseConversation, addUserMessageToChat);
+const courseController = new CourseModeController(llmProvider, projectRepo, startCourseConversation, addUserMessageToChat);
 
 export {
     courseController
