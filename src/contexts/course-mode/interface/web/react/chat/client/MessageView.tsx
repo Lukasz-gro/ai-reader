@@ -1,7 +1,7 @@
 'use client';
 import { Conversation } from '@/shared/entities/conversation';
 import { AnimatePresence } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatedChatMessage } from '@/contexts/course-mode/interface/web/react/chat/client/ChatMessage';
 
 interface ChatViewProps {
@@ -10,6 +10,16 @@ interface ChatViewProps {
 }
 
 export function MessageView({ conversation, isGenerating }: ChatViewProps) {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        return null; // Or a loading spinner
+    }
+
     return <ChatHistory conversation={conversation} isGenerating={isGenerating} />;
 }
 
