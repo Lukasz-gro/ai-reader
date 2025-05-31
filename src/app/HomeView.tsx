@@ -1,9 +1,12 @@
+// For now we keep all of component in this file, after discussons are resolved we will 
 import React, { useState } from 'react';
 import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
+import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
+import { QuizSection } from '@/contexts/course-mode/interface/web/react/quiz/client/general-view/QuizSection';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -12,7 +15,6 @@ export interface HomeViewProps {
 export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
     const [activeTab, setActiveTab] = useState<Mode>('course');
     const [activeProject, setActiveProject] = useState<Project | null>(null);
-    const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
 
     return (
         <div className='flex w-full h-screen bg-p-90 text-p-10'>
@@ -22,7 +24,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
             <main className='flex-1 flex flex-col'>
                 <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} />
                 <section className='flex-1 overflow-y-auto p-6'>
-                    <CenterSection activeTab={activeTab} activeProject={activeProject} activeConversation={activeConversation} setActiveConversation={setActiveConversation} />
+                    <CenterSection 
+                        activeTab={activeTab} 
+                        activeProject={activeProject}
+                    />
                 </section>
             </main>
             <aside className='w-64 border-l border-p-80 bg-sd-90/30 flex flex-col h-full'>
@@ -137,37 +142,35 @@ const ConversationModeSelector: React.FC<{activeTab: Mode, onSelectActiveTab: (m
 
 const CenterSection: React.FC<{
     activeProject: Project | null,
-    activeConversation: Conversation | null,
-    activeTab: Mode,
-    setActiveConversation: (newActiveConversation: Conversation) => void,
-}> = ({ activeProject, activeConversation, activeTab, setActiveConversation }) => {
-    return (
-        <div className={'flex flex-col h-full'}>
-            {!activeProject ? (
-                <NoProjectPlaceholder />
-            ) :
-                !activeConversation ? (
-                    <StartConversationPlaceholder
-                        activeProject={activeProject}
-                        activeTab={activeTab}
-                        setActiveConversation={setActiveConversation}
-                    />
-                ) : (
-                    <Chat conversation={activeConversation} />
-                )}
-        </div>
-    );
+    activeTab: Mode
+}> = ({ activeProject, activeTab }) => {
+    if (!activeProject) {
+        return <NoProjectPlaceholder />;
+    }
+
+    if (activeTab === 'quiz') {
+        return <QuizSection activeProject={activeProject}></QuizSection>;
+    }
+    return <ConversationSection activeProject={activeProject} activeTab={activeTab}/>;
 };
 
-const NoProjectPlaceholder: React.FC = () => {
+const ConversationSection: React.FC<{
+    activeProject: Project,
+    activeTab: Mode
+}> = ({ activeProject, activeTab }) => {
+    const [activeConversation, setActiveConversation] = useState<Conversation|null>(null);
+
     return (
-        <div className={'self-center mt-8'}>
-            <h1 className={'text-p-70'}>
-                No project selected.
-            </h1>
-            <p className={'text-p-70 text-center'}>
-                Select existing project or add a new one.
-            </p>
+        <div className={'flex flex-col h-full'}>
+            {!activeConversation ? (
+                <StartConversationPlaceholder
+                    activeProject={activeProject}
+                    activeTab={activeTab}
+                    setActiveConversation={setActiveConversation}
+                />
+            ) : (
+                <Chat conversation={activeConversation} />
+            )}
         </div>
     );
 };

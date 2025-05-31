@@ -6,4 +6,4 @@ export interface Conversation {
     mode: Mode;
 }
 
-export type Mode = 'course' | 'explain' | 'quiz';
+export type Mode = 'course' | 'explain' | 'quiz' ;

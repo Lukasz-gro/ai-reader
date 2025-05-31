@@ -13,6 +13,7 @@ const mockProject: Project = {
     },
     materials: [],
     conversations: [],
+    quizes: []
 };
 
 export default function Home() {
