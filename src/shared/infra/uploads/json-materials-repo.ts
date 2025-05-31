@@ -1,5 +1,5 @@
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
-import { StoredMaterial } from '@/shared/entities/stored-material';
+import { Material } from '@/shared/entities/material';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
@@ -10,7 +10,7 @@ export class JsonMaterialRepo implements MaterialRepo {
         this.dbPath = path.resolve(process.cwd(), 'mockdb', 'materials.json');
     }
 
-    async upsert(material: StoredMaterial): Promise<StoredMaterial> {
+    async upsert(material: Material): Promise<Material> {
         const materials = await this.readAll();
         const idx = materials.findIndex(m => m.id === material.id);
         if (idx !== -1) {
@@ -22,7 +22,7 @@ export class JsonMaterialRepo implements MaterialRepo {
         return material;
     }
 
-    async getAll(): Promise<StoredMaterial[]> {
+    async getAll(): Promise<Material[]> {
         return this.readAll();
     }
 
@@ -30,6 +30,7 @@ export class JsonMaterialRepo implements MaterialRepo {
         try {
             await fs.unlink(this.dbPath);
         } catch (err: unknown) {
+            // @ts-expect-error ignore file not existing
             if (err.code !== 'ENOENT') {
                 throw err;
             }
@@ -46,17 +47,17 @@ export class JsonMaterialRepo implements MaterialRepo {
         }
     }
 
-    private async readAll(): Promise<StoredMaterial[]> {
+    private async readAll(): Promise<Material[]> {
         await this.ensureFileExists();
         const raw = await fs.readFile(this.dbPath, 'utf-8');
         try {
-            return JSON.parse(raw) as StoredMaterial[];
+            return JSON.parse(raw) as Material[];
         } catch {
             return [];
         }
     }
 
-    private async writeAll(materials: StoredMaterial[]): Promise<void> {
+    private async writeAll(materials: Material[]): Promise<void> {
         await this.ensureFileExists();
         await fs.writeFile(this.dbPath, JSON.stringify(materials, null, 2), 'utf-8');
     }

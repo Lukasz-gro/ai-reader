@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
@@ -6,6 +6,7 @@ import { Conversation, Mode } from '@/shared/entities/conversation';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
 import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
+import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -23,8 +24,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
             <main className='flex-1 flex flex-col'>
                 <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} />
                 <section className='flex-1 overflow-y-auto p-6'>
-                    <CenterSection 
-                        activeTab={activeTab} 
+                    <CenterSection
+                        activeTab={activeTab}
                         activeProject={activeProject}
                     />
                 </section>
@@ -209,13 +210,15 @@ const StartConversationPlaceholder: React.FC<{
     );
 };
 
-const RightSideSection: React.FC<{activeProject: Project | null}> = ({ activeProject }) => {
+export function RightSideSection({ activeProject }: { activeProject: Project | null }) {
+    const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
+    useEffect(() => {
+        getAcceptedMimeTypes().then(res => setAcceptedMimeTypes(res));
+    }, []);
     return (
         <div className={'flex flex-col h-full'}>
             <div className={'border-b border-sd-80'}>
-                <h3 className={'p-4'}>
-                    Materials
-                </h3>
+                <h3 className={'p-4'}>Materials</h3>
             </div>
             <div className={'p-4 flex flex-col h-full'}>
                 <div className='flex-1 mt-2 overflow-y-auto flex flex-col gap-2'>
@@ -228,10 +231,28 @@ const RightSideSection: React.FC<{activeProject: Project | null}> = ({ activePro
                         </div>
                     ))}
                 </div>
-                <div className='border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-30/15 transition-colors duration-150'>
-                    Drop new materials
-                </div>
+                <form
+                    action={uploadMaterialAction}
+                    className='mt-4'
+                >
+                    <label
+                        htmlFor='file-upload'
+                        className='border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-30/15 transition-colors duration-150'
+                        style={{ minHeight: 80 }}
+                    >
+                        Drop new materials or click to upload
+                        <input
+                            id='file-upload'
+                            name='file'
+                            type='file'
+                            className='hidden'
+                            accept={acceptedMimeTypes.join(' ')}
+                            required
+                            onChange={e => { e.currentTarget.form?.requestSubmit(); }}
+                        />
+                    </label>
+                </form>
             </div>
         </div>
     );
-};
+}

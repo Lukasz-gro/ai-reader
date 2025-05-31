@@ -31,12 +31,11 @@ describe('upload material use case', () => {
     });
 
     it('should upload parsed material content to repo', async () => {
-        await useCase.execute(manager, repo, testUpload);
+        const uploaded = await useCase.execute(manager, repo, testUpload);
 
         const stored = await repo.getAll();
-        const parsed = await parser.parse(testUpload);
         expect(stored.length).toEqual(1);
-        expect(stored[0].content).toEqual(parsed);
+        expect(stored[0]).toEqual(uploaded);
     });
 
     it('should throw when no parser can handle the file', async () => {

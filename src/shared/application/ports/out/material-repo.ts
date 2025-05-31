@@ -1,7 +1,7 @@
-import { StoredMaterial } from '@/shared/entities/stored-material';
+import { Material } from '@/shared/entities/material';
 
 export interface MaterialRepo {
-    upsert(material: StoredMaterial): Promise<StoredMaterial>;
-    getAll(): Promise<StoredMaterial[]>;
+    upsert(material: Material): Promise<Material>;
+    getAll(): Promise<Material[]>;
     clear(): Promise<void>;
 }

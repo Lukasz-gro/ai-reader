@@ -1,10 +1,10 @@
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
-import { StoredMaterial } from '@/shared/entities/stored-material';
+import { Material } from '@/shared/entities/material';
 
 export class InMemoryMaterialRepo implements MaterialRepo {
-    materials: StoredMaterial[] = [];
+    materials: Material[] = [];
 
-    upsert(material: StoredMaterial): Promise<StoredMaterial> {
+    upsert(material: Material): Promise<Material> {
         if (this.materials.find(s => s.id === material.id)) {
             this.materials = this.materials.map(s => s.id === material.id ? material : s);
         } else {
@@ -13,7 +13,7 @@ export class InMemoryMaterialRepo implements MaterialRepo {
         return Promise.resolve(material);
     }
 
-    getAll(): Promise<StoredMaterial[]> {
+    getAll(): Promise<Material[]> {
         return Promise.resolve(this.materials);
     }
 
