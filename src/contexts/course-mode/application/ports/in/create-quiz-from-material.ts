@@ -1,9 +1,10 @@
+import { Project } from '@/shared/entities/project';
 import { Quiz } from '../../../entities/quiz';
 import { QuizProvider } from '../out/quiz-provider';
 
-export interface CreateQuizFromContent {
+export interface CreateQuizFromMaterial {
     execute(
-        content: string,
+        project: Project,
         quizProvider: QuizProvider
     ): Promise<Quiz>;
 }
