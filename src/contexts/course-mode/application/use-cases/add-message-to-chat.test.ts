@@ -1,11 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { AddMessageToChatUseCase } from '@/contexts/course-mode/application/use-cases/add-message-to-chat';
 import { Conversation } from '@/shared/entities/conversation';
 import { MockConversation } from '@/shared/infra/mocks/mock-conversation';
 import { Role } from '@/shared/application/ports/out/llm-provider';
 
 describe('add user message to chat use case', () => {
-    const useCase = new AddMessageToChatUseCase();
+    let useCase: AddMessageToChatUseCase;
+
+    beforeEach(() => {
+        useCase = new AddMessageToChatUseCase();
+    });
 
     for (const role of [Role.USER, Role.ASSISTANT]) {
         it(`should return conversation with added ${role} message`, async () => {
