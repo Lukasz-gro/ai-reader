@@ -6,16 +6,21 @@ import pdfParse from 'pdf-parse';
 export class PdfParser implements UploadsParser {
     private readonly validMimeTypes = ['application/pdf'];
 
-    getValidMimeTypes() { return this.validMimeTypes; }
-    canParse(file: UserUpload)      { return this.validMimeTypes.includes(file.mimeType); }
+    getValidMimeTypes() {
+        return this.validMimeTypes;
+    }
+
+    canParse(file: UserUpload)      {
+        return this.validMimeTypes.includes(file.mimeType);
+    }
 
     async parse(file: UserUpload): Promise<ParsedContent> {
-        const { text, numpages, info, metadata } = await pdfParse(file.data);
+        const { text, numpages } = await pdfParse(file.data);
 
         return {
             type: 'text',
             content: text.trim(),
-            metadata: { pages: numpages, info, metadata },
+            metadata: { pages: numpages },
         };
     }
 }

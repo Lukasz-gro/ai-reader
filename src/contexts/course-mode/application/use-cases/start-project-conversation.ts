@@ -57,11 +57,12 @@ function generateFirstMessage(project: Project) {
 function getProjectSystemPrompt(project: Project) {
     const projectTitle = project.title;
     const projectProgress = generateUserProgressString(project.roadmap.checkpoints);
-    const projectContext = generateProjectContextString(project.materials);
+    // TODO
+    // const projectContext = generateProjectContextString(project.materials);
+    void generateProjectContextString;
 
     return  `You are a teacher responsible for teaching the user about ${projectTitle}. 
     Based on the following materials, think of a learning plan and ask the user whether to proceed with it. 
-    ${projectContext}
     ${projectProgress}
     `;
 }

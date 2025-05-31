@@ -127,3 +127,22 @@
 
 @layer components {
 }
+
+@layer utilities {
+  .with-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxIiBmaWxsPSIjMDAwIiBvcGFjaXR5PSIxIi8+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjEiLz48Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iMSIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==");
+    background-repeat: repeat;
+    background-size: 4px 4px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .with-noise {
+    position: relative;
+    z-index: 1;
+  }
+}

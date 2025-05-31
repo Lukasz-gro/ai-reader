@@ -7,6 +7,7 @@ import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucid
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
 import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
 import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
+import { Material } from '@/shared/entities/material';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -31,7 +32,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
                 </section>
             </main>
             <aside className='w-64 border-l border-p-80 bg-sd-90/30 flex flex-col h-full'>
-                <RightSideSection activeProject={activeProject} />
+                <RightSideSection projectMaterials={[]} />
             </aside>
         </div>
     );
@@ -94,7 +95,7 @@ const ProjectPicker: React.FC<{
                     <div className={'flex flex-row gap-4'}>
                         <div className={'flex gap-1 items-center'}>
                             <FileIcon className={'w-[1rem] h-[1rem] stroke-sd-30'}/>
-                            <span className={'text-sd-30 relative top-[1px]'}>{project.materials.length}</span>
+                            <span className={'text-sd-30 relative top-[1px]'}>{project.materialIds.length}</span>
                         </div>
                         <div className={'flex gap-1 items-center'}>
                             <MessageCircleIcon className={'w-[1rem] h-[1rem] stroke-sd-30'}/>
@@ -210,49 +211,88 @@ const StartConversationPlaceholder: React.FC<{
     );
 };
 
-export function RightSideSection({ activeProject }: { activeProject: Project | null }) {
+export const RightSideSection: React.FC<{ projectMaterials: Material[] }> = ({ projectMaterials }) => {
     const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
+    const [materials, setMaterials] = useState<Material[]>(projectMaterials);
+
+    async function handleUpload(formData: FormData) {
+        const material = await uploadMaterialAction(formData);
+        setMaterials((prev) => [...prev, material]);
+    }
+
     useEffect(() => {
         getAcceptedMimeTypes().then(res => setAcceptedMimeTypes(res));
     }, []);
+
     return (
         <div className={'flex flex-col h-full'}>
             <div className={'border-b border-sd-80'}>
                 <h3 className={'p-4'}>Materials</h3>
             </div>
             <div className={'p-4 flex flex-col h-full'}>
-                <div className='flex-1 mt-2 overflow-y-auto flex flex-col gap-2'>
-                    {activeProject?.materials.map((res) => (
-                        <div
-                            key={res.id}
-                            className='px-3 py-2 rounded-lg bg-sd-30 text-sd-10'
-                        >
-                            {res.title}
-                        </div>
-                    ))}
-                </div>
-                <form
-                    action={uploadMaterialAction}
-                    className='mt-4'
-                >
-                    <label
-                        htmlFor='file-upload'
-                        className='border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-30/15 transition-colors duration-150'
-                        style={{ minHeight: 80 }}
-                    >
-                        Drop new materials or click to upload
-                        <input
-                            id='file-upload'
-                            name='file'
-                            type='file'
-                            className='hidden'
-                            accept={acceptedMimeTypes.join(' ')}
-                            required
-                            onChange={e => { e.currentTarget.form?.requestSubmit(); }}
-                        />
-                    </label>
-                </form>
+                <MaterialsDisplay materials={materials} />
+                <MaterialUploadForm acceptedTypes={acceptedMimeTypes} handleUpload={handleUpload} />
             </div>
         </div>
     );
-}
+};
+
+const MaterialsDisplay: React.FC<{ materials: Material[] }> = ({ materials }) => {
+    const gradientDefault = 'bg-gradient-to-b from-p-70/70 via-p-70/70 to-sd-90/30';
+    const gradientHover = 'hover:from-p-70 hover:via-p-70/70 hover:to-sd-90/30';
+
+    return (
+        <div className='flex-1 overflow-y-auto flex flex-col gap-2'>
+            {materials.map(m => (
+                <div key={m.id} className={`${gradientDefault} ${gradientHover} with-noise transition-colors duration-150 px-4 pt-4 pb-8 mb-[-4px] rounded-t-md overflow-x-hidden text-ellipsis`}>
+                    <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
+                    {typeof m.content.metadata?.pages === 'number' &&
+                        <p className={'text-sm font-mono'}>{m.content.metadata.pages} pages</p>}
+                    {typeof m.content.metadata?.lines === 'number' &&
+                        <p className={'text-sm font-mono'}>{m.content.metadata.lines} lines</p>}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const MaterialUploadForm: React.FC<{acceptedTypes: string[], handleUpload: (formData: FormData) => Promise<void>}> = ({ acceptedTypes, handleUpload }) => {
+    const [pending, setPending] = useState(false);
+
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setPending(true);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        await handleUpload(formData);
+        setPending(false);
+    }
+
+    return (
+        <form
+            onSubmit={onSubmit}
+            className='mt-4'
+        >
+            <label
+                htmlFor='file-upload'
+                className='group border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-70/10 transition-colors duration-150'
+                style={{ minHeight: 80 }}
+            >
+                {pending ?
+                    <em className='text-sd-40'>Uploading...</em> :
+                    <p className={'text-sd-40 group-hover:text-sd-10'}>Drop new material or click to upload</p>
+                }
+                <input
+                    id='file-upload'
+                    name='file'
+                    type='file'
+                    className='hidden'
+                    accept={acceptedTypes.join(' ')}
+                    required
+                    disabled={pending}
+                    onChange={e => { e.currentTarget.form?.requestSubmit(); }}
+                />
+            </label>
+        </form>
+    );
+};

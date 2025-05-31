@@ -11,7 +11,7 @@ const mockProject: Project = {
         title: 'Mock Project Roadmap',
         checkpoints: []
     },
-    materials: [],
+    materialIds: [],
     conversations: [],
     quizes: []
 };
