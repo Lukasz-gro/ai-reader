@@ -14,5 +14,4 @@ export interface Question {
     readonly id: string;
     readonly content: string;
     readonly type: QuestionType;
-    validate(answer: Answer, services: QuestionServices): Promise<ValidationResult>;
 }

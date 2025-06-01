@@ -1,13 +1,12 @@
 import { z } from 'zod';
 import { MultipleChoiceQuestion } from '../../entities/multiple-choice-question';
-import { QuizQuestion } from '../../entities/quiz-question';
 
 export const ChoiceSchema = z.object({
     id: z.string(),
     label: z.string()
 });
 
-export const MultipleChoiceQuestionInputSchema = z.object({
+export const MultipleChoiceQuestionSchema = z.object({
     id: z.string(),
     type: z.literal('multiple_choice'),
     content: z.string(),
@@ -19,15 +18,6 @@ export const MultipleChoiceQuestionInputSchema = z.object({
         message: "correctChoiceId must match one of the choice IDs",
         path: ["correctChoiceId"]
     }
-);
+) as unknown as z.ZodType<MultipleChoiceQuestion>;
 
-export const MultipleChoiceQuestionSchema = MultipleChoiceQuestionInputSchema.transform(
-    (data) => new MultipleChoiceQuestion(
-        data.id,
-        data.content,
-        data.choices,
-        data.correctChoiceId
-    )
-) as unknown as z.ZodType<QuizQuestion>;
-
-export type MultipleChoiceQuestionInput = z.infer<typeof MultipleChoiceQuestionInputSchema>; 
+export type MultipleChoiceQuestionInput = z.infer<typeof MultipleChoiceQuestionSchema>; 

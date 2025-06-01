@@ -1,9 +1,9 @@
-import { SerializedMultipleChoiceQuestion } from '@/contexts/quiz-mode/infra/serialization/quiz-serializer';
+import { MultipleChoiceQuestion } from '@/contexts/quiz-mode/entities/multiple-choice-question';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 
 interface MultipleChoiceQuestionViewProps {
-    question: SerializedMultipleChoiceQuestion;
+    question: MultipleChoiceQuestion;
     onAnswer: (answerId: string) => void;
     isAnswered?: boolean;
     isCorrect?: boolean;
