@@ -1,13 +1,13 @@
-import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { Project } from '@/shared/entities/project';
 import { useState } from 'react';
 import { createNewQuiz } from '../../server/quiz-actions';
 import { QuizView } from './QuizView';
+import { SerializedQuiz } from '@/contexts/quiz-mode/infra/serialization/quiz-serializer';
 
 export const QuizSection: React.FC<{
     activeProject: Project,
 }> = ({ activeProject }) => {
-    const [activeQuiz, setActiveQuiz] = useState<Quiz|null>(null);
+    const [activeQuiz, setActiveQuiz] = useState<SerializedQuiz | null>(null);
 
     if (!activeQuiz) {
         return <div className={'flex flex-col h-full'}>

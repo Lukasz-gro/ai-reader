@@ -12,9 +12,19 @@ export class OpenAIQuizProvider implements QuizProvider {
     }
 
     async generateQuestions<T extends QuizQuestion>(content: string, schema: ZodSchema<T>, numOfQuestions = 2): Promise<T[]> {
-        const arraySchema = z.array(schema);
-
-        const jsonSchema = zodToJsonSchema(arraySchema, 'QuizQuestions');
+        const jsonSchema = zodToJsonSchema(schema, 'QuizQuestion');
+        const functionParameters = {
+            type: 'object',
+            properties: {
+                questions: {
+                    type: 'array',
+                    items: jsonSchema,
+                    minItems: numOfQuestions,
+                    maxItems: numOfQuestions
+                }
+            },
+            required: ['questions']
+        };
 
         const completion = await this.client.chat.completions.create({
             model: 'gpt-4.1',
@@ -24,7 +34,13 @@ export class OpenAIQuizProvider implements QuizProvider {
                     content:
                     'You are a precise JSON-only API. '
                     + 'Return **only** JSON that matches the parameters of the function you will call. '
-                    + 'You help students learn the subject they are interested in.',
+                    + 'You help students learn the subject they are interested in. '
+                    + 'Each question must have: '
+                    + '- id: a unique string identifier '
+                    + '- type: must be "multiple_choice" '
+                    + '- content: the question text '
+                    + '- choices: an array of objects with id and label fields '
+                    + '- correctChoiceId: must match one of the choice IDs',
                 },
                 { role: 'user', content },
             ],
@@ -34,21 +50,20 @@ export class OpenAIQuizProvider implements QuizProvider {
                     function: {
                         name: 'answer',
                         description:
-                    `Return an **array** of quiz-question objects that match the schema. The array should have ${numOfQuestions} elements.`,
-                        parameters: jsonSchema,
+                    `Return an object with a 'questions' array containing ${numOfQuestions} quiz-question objects that match the schema.`,
+                        parameters: functionParameters,
                     },
                 },
             ],
             tool_choice: { type: 'function', function: { name: 'answer' } },
         });
-
+        console.log(completion);
         const msg = completion.choices[0].message;
         const call = msg.tool_calls?.[0];
         if (!call) {
             throw new Error('Model replied without calling the `answer` tool');
         }
         const args = JSON.parse(call.function.arguments);
-
-        return arraySchema.parse(args);
+        return z.array(schema).parse(args.questions);
     }
 }

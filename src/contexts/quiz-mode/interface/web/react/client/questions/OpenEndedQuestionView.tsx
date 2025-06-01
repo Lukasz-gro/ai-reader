@@ -1,9 +1,9 @@
-import { OpenEndedQuestion } from '@/contexts/quiz-mode/entities/open-ended-question';
+import { SerializedOpenEndedQuestion } from '@/contexts/quiz-mode/infra/serialization/quiz-serializer';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 
 interface OpenEndedQuestionViewProps {
-    question: OpenEndedQuestion;
+    question: SerializedOpenEndedQuestion;
     onAnswer: (answer: string) => void;
     isAnswered?: boolean;
     isCorrect?: boolean;

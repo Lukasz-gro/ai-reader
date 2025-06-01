@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { MultipleChoiceQuestionView } from '../questions/MultipleChoiceQuestionView';
 import { OpenEndedQuestionView } from '../questions/OpenEndedQuestionView';
-import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
-import { motion, AnimatePresence } from 'framer-motion';
+import { SerializedQuiz } from '@/contexts/quiz-mode/infra/serialization/quiz-serializer';
 
 interface QuizViewProps {
-    quiz: Quiz;
+    quiz: SerializedQuiz;
 }
 
 export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
@@ -14,7 +13,6 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
 
     const currentQuestion = quiz.questions[currentQuestionIndex];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleAnswer = (answer: unknown) => {
         setIsCurrentQuestionAnswered(true);
     };
@@ -27,7 +25,7 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
     };
 
     const renderQuestion = () => {
-        if ('choices' in currentQuestion) {
+        if (currentQuestion.type === 'multiple_choice') {
             return (
                 <MultipleChoiceQuestionView
                     question={currentQuestion}
@@ -47,38 +45,15 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
     };
 
     return (
-        <div className='w-full max-w-4xl mx-auto p-6'>
-            <div className='mb-6'>
-                <h2 className='text-2xl font-bold text-p-10'>{quiz.name}</h2>
-                <p className='text-p-20'>
-                    Question {currentQuestionIndex + 1} of {quiz.questions.length}
-                </p>
-            </div>
-
-            <AnimatePresence mode='wait'>
-                <motion.div
-                    key={currentQuestionIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                >
-                    {renderQuestion()}
-                </motion.div>
-            </AnimatePresence>
-
+        <div className="flex flex-col h-full">
+            {renderQuestion()}
             {isCurrentQuestionAnswered && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className='mt-6 flex justify-end'
+                <button
+                    onClick={handleNext}
+                    className="mt-4 px-6 py-2 bg-a-50 hover:bg-a-50/80 text-p-10 rounded-lg transition-colors cursor-pointer"
                 >
-                    <button
-                        onClick={handleNext}
-                        className='px-6 py-2 bg-p-10 text-p-90 rounded-lg hover:bg-p-20 transition-colors'
-                    >
-                        {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                    </button>
-                </motion.div>
+                    {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                </button>
             )}
         </div>
     );
