@@ -1,7 +1,7 @@
-import { Quiz } from '@/contexts/course-mode/entities/quiz';
+import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { Project } from '@/shared/entities/project';
-import { OpenEndedQuestion } from '@/contexts/course-mode/entities/open-ended-question';
-import { MultipleChoiceQuestion } from '@/contexts/course-mode/entities/multiple-choice-question';
+import { OpenEndedQuestion } from '@/contexts/quiz-mode/entities/open-ended-question';
+import { MultipleChoiceQuestion } from '@/contexts/quiz-mode/entities/multiple-choice-question';
 import { v4 as uuidv4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

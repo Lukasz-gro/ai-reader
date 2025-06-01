@@ -1,4 +1,4 @@
-import { QuizQuestion } from '@/contexts/course-mode/entities/quiz-question';
+import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { ZodSchema } from 'zod';
 
 export interface QuizProvider {

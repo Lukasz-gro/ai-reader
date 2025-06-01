@@ -1,4 +1,4 @@
-import { QuizQuestion } from '@/contexts/course-mode/entities/quiz-question';
+import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { Answer, QuestionServices, ValidationResult } from '../../../entities/question';
 
 export interface CheckUserAnswer {

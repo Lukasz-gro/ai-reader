@@ -1,4 +1,4 @@
-import { Quiz } from '@/contexts/course-mode/entities/quiz';
+import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { Project } from '@/shared/entities/project';
 import { useState } from 'react';
 import { createNewQuiz } from '../../server/quiz-actions';

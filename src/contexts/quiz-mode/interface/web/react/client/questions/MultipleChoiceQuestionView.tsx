@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestion } from '@/contexts/course-mode/entities/multiple-choice-question';
+import { MultipleChoiceQuestion } from '@/contexts/quiz-mode/entities/multiple-choice-question';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 

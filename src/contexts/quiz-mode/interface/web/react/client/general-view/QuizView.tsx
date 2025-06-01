@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MultipleChoiceQuestionView } from '../questions/MultipleChoiceQuestionView';
 import { OpenEndedQuestionView } from '../questions/OpenEndedQuestionView';
-import { Quiz } from '@/contexts/course-mode/entities/quiz';
+import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface QuizViewProps {

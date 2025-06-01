@@ -6,7 +6,7 @@ import { createNewProjectConversation } from '@/contexts/course-mode/interface/w
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
-import { QuizSection } from '@/contexts/course-mode/interface/web/react/quiz/client/general-view/QuizSection';
+import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
 
 export interface HomeViewProps {
     projects: Project[];

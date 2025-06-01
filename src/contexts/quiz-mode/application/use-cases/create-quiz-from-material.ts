@@ -1,7 +1,7 @@
 import { Project } from '@/shared/entities/project';
-import { Quiz } from '../../entities/quiz';
-import { CreateQuizFromMaterial } from '../ports/in/create-quiz-from-material';
-import { QuizProvider } from '../ports/out/quiz-provider';
+import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
+import { CreateQuizFromMaterial } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
+import { QuizProvider } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
 
 export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

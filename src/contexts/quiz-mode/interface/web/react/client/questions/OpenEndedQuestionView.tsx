@@ -1,4 +1,4 @@
-import { OpenEndedQuestion } from '@/contexts/course-mode/entities/open-ended-question';
+import { OpenEndedQuestion } from '@/contexts/quiz-mode/entities/open-ended-question';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 
