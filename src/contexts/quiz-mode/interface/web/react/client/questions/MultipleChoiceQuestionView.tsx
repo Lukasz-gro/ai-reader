@@ -1,30 +1,38 @@
 import { MultipleChoiceQuestion } from '@/contexts/quiz-mode/entities/multiple-choice-question';
+import { Answer } from '@/contexts/quiz-mode/entities/question';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
+import { QuestionState } from '../general-view/QuizView';
 
 interface MultipleChoiceQuestionViewProps {
     question: MultipleChoiceQuestion;
-    onAnswer: (answerId: string) => void;
-    isAnswered?: boolean;
-    isCorrect?: boolean;
+    onAnswer: (answer: Answer) => void;
+    questionState: QuestionState;
 }
 
 export const MultipleChoiceQuestionView: React.FC<MultipleChoiceQuestionViewProps> = ({
     question,
     onAnswer,
-    isAnswered = false,
-    isCorrect = false,
+    questionState
 }) => {
     const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
+    const [isConfirming, setIsConfirming] = useState(false);
 
     const handleChoiceSelect = (choiceId: string) => {
-        if (isAnswered) return;
+        if (questionState.answered) return;
         setSelectedChoiceId(choiceId);
-        onAnswer(choiceId);
+        setIsConfirming(true);
+    };
+
+    const handleConfirm = () => {
+        if (selectedChoiceId && !questionState.answered) {
+            onAnswer({ value: selectedChoiceId });
+            setIsConfirming(false);
+        }
     };
 
     const getChoiceStyle = (choiceId: string) => {
-        if (!isAnswered) {
+        if (!questionState.answered) {
             return selectedChoiceId === choiceId
                 ? 'bg-sd-50 text-p-10 border-sd-50'
                 : 'bg-p-90 text-p-10 border-p-70 hover:bg-p-80';
@@ -34,7 +42,7 @@ export const MultipleChoiceQuestionView: React.FC<MultipleChoiceQuestionViewProp
             return 'bg-sd-50 text-p-10 border-sd-50';
         }
 
-        if (choiceId === selectedChoiceId && !isCorrect) {
+        if (choiceId === selectedChoiceId && !questionState.isCorrect) {
             return 'bg-a-50 text-p-10 border-a-50';
         }
 
@@ -55,22 +63,36 @@ export const MultipleChoiceQuestionView: React.FC<MultipleChoiceQuestionViewProp
                         key={choice.id}
                         onClick={() => handleChoiceSelect(choice.id)}
                         className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${getChoiceStyle(choice.id)}`}
-                        whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                        whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                        whileHover={!questionState.answered ? { scale: 1.02 } : {}}
+                        whileTap={!questionState.answered ? { scale: 0.98 } : {}}
                     >
                         {choice.label}
                     </motion.button>
                 ))}
             </div>
-            {isAnswered && (
+            {isConfirming && !questionState.answered && (
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className='mt-4'
+                >
+                    <button
+                        onClick={handleConfirm}
+                        className='w-full p-4 bg-sd-50 text-p-10 rounded-lg hover:bg-sd-50/80 transition-colors'
+                    >
+                        Confirm Answer
+                    </button>
+                </motion.div>
+            )}
+            {questionState.answered && (
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className={`mt-4 p-3 rounded-lg ${
-                        isCorrect ? 'bg-sd-50 text-p-10' : 'bg-a-50 text-p-10'
+                        questionState.isCorrect ? 'bg-sd-50 text-p-10' : 'bg-a-50 text-p-10'
                     }`}
                 >
-                    {isCorrect ? 'Correct!' : 'Incorrect. Try again!'}
+                    {questionState.isCorrect ? 'Correct!' : 'Incorrect. Try again!'}
                 </motion.div>
             )}
         </motion.div>

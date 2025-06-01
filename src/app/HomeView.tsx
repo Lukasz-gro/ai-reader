@@ -1,4 +1,3 @@
-// For now we keep all of component in this file, after discussons are resolved we will 
 import React, { useState } from 'react';
 import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';

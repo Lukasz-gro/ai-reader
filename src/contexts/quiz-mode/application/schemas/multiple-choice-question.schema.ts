@@ -15,8 +15,8 @@ export const MultipleChoiceQuestionSchema = z.object({
 }).refine(
     (data) => data.choices.some(choice => choice.id === data.correctChoiceId),
     {
-        message: "correctChoiceId must match one of the choice IDs",
-        path: ["correctChoiceId"]
+        message: 'correctChoiceId must match one of the choice IDs',
+        path: ['correctChoiceId']
     }
 ) as unknown as z.ZodType<MultipleChoiceQuestion>;
 

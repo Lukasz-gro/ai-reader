@@ -21,6 +21,6 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
     }
 
     private extractContent(project: Project): string {
-        return `Create quiz about Poland's geography - ${project.title}`
+        return `Create quiz about Poland's geography - ${project.title}`;
     }
 }

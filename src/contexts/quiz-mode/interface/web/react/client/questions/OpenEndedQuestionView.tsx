@@ -1,10 +1,11 @@
 import { OpenEndedQuestion } from '@/contexts/quiz-mode/entities/open-ended-question';
+import { Answer } from '@/contexts/quiz-mode/entities/question';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 
 interface OpenEndedQuestionViewProps {
     question: OpenEndedQuestion;
-    onAnswer: (answer: string) => void;
+    onAnswer: (answer: Answer) => void;
     isAnswered?: boolean;
     isCorrect?: boolean;
     feedback?: string;
@@ -22,7 +23,7 @@ export const OpenEndedQuestionView: React.FC<OpenEndedQuestionViewProps> = ({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!answer.trim() || isAnswered) return;
-        onAnswer(answer);
+        onAnswer({ value: answer });
     };
 
     return (
