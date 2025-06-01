@@ -1,5 +1,6 @@
 import { Material } from './material';
 import { LearningRoadmap } from '@/contexts/course-mode/entities/learning-roadmap';
+import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { Conversation } from '@/shared/entities/conversation';
 
 export interface Project {
@@ -8,4 +9,5 @@ export interface Project {
     materials: Material[];
     roadmap: LearningRoadmap;
     conversations: Conversation[];
+    quizes: Quiz[];
 }

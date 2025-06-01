@@ -7,12 +7,11 @@ export interface Answer {
 export type QuestionType = 'multiple_choice' | 'open_ended';
 
 export interface QuestionServices {
-    evaluate?(context: string, textToEvaluate: string): Promise<ValidationResult>;
+    validate(question: Question, userAnswer: Answer, context?: string): Promise<ValidationResult>;
 }
 
 export interface Question {
     readonly id: string;
     readonly content: string;
     readonly type: QuestionType;
-    validate(answer: Answer, services: QuestionServices): Promise<ValidationResult>;
 }
