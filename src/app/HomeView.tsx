@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
@@ -6,6 +6,9 @@ import { Conversation, Mode } from '@/shared/entities/conversation';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
 import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
+import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
+import { Material } from '@/shared/entities/material';
+import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -23,14 +26,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
             <main className='flex-1 flex flex-col'>
                 <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} />
                 <section className='flex-1 overflow-y-auto p-6'>
-                    <CenterSection 
-                        activeTab={activeTab} 
+                    <CenterSection
+                        activeTab={activeTab}
                         activeProject={activeProject}
                     />
                 </section>
             </main>
             <aside className='w-64 border-l border-p-80 bg-sd-90/30 flex flex-col h-full'>
-                <RightSideSection activeProject={activeProject} />
+                <RightSideSection projectMaterials={[]} />
             </aside>
         </div>
     );
@@ -47,9 +50,11 @@ const LeftSideSection: React.FC<{
                     <h3 className={'p-4'}>
                         Projects
                     </h3>
-                    <div title={'New project'}>
-                        <PlusIcon className={'m-4 w-8 h-8 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'}/>
-                    </div>
+                    <Tooltip tooltip={'New project'}>
+                        <div>
+                            <PlusIcon className={'m-4 w-8 h-8 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'}/>
+                        </div>
+                    </Tooltip>
                 </div>
             </div>
             <div className='mt-4 flex flex-col gap-2 overflow-y-auto'>
@@ -93,7 +98,7 @@ const ProjectPicker: React.FC<{
                     <div className={'flex flex-row gap-4'}>
                         <div className={'flex gap-1 items-center'}>
                             <FileIcon className={'w-[1rem] h-[1rem] stroke-sd-30'}/>
-                            <span className={'text-sd-30 relative top-[1px]'}>{project.materials.length}</span>
+                            <span className={'text-sd-30 relative top-[1px]'}>{project.materialIds.length}</span>
                         </div>
                         <div className={'flex gap-1 items-center'}>
                             <MessageCircleIcon className={'w-[1rem] h-[1rem] stroke-sd-30'}/>
@@ -111,12 +116,16 @@ const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void}>
         <div className={'flex justify-between items-center border-b border-p-80'}>
             <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => onSelectActiveTab(newMode)} />
             <div className={'flex gap-4 mr-8'}>
-                <button>
-                    <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
-                </button>
-                <button>
-                    <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
-                </button>
+                <Tooltip tooltip={'Account'}>
+                    <button>
+                        <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                    </button>
+                </Tooltip>
+                <Tooltip tooltip={'Settings'}>
+                    <button>
+                        <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
+                    </button>
+                </Tooltip>
             </div>
         </div>
     );
@@ -209,29 +218,95 @@ const StartConversationPlaceholder: React.FC<{
     );
 };
 
-const RightSideSection: React.FC<{activeProject: Project | null}> = ({ activeProject }) => {
+export const RightSideSection: React.FC<{ projectMaterials: Material[] }> = ({ projectMaterials }) => {
+    const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
+    const [materials, setMaterials] = useState<Material[]>(projectMaterials);
+
+    async function handleUpload(formData: FormData) {
+        const material = await uploadMaterialAction(formData);
+        setMaterials((prev) => [...prev, material]);
+    }
+
+    useEffect(() => {
+        getAcceptedMimeTypes().then(res => setAcceptedMimeTypes(res));
+    }, []);
+
     return (
-        <div className={'flex flex-col h-full'}>
-            <div className={'border-b border-sd-80'}>
-                <h3 className={'p-4'}>
-                    Materials
-                </h3>
+        <div className='flex flex-col h-full'>
+            <div className='border-b border-sd-80'>
+                <h3 className='p-4'>Materials</h3>
             </div>
-            <div className={'p-4 flex flex-col h-full'}>
-                <div className='flex-1 mt-2 overflow-y-auto flex flex-col gap-2'>
-                    {activeProject?.materials.map((res) => (
-                        <div
-                            key={res.id}
-                            className='px-3 py-2 rounded-lg bg-sd-30 text-sd-10'
-                        >
-                            {res.title}
-                        </div>
-                    ))}
-                </div>
-                <div className='border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-30/15 transition-colors duration-150'>
-                    Drop new materials
+            <div className='flex flex-col h-full min-h-0'>
+                <MaterialsDisplay materials={materials} />
+                <div className='shrink-0 px-4 pb-4'>
+                    <MaterialUploadForm
+                        acceptedTypes={acceptedMimeTypes}
+                        handleUpload={handleUpload}
+                    />
                 </div>
             </div>
         </div>
+    );
+};
+
+const MaterialsDisplay: React.FC<{ materials: Material[] }> = ({ materials }) => {
+    const classDefault = 'bg-gradient-to-b from-p-70 via-p-70 to-sd-90 border-p-50/30';
+    const classHover = 'hover:-translate-y-2 hover:from-p-60 hover:via-p-60 hover:border-t-p-50';
+
+    return (
+        <div className='flex-1 overflow-y-auto flex flex-col p-4 gap-2 custom-scrollbar'>
+            {materials.map(m => (
+                <div key={m.id} className={`${classDefault} ${classHover} with-noise shrink-0 fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
+                    <div className='content-perspective'>
+                        <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
+                        {typeof m.content.metadata?.pages === 'number' &&
+                            <p className={'text-sm font-mono'}>{m.content.metadata.pages} pages</p>}
+                        {typeof m.content.metadata?.lines === 'number' &&
+                            <p className={'text-sm font-mono'}>{m.content.metadata.lines} lines</p>}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const MaterialUploadForm: React.FC<{acceptedTypes: string[], handleUpload: (formData: FormData) => Promise<void>}> = ({ acceptedTypes, handleUpload }) => {
+    const [pending, setPending] = useState(false);
+
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setPending(true);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        await handleUpload(formData);
+        setPending(false);
+    }
+
+    return (
+        <form
+            onSubmit={onSubmit}
+            className='mt-4'
+        >
+            <label
+                htmlFor='file-upload'
+                className='group border-2 border-dashed border-sd-50 rounded-lg p-6 flex items-center justify-center text-center text-sd-10 cursor-pointer select-none hover:bg-sd-70/10 transition-colors duration-150'
+                style={{ minHeight: 80 }}
+            >
+                {pending ?
+                    <em className='text-sd-40'>Uploading...</em> :
+                    <p className={'text-sd-40 group-hover:text-sd-10'}>Drop new material</p>
+                }
+                <input
+                    id='file-upload'
+                    name='file'
+                    type='file'
+                    className='hidden'
+                    accept={acceptedTypes.join(' ')}
+                    required
+                    disabled={pending}
+                    onChange={e => { e.currentTarget.form?.requestSubmit(); }}
+                />
+            </label>
+        </form>
     );
 };

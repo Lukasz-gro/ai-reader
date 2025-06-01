@@ -1,6 +1,6 @@
 import { expect, afterEach, describe, it } from 'vitest';
 import { InMemoryProjectRepo } from '../../infra/repo/in-memory-project-repo';
-import { StartProjectConversationUseCase } from './start-project-conversation-use-case';
+import { StartProjectConversationUseCase } from './start-project-conversation';
 import { LearningRoadmap } from '../../entities/learning-roadmap';
 import { Project } from '@/shared/entities/project';
 import { MockLLMProvider } from '@/shared/infra/llms/mock-llm-provider';

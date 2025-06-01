@@ -3,7 +3,7 @@ import { LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
 import { StartProjectConversation } from '../../application/ports/in/start-project-conversation';
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { AddMessageToChat } from '../../application/ports/in/add-message-to-chat';
-import { StartProjectConversationUseCase } from '../../application/use-cases/start-project-conversation-use-case';
+import { StartProjectConversationUseCase } from '../../application/use-cases/start-project-conversation';
 import { AddMessageToChatUseCase } from '../../application/use-cases/add-message-to-chat';
 import { InMemoryProjectRepo } from '../../infra/repo/in-memory-project-repo';
 import { Project } from '@/shared/entities/project';
