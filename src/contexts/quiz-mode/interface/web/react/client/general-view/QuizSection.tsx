@@ -10,7 +10,6 @@ export const QuizSection: React.FC<{
     const [activeQuiz, setActiveQuiz] = useState<Quiz|null>(null);
 
     if (!activeQuiz) {
-        // TODO: Move to separate component
         return <div className={'flex flex-col h-full'}>
             <button 
                 onClick={() => createNewQuiz(activeProject).then(setActiveQuiz)}

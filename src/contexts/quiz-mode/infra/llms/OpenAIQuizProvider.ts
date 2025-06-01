@@ -11,7 +11,7 @@ export class OpenAIQuizProvider implements QuizProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    async generateQuestions<T extends QuizQuestion>(content: string, schema: ZodSchema<T>): Promise<T[]> {
+    async generateQuestions<T extends QuizQuestion>(content: string, schema: ZodSchema<T>, numOfQuestions = 2): Promise<T[]> {
         const arraySchema = z.array(schema);
 
         const jsonSchema = zodToJsonSchema(arraySchema, 'QuizQuestions');
@@ -34,7 +34,7 @@ export class OpenAIQuizProvider implements QuizProvider {
                     function: {
                         name: 'answer',
                         description:
-                    'Return an **array** of quiz-question objects that match the schema.',
+                    `Return an **array** of quiz-question objects that match the schema. The array should have ${numOfQuestions} elements.`,
                         parameters: jsonSchema,
                     },
                 },
