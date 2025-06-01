@@ -232,13 +232,18 @@ export const RightSideSection: React.FC<{ projectMaterials: Material[] }> = ({ p
     }, []);
 
     return (
-        <div className={'flex flex-col h-full'}>
-            <div className={'border-b border-sd-80'}>
-                <h3 className={'p-4'}>Materials</h3>
+        <div className='flex flex-col h-full'>
+            <div className='border-b border-sd-80'>
+                <h3 className='p-4'>Materials</h3>
             </div>
-            <div className={'p-4 flex flex-col h-full'}>
+            <div className='flex flex-col h-full min-h-0'>
                 <MaterialsDisplay materials={materials} />
-                <MaterialUploadForm acceptedTypes={acceptedMimeTypes} handleUpload={handleUpload} />
+                <div className='shrink-0 px-4 pb-4'>
+                    <MaterialUploadForm
+                        acceptedTypes={acceptedMimeTypes}
+                        handleUpload={handleUpload}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -249,9 +254,9 @@ const MaterialsDisplay: React.FC<{ materials: Material[] }> = ({ materials }) =>
     const classHover = 'hover:-translate-y-2 hover:from-p-60 hover:via-p-60 hover:border-t-p-50';
 
     return (
-        <div className='flex-1 overflow-y-auto flex flex-col gap-2 pt-2'>
+        <div className='flex-1 overflow-y-auto flex flex-col p-4 gap-2 custom-scrollbar'>
             {materials.map(m => (
-                <div key={m.id} className={`${classDefault} ${classHover} with-noise fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
+                <div key={m.id} className={`${classDefault} ${classHover} with-noise shrink-0 fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
                     <div className='content-perspective'>
                         <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
                         {typeof m.content.metadata?.pages === 'number' &&
