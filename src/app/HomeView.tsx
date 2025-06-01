@@ -238,18 +238,20 @@ export const RightSideSection: React.FC<{ projectMaterials: Material[] }> = ({ p
 };
 
 const MaterialsDisplay: React.FC<{ materials: Material[] }> = ({ materials }) => {
-    const gradientDefault = 'bg-gradient-to-b from-p-70/70 via-p-70/70 to-sd-90/30';
-    const gradientHover = 'hover:from-p-70 hover:via-p-70/70 hover:to-sd-90/30';
+    const classDefault = 'bg-gradient-to-b from-p-70 via-p-70 to-sd-90 border-p-50/30';
+    const classHover = 'hover:-translate-y-2 hover:from-p-60 hover:via-p-60 hover:border-t-p-50';
 
     return (
-        <div className='flex-1 overflow-y-auto flex flex-col gap-2'>
+        <div className='flex-1 overflow-y-auto flex flex-col gap-2 pt-2'>
             {materials.map(m => (
-                <div key={m.id} className={`${gradientDefault} ${gradientHover} with-noise transition-colors duration-150 px-4 pt-4 pb-8 mb-[-4px] rounded-t-md overflow-x-hidden text-ellipsis`}>
-                    <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
-                    {typeof m.content.metadata?.pages === 'number' &&
-                        <p className={'text-sm font-mono'}>{m.content.metadata.pages} pages</p>}
-                    {typeof m.content.metadata?.lines === 'number' &&
-                        <p className={'text-sm font-mono'}>{m.content.metadata.lines} lines</p>}
+                <div key={m.id} className={`${classDefault} ${classHover} with-noise fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
+                    <div className='content-perspective'>
+                        <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
+                        {typeof m.content.metadata?.pages === 'number' &&
+                            <p className={'text-sm font-mono'}>{m.content.metadata.pages} pages</p>}
+                        {typeof m.content.metadata?.lines === 'number' &&
+                            <p className={'text-sm font-mono'}>{m.content.metadata.lines} lines</p>}
+                    </div>
                 </div>
             ))}
         </div>
