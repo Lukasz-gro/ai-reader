@@ -8,6 +8,7 @@ import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react
 import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
 import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Material } from '@/shared/entities/material';
+import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -49,9 +50,11 @@ const LeftSideSection: React.FC<{
                     <h3 className={'p-4'}>
                         Projects
                     </h3>
-                    <div title={'New project'}>
-                        <PlusIcon className={'m-4 w-8 h-8 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'}/>
-                    </div>
+                    <Tooltip tooltip={'New project'}>
+                        <div>
+                            <PlusIcon className={'m-4 w-8 h-8 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'}/>
+                        </div>
+                    </Tooltip>
                 </div>
             </div>
             <div className='mt-4 flex flex-col gap-2 overflow-y-auto'>
@@ -113,12 +116,16 @@ const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void}>
         <div className={'flex justify-between items-center border-b border-p-80'}>
             <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => onSelectActiveTab(newMode)} />
             <div className={'flex gap-4 mr-8'}>
-                <button>
-                    <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
-                </button>
-                <button>
-                    <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
-                </button>
+                <Tooltip tooltip={'Account'}>
+                    <button>
+                        <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                    </button>
+                </Tooltip>
+                <Tooltip tooltip={'Settings'}>
+                    <button>
+                        <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
+                    </button>
+                </Tooltip>
             </div>
         </div>
     );
@@ -282,7 +289,7 @@ const MaterialUploadForm: React.FC<{acceptedTypes: string[], handleUpload: (form
             >
                 {pending ?
                     <em className='text-sd-40'>Uploading...</em> :
-                    <p className={'text-sd-40 group-hover:text-sd-10'}>Drop new material or click to upload</p>
+                    <p className={'text-sd-40 group-hover:text-sd-10'}>Drop new material</p>
                 }
                 <input
                     id='file-upload'
