@@ -5,7 +5,7 @@ import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/gen
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { Material } from '@/shared/entities/material';
 import { Project } from '@/shared/entities/project';
-import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
+import { getAcceptedMimeTypes, uploadMaterialAction, getMaterialsByIds } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -243,6 +243,24 @@ export const RightSideSection: React.FC<{
     useEffect(() => {
         getAcceptedMimeTypes().then(res => setAcceptedMimeTypes(res));
     }, []);
+
+    useEffect(() => {
+        async function fetchMaterials() {
+            if (projectMaterialIds.length === 0) {
+                setMaterials([]);
+                return;
+            }
+            
+            try {
+                const fetchedMaterials = await getMaterialsByIds(projectMaterialIds);
+                setMaterials(fetchedMaterials);
+            } catch (error) {
+                console.error('Failed to fetch materials:', error);
+            }
+        }
+
+        fetchMaterials();
+    }, [projectMaterialIds]);
 
     return (
         <div className='flex flex-col h-full'>

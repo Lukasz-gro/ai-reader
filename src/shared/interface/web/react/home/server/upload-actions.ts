@@ -13,3 +13,7 @@ export async function uploadMaterialAction(formData: FormData): Promise<Material
 export async function getAcceptedMimeTypes(): Promise<string[]> {
     return uploadsController.getValidUploadMimeTypes();
 }
+
+export async function getMaterialsByIds(materialIds: string[]): Promise<Material[]> {
+    return uploadsController.getMaterialsByIds(materialIds);
+}
