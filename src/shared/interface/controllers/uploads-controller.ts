@@ -28,6 +28,11 @@ export class UploadsController {
     getValidUploadMimeTypes = () => {
         return this.uploadMaterialUseCase.getAvailableMimeTypes(this.parserManager);
     };
+
+    async getMaterialsByIds(materialIds: string[]): Promise<Material[]> {
+        const allMaterials = await this.repo.getAll();
+        return allMaterials.filter(material => materialIds.includes(material.id));
+    }
 }
 
 const parserManager: ParserManager = new ParserManager();
