@@ -236,7 +236,7 @@ export const RightSideSection: React.FC<{
 
     async function handleUpload(formData: FormData) {
         const material = await uploadMaterialAction(formData);
-        setMaterials((prev) => [...prev, material]);
+        setMaterials(prev => [...prev, material]);
         onMaterialUpdate([...projectMaterialIds, material.id]);
     }
 
@@ -252,15 +252,20 @@ export const RightSideSection: React.FC<{
             }
             
             try {
-                const fetchedMaterials = await getMaterialsByIds(projectMaterialIds);
-                setMaterials(fetchedMaterials);
+                const existingMaterialIds = new Set(materials.map(m => m.id));
+                const newMaterialIds = projectMaterialIds.filter(id => !existingMaterialIds.has(id));
+                
+                if (newMaterialIds.length > 0) {
+                    const fetchedMaterials = await getMaterialsByIds(newMaterialIds);
+                    setMaterials(prev => [...prev, ...fetchedMaterials]);
+                }
             } catch (error) {
                 console.error('Failed to fetch materials:', error);
             }
         }
 
         fetchMaterials();
-    }, [projectMaterialIds]);
+    }, [projectMaterialIds, materials]);
 
     return (
         <div className='flex flex-col h-full'>
