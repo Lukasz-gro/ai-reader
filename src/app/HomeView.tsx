@@ -23,9 +23,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
             return {
                 ...prev,
                 materialIds
-            }
+            };
         });
-    }
+    };
 
     return (
         <div className='flex w-full h-screen bg-p-90 text-p-10'>
