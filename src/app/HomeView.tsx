@@ -8,7 +8,7 @@ import { Project } from '@/shared/entities/project';
 import { getAcceptedMimeTypes, uploadMaterialAction, getMaterialsByIds } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -233,10 +233,12 @@ export const RightSideSection: React.FC<{
 }> = ({ projectMaterialIds, onMaterialUpdate }) => {
     const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
+    const existingMaterialIdsRef = useRef<Set<string>>(new Set());
 
     async function handleUpload(formData: FormData) {
         const material = await uploadMaterialAction(formData);
         setMaterials(prev => [...prev, material]);
+        existingMaterialIdsRef.current.add(material.id);
         onMaterialUpdate([...projectMaterialIds, material.id]);
     }
 
@@ -248,16 +250,17 @@ export const RightSideSection: React.FC<{
         async function fetchMaterials() {
             if (projectMaterialIds.length === 0) {
                 setMaterials([]);
+                existingMaterialIdsRef.current.clear();
                 return;
             }
             
             try {
-                const existingMaterialIds = new Set(materials.map(m => m.id));
-                const newMaterialIds = projectMaterialIds.filter(id => !existingMaterialIds.has(id));
+                const newMaterialIds = projectMaterialIds.filter(id => !existingMaterialIdsRef.current.has(id));
                 
                 if (newMaterialIds.length > 0) {
                     const fetchedMaterials = await getMaterialsByIds(newMaterialIds);
                     setMaterials(prev => [...prev, ...fetchedMaterials]);
+                    fetchedMaterials.forEach(material => existingMaterialIdsRef.current.add(material.id));
                 }
             } catch (error) {
                 console.error('Failed to fetch materials:', error);
@@ -265,7 +268,7 @@ export const RightSideSection: React.FC<{
         }
 
         fetchMaterials();
-    }, [projectMaterialIds, materials]);
+    }, [projectMaterialIds]);
 
     return (
         <div className='flex flex-col h-full'>
