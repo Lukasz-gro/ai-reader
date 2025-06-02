@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Project } from '@/shared/entities/project';
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
-import { Conversation, Mode } from '@/shared/entities/conversation';
-import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
 import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
-import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
+import { Conversation, Mode } from '@/shared/entities/conversation';
 import { Material } from '@/shared/entities/material';
+import { Project } from '@/shared/entities/project';
+import { getAcceptedMimeTypes, uploadMaterialAction } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
+import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 export interface HomeViewProps {
     projects: Project[];
@@ -16,7 +16,16 @@ export interface HomeViewProps {
 
 export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
     const [activeTab, setActiveTab] = useState<Mode>('course');
-    const [activeProject, setActiveProject] = useState<Project | null>(null);
+    const [activeProject, setActiveProject] = useState<Project>(projects[0]);
+    
+    const onMaterialUpdate = (materialIds: string[]) => {
+        setActiveProject((prev) => {
+            return {
+                ...prev,
+                materialIds
+            }
+        });
+    }
 
     return (
         <div className='flex w-full h-screen bg-p-90 text-p-10'>
@@ -33,7 +42,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
                 </section>
             </main>
             <aside className='w-64 border-l border-p-80 bg-sd-90/30 flex flex-col h-full'>
-                <RightSideSection projectMaterials={[]} />
+                <RightSideSection projectMaterialIds={activeProject.materialIds} onMaterialUpdate={onMaterialUpdate}/>
             </aside>
         </div>
     );
@@ -218,13 +227,17 @@ const StartConversationPlaceholder: React.FC<{
     );
 };
 
-export const RightSideSection: React.FC<{ projectMaterials: Material[] }> = ({ projectMaterials }) => {
+export const RightSideSection: React.FC<{ 
+    projectMaterialIds: string[];
+    onMaterialUpdate: (materialIds: string[]) => void;
+}> = ({ projectMaterialIds, onMaterialUpdate }) => {
     const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
-    const [materials, setMaterials] = useState<Material[]>(projectMaterials);
+    const [materials, setMaterials] = useState<Material[]>([]);
 
     async function handleUpload(formData: FormData) {
         const material = await uploadMaterialAction(formData);
         setMaterials((prev) => [...prev, material]);
+        onMaterialUpdate([...projectMaterialIds, material.id]);
     }
 
     useEffect(() => {
