@@ -9,17 +9,20 @@ import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { Answer, QuestionServices, ValidationResult } from '@/contexts/quiz-mode/entities/question';
 import { AlwaysFailQuestionService } from '@/contexts/quiz-mode/infra/llms/AlwaysFailQuestionService';
 import { CheckUserAnswerUseCase } from '@/contexts/quiz-mode/application/use-cases/check-user-answer';
+import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
+import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
 
 class QuizModeController {
     constructor(
         private readonly quizProvider: QuizProvider,
         private readonly createQuizFromMaterial: CreateQuizFromMaterial,
         private readonly questionService: QuestionServices,
-        private readonly checkUserAnswer: CheckUserAnswer
+        private readonly checkUserAnswer: CheckUserAnswer,
+        private readonly materialRepo: MaterialRepo
     ) {}
 
     async onCreateNewQuiz(project: Project): Promise<Quiz> {
-        return await this.createQuizFromMaterial.execute(project, this.quizProvider);
+        return await this.createQuizFromMaterial.execute(project, this.quizProvider, this.materialRepo);
     }
 
     async onCheckUserAnswer(question: QuizQuestion, userAnswer: Answer): Promise<ValidationResult> {
@@ -41,7 +44,8 @@ const quizModeController = new QuizModeController(
     quizProvider,
     createQuizFromMaterialUseCase,
     alwaysFailQuestionService,
-    checkUserAnswerUseCase
+    checkUserAnswerUseCase,
+    new JsonMaterialRepo(),
 );
 
 export {

@@ -42,7 +42,7 @@ export class OpenAIQuizProvider implements QuizProvider {
                     + '- choices: an array of objects with id and label fields '
                     + '- correctChoiceId: must match one of the choice IDs',
                 },
-                { role: 'user', content },
+                { role: 'user', content: `Create a quiz from the provided material: ${content}` },
             ],
             tools: [
                 {
@@ -57,7 +57,7 @@ export class OpenAIQuizProvider implements QuizProvider {
             ],
             tool_choice: { type: 'function', function: { name: 'answer' } },
         });
-        console.log(completion);
+        
         const msg = completion.choices[0].message;
         const call = msg.tool_calls?.[0];
         if (!call) {
