@@ -14,9 +14,9 @@ export const QuizSection: React.FC<{
             <button 
                 onClick={() => createNewQuiz(activeProject).then(setActiveQuiz)}
                 className='px-6 py-2 mt-4 bg-a-50 hover:bg-a-50/80 text-p-10 rounded-lg transition-colors cursor-pointer'>
-                    <p className={'text-lg capitalize'}>
+                <p className={'text-lg capitalize'}>
                         Create new quiz
-                    </p>
+                </p>
             </button>
         </div>;
     }

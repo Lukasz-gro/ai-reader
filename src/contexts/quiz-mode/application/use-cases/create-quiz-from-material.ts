@@ -31,8 +31,6 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
 
         const contentParts = projectMaterials.map(material => {
             const title = material.title;
-            // We have differnt types of content, do we have an idea how we want to parse them so that
-            // it can be send to the llms?
             const content = material.content.type === 'text' ? material.content.content : '';
             return `Material: ${title}\n${content}`;
         });
