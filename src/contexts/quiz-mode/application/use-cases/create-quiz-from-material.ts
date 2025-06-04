@@ -2,21 +2,29 @@ import { Project } from '@/shared/entities/project';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { CreateQuizFromMaterial } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 import { QuizProvider } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
-import { MultipleChoiceQuestionSchema } from '../schemas/multiple-choice-question.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
+import { multipleChoiceQuestionSchemaJson } from '../schemas/multiple-choice-question.schema';
+import { MultipleChoiceQuestion } from '../../entities/multiple-choice-question';
+import { openEndedQuestionSchemaJson } from '../schemas/open-ended-question.schema';
+import { OpenEndedQuestion } from '../../entities/open-ended-question';
 
 export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
     async execute(project: Project, quizProvider: QuizProvider, materialRepo: MaterialRepo): Promise<Quiz> {
-        const questions = await quizProvider.generateQuestions(
+        const multipleChoiceQuestions = await quizProvider.generateQuestions(
             await this.extractContent(project, materialRepo),
-            MultipleChoiceQuestionSchema
-        );
+            multipleChoiceQuestionSchemaJson
+        ) as MultipleChoiceQuestion[];
+        
+        const openEndedQuestions = await quizProvider.generateQuestions(
+            await this.extractContent(project, materialRepo),
+            openEndedQuestionSchemaJson
+        ) as OpenEndedQuestion[];
         
         return {
             id: uuidv4(),
             name: `Quiz for ${project.title}`,
-            questions
+            questions: [...multipleChoiceQuestions, ...openEndedQuestions]
         };
     }
 
