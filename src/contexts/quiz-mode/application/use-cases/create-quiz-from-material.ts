@@ -31,7 +31,7 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
 
         const contentParts = projectMaterials.map(material => {
             const title = material.title;
-            const content = material.content.type === 'text' ? material.content.content : '';
+            const content = material.content.type === 'text' ? material.content.text : '';
             return `Material: ${title}\n${content}`;
         });
 

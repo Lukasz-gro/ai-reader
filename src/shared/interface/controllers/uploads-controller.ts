@@ -7,11 +7,23 @@ import { TxtParser } from '@/shared/infra/parsing/txt-parser';
 import { PdfParser } from '@/shared/infra/parsing/pdf-parser';
 import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
 import { UploadMaterialUseCase } from '@/shared/application/use-cases/upload-material';
+import { TextChunker } from '@/shared/application/ports/out/text-chunker';
+import { EmbeddingProvider } from '@/shared/ports/out/embedding-provider';
+import { Summarizer } from '@/shared/ports/out/summarizer';
+import { VectorRepo } from '@/shared/ports/out/vector-repo';
+import { RecursiveTextChunker } from '@/shared/infra/chunking/recursive-text-chunker';
+import { MockEmbeddingProvider } from '@/shared/infra/mocks/mock-embedding-provider';
+import { MockSummarizer } from '@/shared/infra/mocks/mock-summarizer';
+import { ChromaVectorRepo } from '@/shared/infra/mocks/chroma-vector-repo';
 
 export class UploadsController {
     constructor(
         private readonly parserManager: ParserManager,
-        private readonly repo: MaterialRepo,
+        private readonly materialRepo: MaterialRepo,
+        private readonly textChunker: TextChunker,
+        private readonly embeddingProvider: EmbeddingProvider,
+        private readonly summarizer: Summarizer,
+        private readonly chunksVectorRepo: VectorRepo,
         private readonly uploadMaterialUseCase: UploadMaterial,
     ) { }
 
@@ -22,7 +34,15 @@ export class UploadsController {
             mimeType: file.type,
             data: buffer,
         };
-        return await this.uploadMaterialUseCase.execute(this.parserManager, this.repo, upload);
+        return await this.uploadMaterialUseCase.execute(
+            this.parserManager,
+            this.materialRepo,
+            this.textChunker,
+            this.embeddingProvider,
+            this.summarizer,
+            this.chunksVectorRepo,
+            upload
+        );
     }
 
     getValidUploadExtensions = () => {
@@ -30,7 +50,7 @@ export class UploadsController {
     };
 
     async getMaterialsByIds(materialIds: string[]): Promise<Material[]> {
-        const allMaterials = await this.repo.getAll();
+        const allMaterials = await this.materialRepo.getAll();
         return allMaterials.filter(material => materialIds.includes(material.id));
     }
 }
@@ -42,5 +62,9 @@ parserManager.register(new TxtParser());
 export const uploadsController = new UploadsController(
     parserManager,
     new JsonMaterialRepo(),
+    new RecursiveTextChunker(),
+    new MockEmbeddingProvider(),
+    new MockSummarizer(),
+    new ChromaVectorRepo(),
     new UploadMaterialUseCase(),
 );
