@@ -4,6 +4,7 @@ import { UserUpload } from '@/shared/entities/user-upload';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { Material } from '@/shared/entities/material';
 import { v4 as uuidv4 } from 'uuid';
+import mime from 'mime-types';
 
 export class UploadMaterialUseCase implements UploadMaterial {
     async execute(
@@ -24,5 +25,16 @@ export class UploadMaterialUseCase implements UploadMaterial {
 
     getAvailableMimeTypes(manager: ParserManager): string[] {
         return manager.parsers.map(p => p.getValidMimeTypes()).flat();
+    }
+
+    getAvailableFileExtensions(manager: ParserManager): string[] {
+        const mimeTypes = this.getAvailableMimeTypes(manager);
+        return Array.from(
+            new Set(
+                mimeTypes
+                    .map(type => mime.extension(type))
+                    .filter((ext): ext is string => !!ext)
+            )
+        );
     }
 }

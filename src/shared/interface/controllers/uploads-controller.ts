@@ -25,8 +25,8 @@ export class UploadsController {
         return await this.uploadMaterialUseCase.execute(this.parserManager, this.repo, upload);
     }
 
-    getValidUploadMimeTypes = () => {
-        return this.uploadMaterialUseCase.getAvailableMimeTypes(this.parserManager);
+    getValidUploadExtensions = () => {
+        return this.uploadMaterialUseCase.getAvailableFileExtensions(this.parserManager);
     };
 
     async getMaterialsByIds(materialIds: string[]): Promise<Material[]> {

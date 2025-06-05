@@ -5,7 +5,11 @@ import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/gen
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { Material } from '@/shared/entities/material';
 import { Project } from '@/shared/entities/project';
-import { getAcceptedMimeTypes, uploadMaterialAction, getMaterialsByIds } from '@/shared/interface/web/react/home/server/upload-actions';
+import {
+    uploadMaterialAction,
+    getMaterialsByIds,
+    getValidUploadExtensions
+} from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
@@ -231,7 +235,7 @@ export const RightSideSection: React.FC<{
     projectMaterialIds: string[];
     onMaterialUpdate: (materialIds: string[]) => void;
 }> = ({ projectMaterialIds, onMaterialUpdate }) => {
-    const [acceptedMimeTypes, setAcceptedMimeTypes] = useState<string[]>([]);
+    const [validFileExtensions, setValidFileExtensions] = useState<string[]>([]);
     const [materials, setMaterials] = useState<Material[]>([]);
     const existingMaterialIdsRef = useRef<Set<string>>(new Set());
 
@@ -242,8 +246,9 @@ export const RightSideSection: React.FC<{
         onMaterialUpdate([...projectMaterialIds, material.id]);
     }
 
+    console.log(validFileExtensions);
     useEffect(() => {
-        getAcceptedMimeTypes().then(res => setAcceptedMimeTypes(res));
+        getValidUploadExtensions().then(res => setValidFileExtensions(res));
     }, []);
 
     useEffect(() => {
@@ -267,7 +272,7 @@ export const RightSideSection: React.FC<{
             }
         }
 
-        fetchMaterials();
+        void fetchMaterials();
     }, [projectMaterialIds]);
 
     return (
@@ -279,7 +284,7 @@ export const RightSideSection: React.FC<{
                 <MaterialsDisplay materials={materials} />
                 <div className='shrink-0 px-4 pb-4'>
                     <MaterialUploadForm
-                        acceptedTypes={acceptedMimeTypes}
+                        acceptedTypes={validFileExtensions}
                         handleUpload={handleUpload}
                     />
                 </div>
@@ -340,7 +345,7 @@ const MaterialUploadForm: React.FC<{acceptedTypes: string[], handleUpload: (form
                     name='file'
                     type='file'
                     className='hidden'
-                    accept={acceptedTypes.join(' ')}
+                    accept={acceptedTypes.join(',')}
                     required
                     disabled={pending}
                     onChange={e => { e.currentTarget.form?.requestSubmit(); }}

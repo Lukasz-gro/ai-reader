@@ -88,4 +88,33 @@ describe('upload material use case', () => {
             useCase.execute(throwingManager, repo, testUpload)
         ).rejects.toThrow('parse error');
     });
+
+    it('should return unique file extensions for all available mime types', () => {
+        const anotherParser = new MockParser(['image/png', 'application/pdf', 'image/jpeg']);
+        manager.register(anotherParser);
+
+        const exts = useCase.getAvailableFileExtensions(manager);
+
+        expect(exts).toEqual(expect.arrayContaining(['pdf', 'png']));
+        expect(new Set(exts).size).toBe(exts.length);
+    });
+
+    it('should not return false or empty entries', () => {
+        const unknownType = 'application/x-fake-type';
+        const badParser = new MockParser([unknownType]);
+        manager.register(badParser);
+
+        const exts = useCase.getAvailableFileExtensions(manager);
+
+        expect(exts).not.toContain(false);
+        expect(exts).not.toContain('');
+    });
+
+    it('should return an empty array if there are no registered parsers', () => {
+        const emptyManager = new ParserManager();
+
+        const exts = useCase.getAvailableFileExtensions(emptyManager);
+
+        expect(exts).toEqual([]);
+    });
 });
