@@ -20,7 +20,7 @@ export class TxtParser implements UploadsParser {
 
             return {
                 type: 'text',
-                content: text,
+                text: text,
                 metadata: {
                     length: text.length,
                     lines: text.split(/\r?\n/).length,

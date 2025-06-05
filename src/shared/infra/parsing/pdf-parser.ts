@@ -19,7 +19,7 @@ export class PdfParser implements UploadsParser {
 
         return {
             type: 'text',
-            content: text.trim(),
+            text: text.trim(),
             metadata: { pages: numpages },
         };
     }
