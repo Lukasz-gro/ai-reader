@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { encode } from 'gpt-tokenizer';
-import { TextChunker } from './text-chunker';
+import { RecursiveTextChunker } from './recursive-text-chunker';
 
 describe('TextChunker', () => {
     const CHUNK_SIZE = 50;
     const OVERLAP    = 5;
-    let chunker: TextChunker;
+    let chunker: RecursiveTextChunker;
 
     beforeEach(() => {
-        chunker = new TextChunker(OVERLAP, 4);
+        chunker = new RecursiveTextChunker(OVERLAP, 4);
     });
 
     it('returns one chunk when the input is ≤ CHUNK_SIZE tokens', () => {
@@ -82,7 +82,7 @@ describe('TextChunker', () => {
     });
 
     it('produces the expected number of chunks at each level', () => {
-        const localChunker = new TextChunker(0, 2);
+        const localChunker = new RecursiveTextChunker(0, 2);
         const text = Array.from({ length: 8 }, () => 'w').join(' ');
         expect(encode(text).length).toBe(8);
 

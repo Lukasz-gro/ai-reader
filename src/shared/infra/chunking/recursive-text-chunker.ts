@@ -2,7 +2,7 @@ import { decode, encode } from 'gpt-tokenizer';
 import { TextChunk } from '@/shared/entities/chunk';
 import { v4 as uuidv4 } from 'uuid';
 
-export class TextChunker {
+export class RecursiveTextChunker {
     constructor(
         private readonly overlap = 32,
         private readonly fanOut = 4,
