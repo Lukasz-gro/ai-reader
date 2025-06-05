@@ -1,10 +1,10 @@
-import { EmbeddedChunk } from '@/shared/entities/chunk';
+import { LeafChunk } from '@/shared/entities/chunk';
 
 export interface VectorRepo {
-    get(ids: string[]): Promise<EmbeddedChunk[]>;
-    getAll(): Promise<EmbeddedChunk[]>;
-    put(chunks: EmbeddedChunk[]): Promise<EmbeddedChunk[]>;
+    get(ids: string[]): Promise<LeafChunk[]>;
+    getAll(): Promise<LeafChunk[]>;
+    put(chunks: LeafChunk[]): Promise<LeafChunk[]>;
     delete(ids: string[]): Promise<string[]>;
-    upsert(chunks: EmbeddedChunk[]): Promise<EmbeddedChunk[]>;
-    query(embedding: number[], k: number): Promise<EmbeddedChunk[]>;
+    upsert(chunks: LeafChunk[]): Promise<LeafChunk[]>;
+    query(embedding: number[], k: number): Promise<LeafChunk[]>;
 }

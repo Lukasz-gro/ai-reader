@@ -3,11 +3,13 @@ import { Summarizer } from '@/shared/ports/out/summarizer';
 
 export class MockSummarizer implements Summarizer {
     summarize<T extends Summarizable>(chunks: T[]): Promise<(T & Summarized)[]> {
-        void chunks;
-        return Promise.resolve([]);
+        const summarized = chunks.map(c => {
+            return { ...c, summary: c.text };
+        });
+        return Promise.resolve(summarized);
     }
 
     summarizeOne<T extends Summarizable>(chunk: T): Promise<T & Summarized> {
-        return Promise.resolve({...chunk, summary: ''});
+        return Promise.resolve({ ...chunk, summary: chunk.text });
     }
 }

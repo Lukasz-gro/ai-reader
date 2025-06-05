@@ -14,7 +14,7 @@ import { VectorRepo } from '@/shared/ports/out/vector-repo';
 import { RecursiveTextChunker } from '@/shared/infra/chunking/recursive-text-chunker';
 import { MockEmbeddingProvider } from '@/shared/infra/mocks/mock-embedding-provider';
 import { MockSummarizer } from '@/shared/infra/mocks/mock-summarizer';
-import { ChromaVectorRepo } from '@/shared/infra/mocks/chroma-vector-repo';
+import { InMemoryVectorRepo } from '@/shared/infra/mocks/in-memory-vector-repo';
 
 export class UploadsController {
     constructor(
@@ -65,6 +65,6 @@ export const uploadsController = new UploadsController(
     new RecursiveTextChunker(),
     new MockEmbeddingProvider(),
     new MockSummarizer(),
-    new ChromaVectorRepo(),
+    new InMemoryVectorRepo(),
     new UploadMaterialUseCase(),
 );

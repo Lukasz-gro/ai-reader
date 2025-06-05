@@ -3,7 +3,10 @@ import { Embeddable, Embedded } from '@/shared/entities/chunk';
 
 export class MockEmbeddingProvider implements EmbeddingProvider {
     embed<T extends Embeddable>(chunks: T[]): Promise<(T & Embedded)[]> {
-        void chunks;
-        return Promise.resolve([]);
+        const embedded = chunks.map((c, i ) => {
+            const e = Array.from({ length: 32 }, () => i);
+            return { ...c, embedding: e };
+        });
+        return Promise.resolve(embedded);
     }
 }

@@ -5,11 +5,23 @@ import { UserUpload } from '@/shared/entities/user-upload';
 import { UploadMaterialUseCase } from './upload-material';
 import { MaterialRepo } from '../ports/out/material-repo';
 import { InMemoryMaterialRepo } from '@/shared/infra/mocks/in-memory-material-repo';
+import { EmbeddingProvider } from '@/shared/ports/out/embedding-provider';
+import { TextChunker } from '../ports/out/text-chunker';
+import { Summarizer } from '@/shared/ports/out/summarizer';
+import { VectorRepo } from '@/shared/ports/out/vector-repo';
+import { RecursiveTextChunker } from '@/shared/infra/chunking/recursive-text-chunker';
+import { MockEmbeddingProvider } from '@/shared/infra/mocks/mock-embedding-provider';
+import { MockSummarizer } from '@/shared/infra/mocks/mock-summarizer';
+import { InMemoryVectorRepo } from '@/shared/infra/mocks/in-memory-vector-repo';
 
 describe('upload material use case', () => {
     let useCase: UploadMaterialUseCase;
     let manager: ParserManager;
-    let repo: MaterialRepo;
+    let materialRepo: MaterialRepo;
+    let textChunker: TextChunker;
+    let embeddingProvider: EmbeddingProvider;
+    let summarizer: Summarizer;
+    let chunksVectorRepo: VectorRepo;
     let parser: MockParser;
 
     const testUpload: UserUpload = {
@@ -21,19 +33,31 @@ describe('upload material use case', () => {
     beforeEach(() => {
         useCase = new UploadMaterialUseCase();
         manager = new ParserManager();
-        repo = new InMemoryMaterialRepo();
+        materialRepo = new InMemoryMaterialRepo();
+        textChunker = new RecursiveTextChunker();
+        embeddingProvider = new MockEmbeddingProvider();
+        summarizer = new MockSummarizer();
+        chunksVectorRepo = new InMemoryVectorRepo();
         parser = new MockParser(['application/pdf']);
         manager.register(parser);
     });
 
     afterEach(() => {
-        repo.clear();
+        materialRepo.clear();
     });
 
     it('should upload parsed material content to repo', async () => {
-        const uploaded = await useCase.execute(manager, repo, testUpload);
+        const uploaded = await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload,
+        );
 
-        const stored = await repo.getAll();
+        const stored = await materialRepo.getAll();
         expect(stored.length).toEqual(1);
         expect(stored[0]).toEqual(uploaded);
     });
@@ -44,8 +68,16 @@ describe('upload material use case', () => {
             mimeType: 'text/plain',
             data: Buffer.from('irrelevant'),
         };
-        await expect(useCase.execute(manager, repo, upload)).rejects.toThrow('Unsupported file type');
-        const stored = await repo.getAll();
+        await expect(useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            upload,
+        )).rejects.toThrow('Unsupported file type');
+        const stored = await materialRepo.getAll();
         expect(stored.length).toBe(0);
     });
 
@@ -55,10 +87,26 @@ describe('upload material use case', () => {
             mimeType: 'application/pdf',
             data: Buffer.from('more'),
         };
-        await useCase.execute(manager, repo, testUpload);
-        await useCase.execute(manager, repo, secondUpload);
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            secondUpload
+        );
 
-        const stored = await repo.getAll();
+        const stored = await materialRepo.getAll();
         expect(stored.length).toBe(2);
         expect(stored[0].title).toBe(testUpload.name);
         expect(stored[1].title).toBe(secondUpload.name);
@@ -74,7 +122,15 @@ describe('upload material use case', () => {
 
     it('should call parse on the first matching parser', async () => {
         const canParseSpy = vi.spyOn(parser, 'canParse');
-        await useCase.execute(manager, repo, testUpload);
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
         expect(canParseSpy).toHaveBeenCalledWith(testUpload);
     });
 
@@ -85,7 +141,15 @@ describe('upload material use case', () => {
         throwingManager.register(throwingParser);
 
         await expect(
-            useCase.execute(throwingManager, repo, testUpload)
+            useCase.execute(
+                throwingManager,
+                materialRepo,
+                textChunker,
+                embeddingProvider,
+                summarizer,
+                chunksVectorRepo,
+                testUpload
+            )
         ).rejects.toThrow('parse error');
     });
 
@@ -117,4 +181,81 @@ describe('upload material use case', () => {
 
         expect(exts).toEqual([]);
     });
+
+    it('should chunk material and store all chunks in the vector repo', async () => {
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
+        const chunks = await chunksVectorRepo.getAll();
+
+        expect(chunks.length).toBeGreaterThan(0);
+
+        for (const chunk of chunks) {
+            expect(chunk).toHaveProperty('embedding');
+            expect(chunk).toHaveProperty('summary');
+            expect(Array.isArray(chunk.embedding)).toBe(true);
+            expect(chunk.embedding.length).toBe(32); // per mock
+            expect(typeof chunk.summary).toBe('string');
+        }
+    });
+
+    it('should assign unique embeddings to each chunk', async () => {
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
+        const chunks = await chunksVectorRepo.getAll();
+        // each chunk gets a deterministic vector per its index (per mock)
+        const allEmbeddings = chunks.map(c => c.embedding.join(','));
+        const uniqueEmbeddings = new Set(allEmbeddings);
+        expect(uniqueEmbeddings.size).toBe(chunks.length);
+    });
+
+    it('should summarize each chunk correctly', async () => {
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
+        const chunks = await chunksVectorRepo.getAll();
+        // MockSummarizer uses the chunk text as summary
+        for (const chunk of chunks) {
+            expect(chunk.summary).toBe(chunk.text);
+        }
+    });
+
+    it('should store parent/child chunk hierarchy and metadata correctly', async () => {
+        await useCase.execute(
+            manager,
+            materialRepo,
+            textChunker,
+            embeddingProvider,
+            summarizer,
+            chunksVectorRepo,
+            testUpload
+        );
+        const chunks = await chunksVectorRepo.getAll();
+        for (const chunk of chunks) {
+            expect(chunk).toHaveProperty('metadata');
+            expect(chunk.metadata).toHaveProperty('level');
+            expect(chunk.metadata).toHaveProperty('startOffset');
+            expect(chunk.metadata).toHaveProperty('endOffset');
+        }
+    });
+
 });

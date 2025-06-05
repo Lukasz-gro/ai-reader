@@ -94,14 +94,15 @@ async function processParentChunks(chunks: TextChunk[], leafChunks: LeafChunk[],
 }
 
 async function summarizeParentsFromChildren(parentsToSummarize: TextChunk[], children: SummarizedChunk[], summarizer: Summarizer) {
-    const res: SummarizedChunk[] = [];
-    for (const parent of parentsToSummarize) {
-        const currentChildren: SummarizedChunk[] = findChildren(parent, children);
-        const joinedSummaries = joinChunkSummaries(currentChildren);
-        const parentSummary = await generateSummaryFromText(joinedSummaries, summarizer);
-        res.push({...parent, summary: parentSummary});
-    }
-    return res;
+    return Promise.all(
+        parentsToSummarize.map(async parent => {
+            const currentChildren = findChildren(parent, children);
+            throwOnEmptyChildren(currentChildren, 'Each parent expected to have children at this point!');
+            const joinedSummaries = joinChunkSummaries(currentChildren);
+            const parentSummary = await generateSummaryFromText(joinedSummaries, summarizer);
+            return { ...parent, summary: parentSummary };
+        })
+    );
 }
 
 function findChildren(parent: TextChunk, children: SummarizedChunk[]): SummarizedChunk[] {
@@ -115,4 +116,10 @@ function joinChunkSummaries(chunks: SummarizedChunk[]) {
 async function generateSummaryFromText(text: string, summarizer: Summarizer) {
     return summarizer.summarizeOne({ text })
         .then(res => res.summary);
+}
+
+function throwOnEmptyChildren(children: TextChunk[], message: string, parentId?: string) {
+    if (children.length === 0) {
+        throw new Error(`${message} parentId: ${parentId ?? 'undefined'}`);
+    }
 }
