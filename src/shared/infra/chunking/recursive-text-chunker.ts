@@ -34,7 +34,7 @@ export class RecursiveTextChunker {
             prevCut = endTokIdx;
         });
 
-        node = {...node, childrenIds: children.map(c => c.id)}
+        node = {...node, childrenIds: children.map(c => c.id)};
         return [node, ...children.flatMap(c => this.split(c, chunkSize))];
     }
 

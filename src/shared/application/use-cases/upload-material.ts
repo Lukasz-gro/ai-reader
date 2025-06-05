@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EmbeddingProvider } from '@/shared/ports/out/embedding-provider';
 import { TextChunker } from '@/shared/application/ports/out/text-chunker';
 import { VectorRepo } from '@/shared/ports/out/vector-repo';
-import { LeafChunk, ParentChunk, Summarizable, Summarized, SummarizedChunk, TextChunk } from '@/shared/entities/chunk';
+import { LeafChunk, ParentChunk, SummarizedChunk, TextChunk } from '@/shared/entities/chunk';
 import { Summarizer } from '@/shared/ports/out/summarizer';
 import mime from 'mime-types';
 
@@ -36,6 +36,7 @@ export class UploadMaterialUseCase implements UploadMaterial {
             await chunksVectorRepo.put(leafChunks);
             // TODO store leafs / parents in graph repo
             // during retrieval we'll want to replace children if many come from the same parent
+            void parentChunks;
         }
 
         return await materialRepo.upsert(material);
@@ -58,7 +59,7 @@ export class UploadMaterialUseCase implements UploadMaterial {
 }
 
 async function processLeafChunks(chunks: TextChunk[], embeddingProvider: EmbeddingProvider, summarizer: Summarizer): Promise<LeafChunk[]> {
-    let leafChunks = findLeafChunks(chunks);
+    const leafChunks = findLeafChunks(chunks);
     const embedded = await embeddingProvider.embed(leafChunks);
     return await summarizer.summarize(embedded);
 }
@@ -87,7 +88,7 @@ async function processParentChunks(chunks: TextChunk[], leafChunks: LeafChunk[],
 
         level -= 1;
         currentChildren = summarizedLayer;
-        currentParents = findChunksAtLevel(chunks, level)
+        currentParents = findChunksAtLevel(chunks, level);
     }
     return res;
 }
