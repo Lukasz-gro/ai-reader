@@ -9,4 +9,9 @@ export class MockEmbeddingProvider implements EmbeddingProvider {
         });
         return Promise.resolve(embedded);
     }
+
+    embedOne<T extends Embeddable>(chunk: T): Promise<T & Embedded> {
+        const embedding = Array.from({ length: 32 }, () => 1);
+        return Promise.resolve({ ...chunk, embedding });
+    }
 }

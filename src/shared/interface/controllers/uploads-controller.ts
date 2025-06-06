@@ -12,9 +12,10 @@ import { EmbeddingProvider } from '@/shared/ports/out/embedding-provider';
 import { Summarizer } from '@/shared/ports/out/summarizer';
 import { VectorRepo } from '@/shared/ports/out/vector-repo';
 import { RecursiveTextChunker } from '@/shared/infra/chunking/recursive-text-chunker';
-import { MockEmbeddingProvider } from '@/shared/infra/mocks/mock-embedding-provider';
-import { MockSummarizer } from '@/shared/infra/mocks/mock-summarizer';
-import { InMemoryVectorRepo } from '@/shared/infra/mocks/in-memory-vector-repo';
+import { LLMSummarizer } from '@/shared/infra/summarizing/llm-summarizer';
+import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
+import { OpenAIEmbeddingProvider } from '@/shared/infra/embedding/openai-embedding-provider';
+import { JsonVectorRepo } from '@/shared/infra/vector-db/json-vector-repo';
 
 export class UploadsController {
     constructor(
@@ -55,6 +56,9 @@ export class UploadsController {
     }
 }
 
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
+
 const parserManager: ParserManager = new ParserManager();
 parserManager.register(new PdfParser());
 parserManager.register(new TxtParser());
@@ -63,8 +67,8 @@ export const uploadsController = new UploadsController(
     parserManager,
     new JsonMaterialRepo(),
     new RecursiveTextChunker(),
-    new MockEmbeddingProvider(),
-    new MockSummarizer(),
-    new InMemoryVectorRepo(),
+    new OpenAIEmbeddingProvider(apiKey),
+    new LLMSummarizer(new OpenAIProvider(apiKey)),
+    new JsonVectorRepo(),
     new UploadMaterialUseCase(),
 );

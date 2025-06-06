@@ -6,6 +6,7 @@ interface ChromaMeta extends TextChunkMeta {
     parentId: string | null;
     childrenIds: string[];
     summary: string;
+    [key: string]: any;
 }
 
 function chunkToChromaPayload(chunk: LeafChunk) {
@@ -64,13 +65,6 @@ export class ChromaVectorRepo implements VectorRepo {
         }
     }
 
-    async delete(ids: string[]): Promise<string[]> {
-        const col = await this.getCollection();
-        if (ids.length === 0) return [];
-        await col.delete({ ids });
-        return ids;
-    }
-
     async get(ids: string[]): Promise<LeafChunk[]> {
         if (ids.length === 0) return [];
         const collection = await this.getCollection();
@@ -103,46 +97,49 @@ export class ChromaVectorRepo implements VectorRepo {
     }
 
     async put(chunks: LeafChunk[]): Promise<LeafChunk[]> {
-        if (chunks.length === 0) return [];
+        return this.putOrUpsert(chunks, (col, payload) => col.add(payload));
+    }
+
+    async upsert(chunks: LeafChunk[]): Promise<LeafChunk[]> {
+        return this.putOrUpsert(chunks, (col, payload) => col.upsert(payload));
+    }
+
+    async delete(ids: string[]): Promise<string[]> {
         const col = await this.getCollection();
-
-        const ids: string[] = [];
-        const documents: string[] = [];
-        const embeddings: number[][] = [];
-        const metadatas: ChromaMeta[] = [];
-
-        for (const chunk of chunks) {
-            const payload = chunkToChromaPayload(chunk);
-            ids.push(payload.id);
-            documents.push(payload.document);
-            embeddings.push(payload.embedding);
-            metadatas.push(payload.metadata);
-        }
-
-        await col.add({ ids, documents, embeddings, metadatas });
-        return chunks;
+        if (ids.length === 0) return [];
+        await col.delete({ ids });
+        return ids;
     }
 
     async query(embedding: number[], k: number): Promise<LeafChunk[]> {
         if (k <= 0) return [];
-        const col = await this.getCollection();
-        const result = await col.query({
+        const collection = await this.getCollection();
+        const result = await collection.query({
             queryEmbeddings: [embedding],
             nResults: k,
             include: ['documents', 'embeddings', 'metadatas'],
         });
 
+        // query can take a batch of embeddings, this is a single query so we pull the first result
         return (result.ids[0] || []).map((id, i) =>
             chromaRecordToChunk(
                 id,
-                result.documents[i]!,
-                result.embeddings[i]!,
-                result.metadatas[i]! as unknown as ChromaMeta,
+                result.documents[0][i]!,
+                result.embeddings[0][i]!,
+                result.metadatas[0][i]! as ChromaMeta,
             ),
         );
     }
 
-    async upsert(chunks: LeafChunk[]): Promise<LeafChunk[]> {
+    private async putOrUpsert(
+        chunks: LeafChunk[],
+        action: (col: Collection, payload: {
+            ids: string[];
+            documents: string[];
+            embeddings: number[][];
+            metadatas: ChromaMeta[];
+        }) => Promise<any>
+    ): Promise<LeafChunk[]> {
         if (chunks.length === 0) return [];
         const col = await this.getCollection();
 
@@ -159,7 +156,7 @@ export class ChromaVectorRepo implements VectorRepo {
             metadatas.push(payload.metadata);
         }
 
-        await col.upsert({ ids, documents, embeddings, metadatas });
+        await action(col, { ids, documents, embeddings, metadatas });
         return chunks;
     }
 
@@ -167,9 +164,15 @@ export class ChromaVectorRepo implements VectorRepo {
         if (!this.collection) {
             this.collection = await this.client.getOrCreateCollection({
                 name: this.collectionName,
-                embeddingFunction: this.embeddingFunction,
+                embeddingFunction: this.embeddingFunction ?? NO_EMBED,
             });
         }
         return this.collection;
     }
 }
+
+const NO_EMBED: EmbeddingFunction = {
+    generate: async (_docs: string[]) => {
+        throw new Error('Client must supply embeddings');
+    },
+};
