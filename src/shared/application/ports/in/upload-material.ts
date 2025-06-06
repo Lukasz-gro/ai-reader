@@ -5,12 +5,16 @@ import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 
 export interface UploadMaterial {
     execute(
-        manager: ParserManager,
+        parsers: ParserManager,
         repo: MaterialRepo,
         upload: UserUpload,
     ): Promise<Material>;
 
     getAvailableMimeTypes(
-        manager: ParserManager
+        parsers: ParserManager
+    ): string[];
+
+    getAvailableFileExtensions(
+        parsers: ParserManager
     ): string[];
 }

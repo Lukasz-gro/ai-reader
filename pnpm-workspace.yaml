@@ -3,3 +3,5 @@ ignoredBuiltDependencies:
   - esbuild
   - sharp
   - unrs-resolver
+onlyBuiltDependencies:
+  - canvas

@@ -3,14 +3,14 @@ import { UserUpload } from '@/shared/entities/user-upload';
 import { ParsedContent } from '@/shared/entities/parsed-content';
 
 export class TxtParser implements UploadsParser {
-    private readonly validMimeTypes = ['text/plain', 'application/txt'];
+    private readonly validMimeTypes = ['text/plain', 'application/txt', 'text/markdown'];
 
     getValidMimeTypes(): string[] {
         return this.validMimeTypes;
     }
 
     canParse(file: UserUpload): boolean {
-        return file.mimeType === 'text/plain' || file.name.endsWith('.txt');
+        return this.validMimeTypes.includes(file.mimeType);
     }
 
     async parse(file: UserUpload): Promise<ParsedContent> {
