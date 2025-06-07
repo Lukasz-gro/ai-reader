@@ -11,12 +11,14 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
     async execute(project: Project, quizProvider: QuizProvider, materialRepo: MaterialRepo): Promise<Quiz> {
         const multipleChoiceQuestions = await quizProvider.generateQuestions(
             await this.extractContent(project, materialRepo),
-            multipleChoiceQuestionSchemaJson
+            multipleChoiceQuestionSchemaJson,
+            1
         );
         
         const openEndedQuestions = await quizProvider.generateQuestions(
             await this.extractContent(project, materialRepo),
-            openEndedQuestionSchemaJson
+            openEndedQuestionSchemaJson,
+            1
         );
         
         return {

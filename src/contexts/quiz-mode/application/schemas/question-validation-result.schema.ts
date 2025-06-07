@@ -1,4 +1,4 @@
-export const validationResultSchema = {
+export const questionValidationResultSchema = {
     oneOf: [
       {
         type: 'object',

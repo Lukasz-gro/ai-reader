@@ -10,5 +10,7 @@ export async function createNewQuiz(project: Project): Promise<Quiz> {
 }
 
 export async function validateUserAnswer(question:QuizQuestion, userAnswer: Answer): Promise<QuestionValidationResult> {
-    return await quizModeController.onCheckUserAnswer(question, userAnswer);
+    const xd = await quizModeController.onCheckUserAnswer(question, userAnswer);
+    console.log(xd);
+    return xd;
 }

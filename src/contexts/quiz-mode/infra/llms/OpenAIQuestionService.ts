@@ -1,6 +1,6 @@
 import { Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
 import { Answer, Question, QuestionServices, QuestionValidationResult } from '../../entities/question';
-import { multipleChoiceQuestionSchemaJson } from '../../application/schemas/multiple-choice-question.schema';
+import { questionValidationResultSchema } from '../../application/schemas/question-validation-result.schema';
 
 export class OpenAIQuestionService implements QuestionServices {
     constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
@@ -8,7 +8,7 @@ export class OpenAIQuestionService implements QuestionServices {
     async validate(question: Question, userAnswer: Answer, context?: string): Promise<QuestionValidationResult> {
         return await this.structuredLLMProvider.functionCalling(
             [this.systemNote(), this.userPrompt(question, userAnswer, context)],
-            multipleChoiceQuestionSchemaJson,
+            questionValidationResultSchema,
             {
                 functionName: 'questionValidation',
                 functionDescription: 'Validation result for a single open-ended answer.'
@@ -22,7 +22,7 @@ export class OpenAIQuestionService implements QuestionServices {
             previousId: null,
             role: Role.SYSTEM,
             content: 'You are the teacher and you want to help student learn the provided materials. Your task is to grade user answer.' +
-            'Its okay to provide short feedback to the user if you find the nswer incorrect'
+            'You have to provide short feedback to the user if you find the answer incorrect'
         };
     }
 
@@ -37,7 +37,7 @@ export class OpenAIQuestionService implements QuestionServices {
                 User answer: ${userAnswer.value}.\n\n
 
                 Respond with { "ok": true } if the answer is substantially correct;
-                otherwise { "ok": false, "feedback": "…optional guidance…" }
+                otherwise { "ok": false, "feedback": "explanation of why the answer is not correct" }
             `
         };
     }
