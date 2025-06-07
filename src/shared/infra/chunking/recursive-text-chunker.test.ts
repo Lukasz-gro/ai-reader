@@ -97,4 +97,33 @@ describe('TextChunker', () => {
         expect(counts[1]).toBe(2);
         expect(counts[2]).toBe(4);
     });
+
+    it('stores children ids consistently', () => {
+        const localChunker = new RecursiveTextChunker(0, 2); // overlap 0, fanout 2
+        const text = Array.from({ length: 8 }, () => 'w').join(' ');
+        const chunks = localChunker.chunk(text, 2);
+
+        const byId = Object.fromEntries(chunks.map(c => [c.id, c]));
+
+        chunks.forEach(chunk => {
+            chunk.childrenIds.forEach(childId => {
+                expect(byId[childId]).toBeDefined();
+                expect(byId[childId].parentId).toBe(chunk.id);
+            });
+        });
+
+        chunks
+            .filter(chunk => chunk.childrenIds.length > 0)
+            .forEach(chunk => {
+                chunk.childrenIds.forEach(childId => {
+                    expect(byId[childId].parentId).toBe(chunk.id);
+                });
+            });
+
+        chunks
+            .filter(chunk => chunk.childrenIds.length === 0)
+            .forEach(chunk => {
+                expect(chunk.childrenIds).toHaveLength(0);
+            });
+    });
 });

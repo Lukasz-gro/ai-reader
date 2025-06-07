@@ -7,12 +7,12 @@ export interface ParsedContentBase {
 
 export interface TextContent extends ParsedContentBase {
     type: 'text';
-    content: string;
+    text: string;
 }
 
 export interface BinaryContent extends ParsedContentBase {
     type: 'image' | 'audio' | 'video';
-    content: Buffer;
+    bits: Buffer;
 }
 
 export type ParsedContent = TextContent | BinaryContent;

@@ -12,6 +12,7 @@ export class RecursiveTextChunker {
         const root: TextChunk = {
             id: uuidv4(),
             parentId: null,
+            childrenIds: [],
             text,
             metadata: { level: 0, startOffset: 0, endOffset: text.length },
         };
@@ -33,6 +34,7 @@ export class RecursiveTextChunker {
             prevCut = endTokIdx;
         });
 
+        node = {...node, childrenIds: children.map(c => c.id)};
         return [node, ...children.flatMap(c => this.split(c, chunkSize))];
     }
 
@@ -73,6 +75,7 @@ export class RecursiveTextChunker {
         return {
             id: `${node.id}.${idx}`,
             parentId: node.id,
+            childrenIds: [],
             text: node.text.substring(charStart, charEnd),
             metadata: {
                 level: node.metadata.level + 1,
