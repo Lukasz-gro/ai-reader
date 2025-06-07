@@ -3,7 +3,7 @@ import { QuizProvider } from '../../application/ports/out/quiz-provider';
 import { QuizQuestion } from '../../entities/quiz-question';
 
 export class OpenAIQuizProvider implements QuizProvider {
-    constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {   }
+    constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
  
     async generateQuestions<T extends QuizQuestion>(content: string, schema: Record<string, unknown>, numOfQuestions = 2): Promise<T[]> {
         const arraySchema = this.wrapSchemaInArray(schema, numOfQuestions);
