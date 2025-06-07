@@ -1,69 +1,49 @@
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
 import { QuizProvider } from '../../application/ports/out/quiz-provider';
 import { QuizQuestion } from '../../entities/quiz-question';
-import OpenAI from 'openai';
-import { z, ZodSchema } from 'zod';
 
 export class OpenAIQuizProvider implements QuizProvider {
-    client: OpenAI;
-    
-    constructor(private readonly apiKey: string) {
-        this.client = new OpenAI({ apiKey: this.apiKey });
+    constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
+ 
+    async generateQuestions<T extends QuizQuestion>(content: string, schema: Record<string, unknown>, numOfQuestions = 2): Promise<T[]> {
+        const arraySchema = this.wrapSchemaInArray(schema, numOfQuestions);
+
+        const result = await this.structuredLLMProvider.functionCalling(
+            [this.systemNote(), this.userPrompt(content)],
+            arraySchema,
+            {
+                functionName: 'questions',
+                functionDescription: `Object with exactly ${numOfQuestions} elements`
+            }
+        );
+
+        return result as T[];
     }
 
-    async generateQuestions<T extends QuizQuestion>(content: string, schema: ZodSchema<T>, numOfQuestions = 2): Promise<T[]> {
-        const jsonSchema = zodToJsonSchema(schema, 'QuizQuestion');
-        const functionParameters = {
-            type: 'object',
-            properties: {
-                questions: {
-                    type: 'array',
-                    items: jsonSchema,
-                    minItems: numOfQuestions,
-                    maxItems: numOfQuestions
-                }
-            },
-            required: ['questions']
+    private systemNote(): Message {
+        return {
+            id: '1',
+            previousId: null,
+            role: Role.SYSTEM,
+            content: 'You are the teacher and you want to help student learn the provided materials. Your task is to generate questions'
         };
+    }
 
-        const completion = await this.client.chat.completions.create({
-            model: 'gpt-4.1',
-            messages: [
-                {
-                    role: 'system',
-                    content:
-                    'You are a precise JSON-only API. '
-                    + 'Return **only** JSON that matches the parameters of the function you will call. '
-                    + 'You help students learn the subject they are interested in. '
-                    + 'Each question must have: '
-                    + '- id: a unique string identifier '
-                    + '- type: must be "multiple_choice" '
-                    + '- content: the question text '
-                    + '- choices: an array of objects with id and label fields '
-                    + '- correctChoiceId: must match one of the choice IDs',
-                },
-                { role: 'user', content: `Create a quiz from the provided material: ${content}` },
-            ],
-            tools: [
-                {
-                    type: 'function',
-                    function: {
-                        name: 'answer',
-                        description:
-                    `Return an object with a 'questions' array containing ${numOfQuestions} quiz-question objects that match the schema.`,
-                        parameters: functionParameters,
-                    },
-                },
-            ],
-            tool_choice: { type: 'function', function: { name: 'answer' } },
-        });
-        
-        const msg = completion.choices[0].message;
-        const call = msg.tool_calls?.[0];
-        if (!call) {
-            throw new Error('Model replied without calling the `answer` tool');
-        }
-        const args = JSON.parse(call.function.arguments);
-        return z.array(schema).parse(args.questions);
+    private userPrompt(content: string): Message {
+        return {
+            id: '2',
+            previousId: '1',
+            role: Role.USER,
+            content: `Generate quiz for provided material:\n\n ${content}`
+        };
+    }
+
+    private wrapSchemaInArray(schema: Record<string, unknown>, numOfQuestions: number): Record<string, unknown> {
+        return {
+            type: 'array',
+            minItems: numOfQuestions,
+            maxItems: numOfQuestions,
+            items: schema
+        };
     }
 }

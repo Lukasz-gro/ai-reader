@@ -92,7 +92,7 @@ export const MultipleChoiceQuestionView: React.FC<MultipleChoiceQuestionViewProp
                         questionState.isCorrect ? 'bg-sd-50 text-p-10' : 'bg-a-50 text-p-10'
                     }`}
                 >
-                    {questionState.isCorrect ? 'Correct!' : 'Incorrect. Try again!'}
+                    {questionState.isCorrect ? 'Correct!' : (questionState.feedback || 'Incorrect. Try again!')}
                 </motion.div>
             )}
         </motion.div>

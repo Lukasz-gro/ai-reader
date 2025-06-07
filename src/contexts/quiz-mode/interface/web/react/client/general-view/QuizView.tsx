@@ -15,7 +15,8 @@ interface UnansweredState {
 
 interface AnsweredState {
     answered: true,
-    isCorrect: boolean
+    isCorrect: boolean,
+    feedback?: string
 }
 
 export type QuestionState = UnansweredState | AnsweredState;
@@ -34,7 +35,8 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
             .then(res => {
                 setCurrentQuestionState({
                     answered: true,
-                    isCorrect: res.ok
+                    isCorrect: res.ok,
+                    feedback: !res.ok ? res.feedback : undefined
                 });
                 setValidatingQuestion(false);
             });
@@ -64,6 +66,8 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
                     question={currentQuestion}
                     onAnswer={handleAnswer}
                     isAnswered={currentQuestionState.answered}
+                    isCorrect={currentQuestionState.answered ? currentQuestionState.isCorrect : false}
+                    feedback={currentQuestionState.answered ? currentQuestionState.feedback : undefined}
                 />
             );
         }
