@@ -11,6 +11,7 @@ import { AlwaysFailQuestionService } from '@/contexts/quiz-mode/infra/llms/Alway
 import { CheckUserAnswerUseCase } from '@/contexts/quiz-mode/application/use-cases/check-user-answer';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
+import { OpenAIStructuredProvider } from '@/shared/infra/llms/open-ai-structured-provider';
 
 class QuizModeController {
     constructor(
@@ -33,7 +34,9 @@ class QuizModeController {
 const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
  
-const quizProvider = new OpenAIQuizProvider(apiKey);
+const openAIStructuredProvider = new OpenAIStructuredProvider(apiKey);
+
+const quizProvider = new OpenAIQuizProvider(openAIStructuredProvider);
 
 const createQuizFromMaterialUseCase = new CreateQuizFromMaterialUseCase();
 

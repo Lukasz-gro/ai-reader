@@ -1,3 +1,5 @@
+import { QuizQuestion } from "@/contexts/quiz-mode/entities/quiz-question";
+
 export interface QuizProvider {
-    generateQuestions(content: string, schema: Record<string, any>, numOfQuestions?: number): Promise<unknown[]>; 
+    generateQuestions<T extends QuizQuestion>(content: string, schema: Record<string, any>, numOfQuestions?: number): Promise<T[]>; 
 }

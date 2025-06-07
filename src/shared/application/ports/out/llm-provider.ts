@@ -3,6 +3,10 @@ export interface LLMProvider {
     streamQuery: (conversation: Message[]) => AsyncGenerator<string, void, unknown>;
 }
 
+export interface StructuredLLMProvider {
+    functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, any>, functionCallingArguments: FunctionCallingArguments): Promise<T>;
+}
+
 export interface Message {
     id: string;
     role: Role
@@ -14,4 +18,9 @@ export enum Role {
     SYSTEM = 'SYSTEM',
     ASSISTANT = 'ASSISTANT',
     USER = 'USER',
+}
+
+export interface FunctionCallingArguments {
+    functionName: string, 
+    functionDescription: string
 }

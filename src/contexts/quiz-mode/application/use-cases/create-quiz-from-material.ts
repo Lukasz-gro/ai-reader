@@ -5,21 +5,19 @@ import { QuizProvider } from '@/contexts/quiz-mode/application/ports/out/quiz-pr
 import { v4 as uuidv4 } from 'uuid';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { multipleChoiceQuestionSchemaJson } from '../schemas/multiple-choice-question.schema';
-import { MultipleChoiceQuestion } from '../../entities/multiple-choice-question';
 import { openEndedQuestionSchemaJson } from '../schemas/open-ended-question.schema';
-import { OpenEndedQuestion } from '../../entities/open-ended-question';
 
 export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
     async execute(project: Project, quizProvider: QuizProvider, materialRepo: MaterialRepo): Promise<Quiz> {
         const multipleChoiceQuestions = await quizProvider.generateQuestions(
             await this.extractContent(project, materialRepo),
             multipleChoiceQuestionSchemaJson
-        ) as MultipleChoiceQuestion[];
+        );
         
         const openEndedQuestions = await quizProvider.generateQuestions(
             await this.extractContent(project, materialRepo),
             openEndedQuestionSchemaJson
-        ) as OpenEndedQuestion[];
+        );
         
         return {
             id: uuidv4(),
