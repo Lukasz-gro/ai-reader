@@ -4,7 +4,7 @@ export interface LLMProvider {
 }
 
 export interface StructuredLLMProvider {
-    functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, any>, functionCallingArguments: FunctionCallingArguments): Promise<T>;
+    functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T>;
 }
 
 export interface Message {

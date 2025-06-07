@@ -1,4 +1,4 @@
-import { FunctionCallingArguments, Message, Role, StructuredLLMProvider } from "@/shared/application/ports/out/llm-provider";
+import { FunctionCallingArguments, Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
 import OpenAI from 'openai';
 
 export class OpenAIStructuredProvider implements StructuredLLMProvider {
@@ -8,12 +8,12 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    async functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, any>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
+    async functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
         const parameters = {
             type: 'object',
             properties: { result: returnSchema },
             required: ['result'],
-          } as const;
+        } as const;
 
         const completion = await this.client.chat.completions.create({
             model: 'gpt-4.1',
@@ -55,10 +55,10 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
     }
 
     private getSystemNote(conversation: Message[]): string {
-        return conversation.filter(msg => msg.role === Role.SYSTEM).map(msg => msg.content).join()
+        return conversation.filter(msg => msg.role === Role.SYSTEM).map(msg => msg.content).join();
     }
 
     private getUserPrompt(conversation: Message[]): string {
-        return conversation.filter(msg => msg.role === Role.USER).map(msg => msg.content).join()
+        return conversation.filter(msg => msg.role === Role.USER).map(msg => msg.content).join();
     }
 }

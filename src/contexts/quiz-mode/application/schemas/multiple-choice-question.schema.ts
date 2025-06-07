@@ -12,8 +12,8 @@ export const multipleChoiceQuestionSchemaJson = {
             items: {
                 type: 'object',
                 properties: {
-                id:    { type: 'string' },
-                label: { type: 'string' },
+                    id:    { type: 'string' },
+                    label: { type: 'string' },
                 },
                 required: ['id', 'label'],
                 additionalProperties: false,

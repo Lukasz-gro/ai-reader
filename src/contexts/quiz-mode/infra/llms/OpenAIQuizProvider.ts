@@ -15,7 +15,7 @@ export class OpenAIQuizProvider implements QuizProvider {
                 functionName: 'questions',
                 functionDescription: `Object with exactly ${numOfQuestions} elements`
             }
-        )
+        );
 
         return result as T[];
     }
@@ -39,11 +39,11 @@ export class OpenAIQuizProvider implements QuizProvider {
     }
 
     private wrapSchemaInArray(schema: Record<string, unknown>, numOfQuestions: number): Record<string, unknown> {
-       return {
+        return {
             type: 'array',
             minItems: numOfQuestions,
             maxItems: numOfQuestions,
             items: schema
-        }
+        };
     }
 }
