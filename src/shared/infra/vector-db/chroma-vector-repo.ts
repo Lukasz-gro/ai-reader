@@ -6,6 +6,7 @@ interface ChromaMeta extends TextChunkMeta {
     parentId: string | null;
     childrenIds: string[];
     summary: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 }
 
@@ -138,7 +139,7 @@ export class ChromaVectorRepo implements VectorRepo {
             documents: string[];
             embeddings: number[][];
             metadatas: ChromaMeta[];
-        }) => Promise<any>
+        }) => Promise<unknown>
     ): Promise<LeafChunk[]> {
         if (chunks.length === 0) return [];
         const col = await this.getCollection();
@@ -173,6 +174,7 @@ export class ChromaVectorRepo implements VectorRepo {
 
 const NO_EMBED: EmbeddingFunction = {
     generate: async (_docs: string[]) => {
+        void _docs;
         throw new Error('Client must supply embeddings');
     },
 };
