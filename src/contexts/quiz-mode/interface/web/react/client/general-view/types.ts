@@ -1,1 +1,1 @@
-export type QuizSectionState = 'initial' | 'configuring' | 'taking-quiz'; 
+export type QuizSectionState = 'initial' | 'configuring' | 'taking-quiz' | 'quiz-completed'; 

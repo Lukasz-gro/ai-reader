@@ -1,15 +1,18 @@
 import React from 'react';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { QuizView } from '../QuizView';
+import { UserAnswer } from '../QuizSummary';
 
 interface QuizTakingStateProps {
     quiz: Quiz;
     onRestartQuiz: () => void;
+    onQuizComplete: (userAnswers: UserAnswer[]) => void;
 }
 
 export const QuizTakingState: React.FC<QuizTakingStateProps> = ({
     quiz,
     onRestartQuiz,
+    onQuizComplete,
 }) => {
     return (
         <div className={'flex flex-col h-full'}>
@@ -23,7 +26,7 @@ export const QuizTakingState: React.FC<QuizTakingStateProps> = ({
                 </button>
             </div>
             <div className={'flex-1 overflow-y-auto'}>
-                <QuizView quiz={quiz} />
+                <QuizView quiz={quiz} onQuizComplete={onQuizComplete} />
             </div>
         </div>
     );

@@ -44,7 +44,6 @@ export const QuizConfigurationForm: React.FC<QuizConfigurationFormProps> = ({
             <h2 className='text-2xl font-semibold mb-6 text-p-10'>Configure Your Quiz</h2>
             
             <form onSubmit={handleSubmit} className='space-y-6'>
-                {/* Number of Questions */}
                 <div className='space-y-3'>
                     <label htmlFor='questions-range' className='block text-p-10 font-medium'>
                         Number of Questions: {numberOfQuestions}
@@ -65,7 +64,6 @@ export const QuizConfigurationForm: React.FC<QuizConfigurationFormProps> = ({
                     </div>
                 </div>
 
-                {/* Difficulty Level */}
                 <fieldset className='space-y-3'>
                     <legend className='block text-p-10 font-medium'>Difficulty Level</legend>
                     <div className='flex gap-4'>
@@ -99,7 +97,6 @@ export const QuizConfigurationForm: React.FC<QuizConfigurationFormProps> = ({
                     </div>
                 </fieldset>
 
-                {/* Question Types */}
                 <fieldset className='space-y-3'>
                     <legend className='block text-p-10 font-medium'>Question Types</legend>
                     <div className='space-y-2'>
@@ -154,7 +151,6 @@ export const QuizConfigurationForm: React.FC<QuizConfigurationFormProps> = ({
                     )}
                 </fieldset>
 
-                {/* Action Buttons */}
                 <div className='flex gap-4 pt-4'>
                     <motion.button
                         type='submit'
