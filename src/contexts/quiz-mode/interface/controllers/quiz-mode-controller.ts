@@ -1,7 +1,7 @@
 import { QuizProvider } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { CreateQuizFromMaterial } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
-import { OpenAIQuizProvider } from '@/contexts/quiz-mode/infra/llms/OpenAIQuizProvider';
+import { OpenAIQuizProvider } from '@/contexts/quiz-mode/infra/llms/open-ai-quiz-provider';
 import { Project } from '@/shared/entities/project';
 import { CreateQuizFromMaterialUseCase } from '@/contexts/quiz-mode/application/use-cases/create-quiz-from-material';
 import { CheckUserAnswer } from '@/contexts/quiz-mode/application/ports/in/check-user-answer';
@@ -11,7 +11,7 @@ import { CheckUserAnswerUseCase } from '@/contexts/quiz-mode/application/use-cas
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
 import { OpenAIStructuredProvider } from '@/shared/infra/llms/open-ai-structured-provider';
-import { OpenAIQuestionService } from '../../infra/llms/OpenAIQuestionService';
+import { OpenAIQuestionService } from '../../infra/llms/open-ai-question-service';
 
 class QuizModeController {
     constructor(

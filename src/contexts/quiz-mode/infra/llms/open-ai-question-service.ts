@@ -1,4 +1,5 @@
-import { Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
+import { Message, Role } from '@/shared/application/ports/out/llm-provider';
+import { StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
 import { Answer, Question, QuestionServices, QuestionValidationResult } from '../../entities/question';
 import { questionValidationResultSchema } from '../../application/schemas/question-validation-result.schema';
 
@@ -6,7 +7,7 @@ export class OpenAIQuestionService implements QuestionServices {
     constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
     
     async validate(question: Question, userAnswer: Answer, context?: string): Promise<QuestionValidationResult> {
-        return await this.structuredLLMProvider.functionCalling(
+        return await this.structuredLLMProvider.structuredQuery(
             [this.systemNote(), this.userPrompt(question, userAnswer, context)],
             questionValidationResultSchema,
             {
@@ -22,7 +23,7 @@ export class OpenAIQuestionService implements QuestionServices {
             previousId: null,
             role: Role.SYSTEM,
             content: 'You are the teacher and you want to help student learn the provided materials. Your task is to grade user answer.' +
-            'You have to provide short feedback to the user if you find the answer incorrect'
+            'You have to provide short feedback to the user if you find the answer incorrect. Please always be nice to the user.'
         };
     }
 

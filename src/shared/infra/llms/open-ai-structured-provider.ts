@@ -1,5 +1,7 @@
-import { FunctionCallingArguments, Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
+import { Message, Role } from '@/shared/application/ports/out/llm-provider';
+import { FunctionCallingArguments, StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
 import OpenAI from 'openai';
+import { ChatCompletionMessageParam } from 'openai/resources/chat/completions/completions';
 
 export class OpenAIStructuredProvider implements StructuredLLMProvider {
     client: OpenAI;
@@ -8,7 +10,7 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    async functionCalling<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
+    async structuredQuery<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
         const parameters = {
             type: 'object',
             properties: { result: returnSchema },
@@ -16,7 +18,7 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
         } as const;
 
         const completion = await this.client.chat.completions.create({
-            model: 'gpt-4.1',
+            model: 'gpt-4.1-mini',
             response_format: { type: 'json_object' },
             messages: [
                 {
@@ -24,13 +26,10 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
                     content:
                     'You are a strict JSON-only API. ' +
                     'Return **only** JSON matching the function schema. ' +
-                    'Do NOT quote entire objects or arrays.' +
-                    this.getSystemNote(conversation)
+                    'Do NOT quote entire objects or arrays.'
                 },
-                { 
-                    role: 'user', 
-                    content: this.getUserPrompt(conversation) 
-                },
+                ...this.getSystemNote(conversation),
+                ...this.getUserPrompt(conversation)
             ],
             tools: [
                 {
@@ -54,11 +53,36 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
         return result;
     }
 
-    private getSystemNote(conversation: Message[]): string {
-        return conversation.filter(msg => msg.role === Role.SYSTEM).map(msg => msg.content).join();
+    private getSystemNote(conversation: Message[]) {
+        return conversation.filter(msg => msg.role === Role.SYSTEM).map(this.messageToOpenAI);
     }
 
-    private getUserPrompt(conversation: Message[]): string {
-        return conversation.filter(msg => msg.role === Role.USER).map(msg => msg.content).join();
+    private getUserPrompt(conversation: Message[]) {
+        return conversation.filter(msg => msg.role === Role.USER).map(this.messageToOpenAI);
+    }
+
+    private messageToOpenAI(message: Message): ChatCompletionMessageParam {
+        if (Array.isArray(message.content)) {
+            throw Error('Message should not be chunked in this context');
+        }
+        switch (message.role) {
+            case Role.SYSTEM:
+                return {
+                    role: 'system',
+                    content: message.content,
+                };
+            case Role.ASSISTANT:
+                return {
+                    role: 'assistant',
+                    content: message.content,
+                };
+            case Role.USER:
+                return {
+                    role: 'user',
+                    content: message.content,
+                };
+            default:
+                throw new Error('Should not be here');
+        }
     }
 }

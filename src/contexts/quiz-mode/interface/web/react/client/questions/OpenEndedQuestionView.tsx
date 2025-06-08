@@ -8,7 +8,7 @@ interface OpenEndedQuestionViewProps {
     onAnswer: (answer: Answer) => void;
     isAnswered?: boolean;
     isCorrect?: boolean;
-    feedback?: string;
+    feedback: string | null;
 }
 
 export const OpenEndedQuestionView: React.FC<OpenEndedQuestionViewProps> = ({

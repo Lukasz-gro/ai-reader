@@ -1,15 +1,16 @@
-import { Message, Role, StructuredLLMProvider } from '@/shared/application/ports/out/llm-provider';
+import { Message, Role } from '@/shared/application/ports/out/llm-provider';
+import { StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
 import { QuizProvider } from '../../application/ports/out/quiz-provider';
 import { QuizQuestion } from '../../entities/quiz-question';
 
 export class OpenAIQuizProvider implements QuizProvider {
     constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
  
-    async generateQuestions<T extends QuizQuestion>(content: string, schema: Record<string, unknown>, numOfQuestions = 2): Promise<T[]> {
-        const arraySchema = this.wrapSchemaInArray(schema, numOfQuestions);
+    async generateQuestions<T extends QuizQuestion>(resource: string, questionSchema: Record<string, unknown>, numOfQuestions = 2): Promise<T[]> {
+        const arraySchema = this.wrapSchemaInArray(questionSchema, numOfQuestions);
 
-        const result = await this.structuredLLMProvider.functionCalling(
-            [this.systemNote(), this.userPrompt(content)],
+        const result = await this.structuredLLMProvider.structuredQuery<T[]>(
+            [this.systemNote(), this.userPrompt(resource)],
             arraySchema,
             {
                 functionName: 'questions',
@@ -17,7 +18,7 @@ export class OpenAIQuizProvider implements QuizProvider {
             }
         );
 
-        return result as T[];
+        return result;
     }
 
     private systemNote(): Message {
@@ -25,7 +26,8 @@ export class OpenAIQuizProvider implements QuizProvider {
             id: '1',
             previousId: null,
             role: Role.SYSTEM,
-            content: 'You are the teacher and you want to help student learn the provided materials. Your task is to generate questions'
+            content: 'You are the teacher and you want to help student learn the provided materials. Your task is to generate questions.' + 
+            'Generate exactly the number of questions user asked you.'
         };
     }
 
