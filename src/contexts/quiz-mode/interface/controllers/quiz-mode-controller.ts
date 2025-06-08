@@ -12,6 +12,7 @@ import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
 import { OpenAIStructuredProvider } from '@/shared/infra/llms/open-ai-structured-provider';
 import { OpenAIQuestionService } from '../../infra/llms/open-ai-question-service';
+import { QuizCreationParams } from '../../application/ports/in/create-quiz-from-material';
 
 class QuizModeController {
     constructor(
@@ -22,8 +23,13 @@ class QuizModeController {
         private readonly materialRepo: MaterialRepo
     ) {}
 
-    async onCreateNewQuiz(project: Project): Promise<Quiz> {
-        return await this.createQuizFromMaterial.execute(project, this.quizProvider, this.materialRepo);
+    async onCreateCustomizedQuiz(project: Project, params: QuizCreationParams): Promise<Quiz> {
+        return await this.createQuizFromMaterial.execute(
+            project, 
+            this.quizProvider, 
+            this.materialRepo, 
+            params
+        );
     }
 
     async onCheckUserAnswer(question: QuizQuestion, userAnswer: Answer): Promise<QuestionValidationResult> {
