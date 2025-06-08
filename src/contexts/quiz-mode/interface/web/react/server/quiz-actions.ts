@@ -4,13 +4,12 @@ import { Project } from '@/shared/entities/project';
 import { quizModeController } from '@/contexts/quiz-mode/interface/controllers/quiz-mode-controller';
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { Answer, QuestionValidationResult } from '@/contexts/quiz-mode/entities/question';
+import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 
-export async function createNewQuiz(project: Project): Promise<Quiz> {
-    return await quizModeController.onCreateNewQuiz(project);
+export async function createCustomizedQuiz(project: Project, params: QuizCreationParams): Promise<Quiz> {
+    return await quizModeController.onCreateCustomizedQuiz(project, params);
 }
 
 export async function validateUserAnswer(question:QuizQuestion, userAnswer: Answer): Promise<QuestionValidationResult> {
-    const xd = await quizModeController.onCheckUserAnswer(question, userAnswer);
-    console.log(xd);
-    return xd;
+    return await quizModeController.onCheckUserAnswer(question, userAnswer);
 }

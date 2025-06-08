@@ -1,43 +1,85 @@
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
 import { StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
-import { QuizProvider } from '../../application/ports/out/quiz-provider';
+import { QuizProvider, QuizGenerationParams } from '../../application/ports/out/quiz-provider';
 import { QuizQuestion } from '../../entities/quiz-question';
 
 export class OpenAIQuizProvider implements QuizProvider {
     constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
  
-    async generateQuestions<T extends QuizQuestion>(resource: string, questionSchema: Record<string, unknown>, numOfQuestions = 2): Promise<T[]> {
-        const arraySchema = this.wrapSchemaInArray(questionSchema, numOfQuestions);
+    async generateQuestions<T extends QuizQuestion>(
+        resource: string, 
+        questionSchema: Record<string, unknown>, 
+        params: QuizGenerationParams
+    ): Promise<T[]> {
+        const arraySchema = this.wrapSchemaInArray(questionSchema, params.numberOfQuestions);
 
         const result = await this.structuredLLMProvider.structuredQuery<T[]>(
-            [this.systemNote(), this.userPrompt(resource)],
+            [this.systemNote(params), this.userPrompt(resource, params)],
             arraySchema,
             {
                 functionName: 'questions',
-                functionDescription: `Object with exactly ${numOfQuestions} elements`
+                functionDescription: `Object with exactly ${params.numberOfQuestions} questions at ${params.difficulty} difficulty level`
             }
         );
 
         return result;
     }
 
-    private systemNote(): Message {
+    private systemNote(params: QuizGenerationParams): Message {
+        const difficultyInstructions = this.getDifficultyInstructions(params.difficulty);
+        
         return {
             id: '1',
             previousId: null,
             role: Role.SYSTEM,
-            content: 'You are the teacher and you want to help student learn the provided materials. Your task is to generate questions.' + 
-            'Generate exactly the number of questions user asked you.'
+            content: `You are an experienced teacher creating quiz questions. Your task is to generate questions that help students learn the provided materials.
+
+            Difficulty Level: ${params.difficulty.toUpperCase()}
+            ${difficultyInstructions}
+
+            Requirements:
+            - Generate exactly the number of questions requested
+            - Ensure questions match the specified difficulty level
+            - Make questions educational and relevant to the material
+            - Use clear and appropriate language for the difficulty level`
         };
     }
 
-    private userPrompt(content: string): Message {
+    private userPrompt(resource: string, params: QuizGenerationParams): Message {
         return {
             id: '2',
             previousId: '1',
             role: Role.USER,
-            content: `Generate quiz for provided material:\n\n ${content}`
+            content: `Generate ${params.numberOfQuestions} ${params.difficulty} difficulty quiz questions for the following material:
+            Material:
+            ${resource}
+
+            Remember to create questions that test understanding at the ${params.difficulty} level.`
         };
+    }
+
+    private getDifficultyInstructions(difficulty: string): string {
+        const instructions = {
+            beginner: `- Focus on basic concepts and fundamental understanding
+            - Use simple, clear language
+            - Test recall and basic comprehension
+            - Avoid complex scenarios or advanced terminology
+            - Questions should be accessible to someone new to the topic`,
+            
+            intermediate: `- Test understanding and application of concepts
+            - Use moderate complexity in language and scenarios
+            - Include some analytical thinking but keep it manageable
+            - Balance between recall and application
+            - Assume some prior knowledge of the topic`,
+            
+            expert: `- Require deep understanding and critical thinking
+            - Use complex scenarios and advanced concepts
+            - Test analysis, synthesis, and evaluation skills
+            - Challenge assumptions and require nuanced understanding
+            - Expect mastery-level knowledge of the topic`
+        };
+
+        return instructions[difficulty as keyof typeof instructions] || instructions.intermediate;
     }
 
     private wrapSchemaInArray(schema: Record<string, unknown>, numOfQuestions: number): Record<string, unknown> {

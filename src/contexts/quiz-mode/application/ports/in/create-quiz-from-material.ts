@@ -7,6 +7,16 @@ export interface CreateQuizFromMaterial {
     execute(
         project: Project,
         quizProvider: QuizProvider,
-        materialRepo: MaterialRepo
+        materialRepo: MaterialRepo,
+        params: QuizCreationParams
     ): Promise<Quiz>;
+}
+
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'expert';
+
+export interface QuizCreationParams {
+    numberOfQuestions: number;
+    difficulty: DifficultyLevel;
+    includeMultipleChoice: boolean;
+    includeOpenEnded: boolean;
 }

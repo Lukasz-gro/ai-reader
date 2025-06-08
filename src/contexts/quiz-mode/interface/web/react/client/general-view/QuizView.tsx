@@ -77,12 +77,14 @@ export const QuizView: React.FC<QuizViewProps> = ({ quiz }) => {
         <div className='flex flex-col h-full'>
             {renderQuestion()}
             {currentQuestionState.answered && (
-                <button
-                    onClick={handleNext}
-                    className='mt-4 px-6 py-2 bg-a-50 hover:bg-a-50/80 text-p-10 rounded-lg transition-colors cursor-pointer'
-                >
-                    {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                </button>
+                <div className='flex justify-center mt-6'>
+                    <button
+                        onClick={handleNext}
+                        className='px-6 py-2 bg-a-50 hover:bg-a-50/80 text-p-10 rounded-lg transition-colors cursor-pointer text-sm font-medium'
+                    >
+                        {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                    </button>
+                </div>
             )}
         </div>
     );
