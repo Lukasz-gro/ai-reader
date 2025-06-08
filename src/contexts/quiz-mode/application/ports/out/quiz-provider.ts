@@ -1,6 +1,5 @@
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
-import { ZodSchema } from 'zod';
 
 export interface QuizProvider {
-    generateQuestions<T extends QuizQuestion>(content: string, schema: ZodSchema<T>, numOfQuestions?: number): Promise<T[]>; 
+    generateQuestions<T extends QuizQuestion>(resource: string, questionSchema: Record<string, unknown>, numOfQuestions?: number): Promise<T[]>; 
 }
