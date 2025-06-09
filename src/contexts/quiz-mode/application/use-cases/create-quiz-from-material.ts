@@ -4,8 +4,8 @@ import { CreateQuizFromMaterial } from '@/contexts/quiz-mode/application/ports/i
 import { QuizProvider, QuizGenerationParams } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
 import { v4 as uuidv4 } from 'uuid';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
-import { multipleChoiceQuestionSchemaJson } from '../schemas/multiple-choice-question.schema';
-import { openEndedQuestionSchemaJson } from '../schemas/open-ended-question.schema';
+import { multipleChoiceQuestionSchemaJson, validateMCQSchema } from '../schemas/multiple-choice-question.schema';
+import { openEndedQuestionSchemaJson, validateOEQSchema } from '../schemas/open-ended-question.schema';
 import { QuizCreationParams } from '../ports/in/create-quiz-from-material';
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 
@@ -29,7 +29,10 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
         if (params.includeMultipleChoice && multipleChoiceCount > 0) {
             const multipleChoiceQuestions = await quizProvider.generateQuestions(
                 content,
-                multipleChoiceQuestionSchemaJson,
+                {
+                    schemaDefinition: multipleChoiceQuestionSchemaJson,
+                    validateSchema: validateMCQSchema
+                },
                 { ...generationParams, numberOfQuestions: multipleChoiceCount }
             );
             questions.push(...multipleChoiceQuestions);
@@ -38,7 +41,10 @@ export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {
         if (params.includeOpenEnded && openEndedCount > 0) {
             const openEndedQuestions = await quizProvider.generateQuestions(
                 content,
-                openEndedQuestionSchemaJson,
+                {
+                    schemaDefinition: openEndedQuestionSchemaJson,
+                    validateSchema: validateOEQSchema
+                },
                 { ...generationParams, numberOfQuestions: openEndedCount }
             );
             questions.push(...openEndedQuestions);

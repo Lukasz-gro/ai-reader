@@ -1,5 +1,6 @@
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { DifficultyLevel } from '../in/create-quiz-from-material';
+import { ReturnSchema } from '@/shared/application/ports/out/structured-llm-provider';
 
 export interface QuizGenerationParams {
     difficulty: DifficultyLevel;
@@ -9,7 +10,7 @@ export interface QuizGenerationParams {
 export interface QuizProvider {
     generateQuestions<T extends QuizQuestion>(
         resource: string, 
-        questionSchema: Record<string, unknown>, 
+        questionSchema: ReturnSchema<T>, 
         params: QuizGenerationParams
     ): Promise<T[]>; 
 }

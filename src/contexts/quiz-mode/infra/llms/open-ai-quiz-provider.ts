@@ -1,5 +1,5 @@
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
-import { StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
+import { ReturnSchema, StructuredLLMProvider, ValidateSchemaFn } from '@/shared/application/ports/out/structured-llm-provider';
 import { QuizProvider, QuizGenerationParams } from '../../application/ports/out/quiz-provider';
 import { QuizQuestion } from '../../entities/quiz-question';
 
@@ -8,14 +8,15 @@ export class OpenAIQuizProvider implements QuizProvider {
  
     async generateQuestions<T extends QuizQuestion>(
         resource: string, 
-        questionSchema: Record<string, unknown>, 
+        questionSchema: ReturnSchema<T>, 
         params: QuizGenerationParams
     ): Promise<T[]> {
-        const arraySchema = this.wrapSchemaInArray(questionSchema, params.numberOfQuestions);
-
         const result = await this.structuredLLMProvider.structuredQuery<T[]>(
             [this.systemNote(params), this.userPrompt(resource, params)],
-            arraySchema,
+            {
+                schemaDefinition: this.wrapSchemaInArray(questionSchema.schemaDefinition, params.numberOfQuestions),
+                validateSchema: this.validationForArraySchema(questionSchema.validateSchema, params.numberOfQuestions)
+            },
             {
                 functionName: 'questions',
                 functionDescription: `Object with exactly ${params.numberOfQuestions} questions at ${params.difficulty} difficulty level`
@@ -80,6 +81,15 @@ export class OpenAIQuizProvider implements QuizProvider {
         };
 
         return instructions[difficulty as keyof typeof instructions] || instructions.intermediate;
+    }
+
+    private validationForArraySchema<T>(singleElementValidator: ValidateSchemaFn<T>, elems: number): ValidateSchemaFn<T[]> {
+        return (value: unknown): value is T[] => {
+            if (!Array.isArray(value) || value.length !== elems) {
+                return false;
+            }
+            return value.every(singleElementValidator);
+        };
     }
 
     private wrapSchemaInArray(schema: Record<string, unknown>, numOfQuestions: number): Record<string, unknown> {

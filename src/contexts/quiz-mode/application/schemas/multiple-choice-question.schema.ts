@@ -1,3 +1,9 @@
+import Ajv, { ValidateFunction } from 'ajv';
+import { MultipleChoiceQuestion } from '../../entities/multiple-choice-question';
+import { ValidateSchemaFn } from '@/shared/application/ports/out/structured-llm-provider';
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
 export const multipleChoiceQuestionSchemaJson = {
     $id: 'MultipleChoiceQuestion',
     type: 'object',
@@ -25,3 +31,13 @@ export const multipleChoiceQuestionSchemaJson = {
     required: ['id', 'type', 'content', 'choices', 'correctChoiceId'],
     additionalProperties: false,
 } as const;
+
+const validateMCQ: ValidateFunction<MultipleChoiceQuestion> = ajv.compile(multipleChoiceQuestionSchemaJson);
+
+export const validateMCQSchema: ValidateSchemaFn<MultipleChoiceQuestion> = (value: unknown): value is MultipleChoiceQuestion => {
+    if (!validateMCQ(value)) {
+        return false;
+    }
+
+    return value.choices.some((c) => c.id === value.correctChoiceId);
+};

@@ -1,3 +1,9 @@
+import Ajv, { ValidateFunction } from 'ajv';
+import { QuestionValidationResult } from '../../entities/question';
+import { ValidateSchemaFn } from '@/shared/application/ports/out/structured-llm-provider';
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
 export const questionValidationResultSchema = {
     oneOf: [
         {
@@ -17,3 +23,9 @@ export const questionValidationResultSchema = {
         },
     ],
 } as const;
+
+const validateQVR: ValidateFunction<QuestionValidationResult> = ajv.compile(questionValidationResultSchema);
+
+export const validateQVRSchema: ValidateSchemaFn<QuestionValidationResult> = (value: unknown): value is QuestionValidationResult => {
+    return validateQVR(value);
+};
