@@ -29,7 +29,8 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "tailwindcss": "^4.1.7",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "bcrypt": "^5.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -42,6 +43,7 @@
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/bcrypt": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^4.4.1",
