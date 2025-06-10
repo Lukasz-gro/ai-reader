@@ -1,7 +1,7 @@
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
 import { StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
 import { Answer, Question, QuestionServices, QuestionValidationResult } from '../../entities/question';
-import { questionValidationResultSchema } from '../../application/schemas/question-validation-result.schema';
+import { questionValidationResultSchema, validateQVRSchema } from '../../application/schemas/question-validation-result.schema';
 
 export class OpenAIQuestionService implements QuestionServices {
     constructor(private readonly structuredLLMProvider: StructuredLLMProvider) {}
@@ -9,7 +9,10 @@ export class OpenAIQuestionService implements QuestionServices {
     async validate(question: Question, userAnswer: Answer, context?: string): Promise<QuestionValidationResult> {
         return await this.structuredLLMProvider.structuredQuery(
             [this.systemNote(), this.userPrompt(question, userAnswer, context)],
-            questionValidationResultSchema,
+            {
+                schemaDefinition: questionValidationResultSchema,
+                validateSchema: validateQVRSchema
+            },
             {
                 functionName: 'questionValidation',
                 functionDescription: 'Validation result for a single open-ended answer.'

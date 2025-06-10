@@ -1,5 +1,5 @@
 import { Message, Role } from '@/shared/application/ports/out/llm-provider';
-import { FunctionCallingArguments, StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
+import { FunctionCallingArguments, ReturnSchema, StructuredLLMProvider } from '@/shared/application/ports/out/structured-llm-provider';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions/completions';
 
@@ -10,10 +10,10 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
         this.client = new OpenAI({ apiKey: this.apiKey });
     }
 
-    async structuredQuery<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
+    async structuredQuery<T>(conversation: Message[], returnSchema: ReturnSchema<T>, functionCallingArguments: FunctionCallingArguments): Promise<T> {
         const parameters = {
             type: 'object',
-            properties: { result: returnSchema },
+            properties: { result: returnSchema.schemaDefinition },
             required: ['result'],
         } as const;
 
@@ -50,7 +50,11 @@ export class OpenAIStructuredProvider implements StructuredLLMProvider {
             throw new Error(`Model replied without calling the ${functionCallingArguments.functionName} tool`);
         }
         const { result } = JSON.parse(call.function.arguments);
-        return result;
+
+        if (returnSchema.validateSchema(result)) {
+            return result;
+        }
+        throw new Error('Invalid schema returned from OpenAI Structured Provider');
     }
 
     private getSystemNote(conversation: Message[]) {

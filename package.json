@@ -15,6 +15,7 @@
     "diagram:all": "pnpm run diagram:classes && npm run diagram:deps"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "chromadb": "^3.0.1",
     "framer-motion": "^12.12.2",
     "gpt-tokenizer": "^2.9.0",

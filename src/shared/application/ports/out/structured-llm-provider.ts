@@ -1,8 +1,14 @@
 import { Message } from './llm-provider';
 
+export type ValidateSchemaFn<T> = (value: unknown) => value is T; 
+
+export interface ReturnSchema<T> {
+    schemaDefinition: Record<string, unknown>;
+    validateSchema: ValidateSchemaFn<T>;
+}
 
 export interface StructuredLLMProvider {
-    structuredQuery<T = unknown>(conversation: Message[], returnSchema: Record<string, unknown>, functionCallingArguments: FunctionCallingArguments): Promise<T>;
+    structuredQuery<T>(conversation: Message[], returnSchema: ReturnSchema<T>, functionCallingArguments: FunctionCallingArguments): Promise<T>;
 }
 
 export interface FunctionCallingArguments {
