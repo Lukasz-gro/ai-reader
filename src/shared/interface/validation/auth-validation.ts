@@ -35,12 +35,10 @@ export function validateRegistrationInput(
 
     if (!password || password.length === 0) {
         errors.push({ field: 'password', message: 'Password is required' });
-    } else if (password.length < 8) {
-        errors.push({ field: 'password', message: 'Password must be at least 8 characters' });
+    } else if (password.length < 3) {
+        errors.push({ field: 'password', message: 'Password must be at least 3 characters' });
     } else if (password.length > 128) {
         errors.push({ field: 'password', message: 'Password must be less than 128 characters' });
-    } else if (!hasMinimumPasswordStrength(password)) {
-        errors.push({ field: 'password', message: 'Password must contain at least one letter and one number' });
     }
 
     return {
@@ -80,9 +78,3 @@ function isValidUsername(username: string): boolean {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     return usernameRegex.test(username);
 }
-
-function hasMinimumPasswordStrength(password: string): boolean {
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    return hasLetter && hasNumber;
-} 

@@ -27,25 +27,15 @@ export async function registerAction(
     
         await authController.register(username, email, password);
     
-        const httpHeaders = await headers();
-        const session = await authController.authenticate(
-            email, 
-            password,
-            httpHeaders.get('x-forwarded-for') || undefined,
-            httpHeaders.get('user-agent') || undefined
-        );
-    
-        if (session) {
-            await setSessionCookie(session.id);
-            redirect('/dashboard');
-        }
-    
-        return { 
-            success: true,
-            errors: [{ field: 'general', message: 'Registration successful. Please log in manually.' }]
-        };
-    
+        redirect('/login?message=registration-success');
+        
     } catch (error) {
+        if (
+            (error instanceof Error && error.message === 'NEXT_REDIRECT') ||
+            (typeof error === 'object' && error !== null && 'digest' in (error as { digest?: string }) && (error as { digest?: string }).digest === 'NEXT_REDIRECT')
+        ) {
+            throw error;
+        }
         const message = error instanceof Error ? error.message : 'Registration failed';
         return { 
             success: false, 
@@ -84,8 +74,16 @@ export async function loginAction(
     
         await setSessionCookie(session.id);
         redirect('/dashboard');
+        
+        return { success: true };
     
-    } catch {
+    } catch (error) {
+        if (
+            (error instanceof Error && error.message === 'NEXT_REDIRECT') ||
+            (typeof error === 'object' && error !== null && 'digest' in (error as { digest?: string }) && (error as { digest?: string }).digest === 'NEXT_REDIRECT')
+        ) {
+            throw error;
+        }
         return { 
             success: false, 
             errors: [{ field: 'general', message: 'Login failed. Please try again.' }] 
@@ -104,6 +102,6 @@ export async function logoutAction(): Promise<void> {
         console.error('Error invalidating session:', error);
     } finally {
         await clearSessionCookie();
-        redirect('/');
+        redirect('/login?message=logged-out');
     }
 } 

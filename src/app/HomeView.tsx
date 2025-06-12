@@ -342,8 +342,8 @@ const MaterialsDisplay: React.FC<{ materials: Material[] }> = ({ materials }) =>
 
     return (
         <div className='flex-1 overflow-y-auto flex flex-col p-4 gap-2 custom-scrollbar'>
-            {materials.map(m => (
-                <div key={m.id} className={`${classDefault} ${classHover} with-noise shrink-0 fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
+            {materials.map((m, idx) => (
+                <div key={`${m.id}-${idx}`} className={`${classDefault} ${classHover} with-noise shrink-0 fade-bg-to-bottom squeeze-bottom border-x-2 border-t-2 transition-all duration-150 px-4 pt-4 pb-8 mb-[-32px] rounded-t-lg overflow-x-hidden text-ellipsis`}>
                     <div className='content-perspective'>
                         <p className={'text-sm font-mono'} title={m.title}>{m.title}</p>
                         {typeof m.content.metadata?.pages === 'number' &&

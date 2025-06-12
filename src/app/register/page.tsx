@@ -1,11 +1,12 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { registerAction } from '@/shared/interface/web/react/auth/server/auth-actions';
 import Link from 'next/link';
 
 export default function RegisterPage() {
-    const [state, action] = useFormState(registerAction, null);
+    const [formState, formAction] = useActionState(registerAction, null);
 
     return (
         <div className='min-h-screen bg-p-90 flex items-center justify-center px-4'>
@@ -16,7 +17,7 @@ export default function RegisterPage() {
                         <p className='text-p-50'>Join us and start learning</p>
                     </div>
 
-                    <form action={action} className='space-y-6'>
+                    <form action={formAction} className='space-y-6'>
                         <div>
                             <label htmlFor='username' className='block text-sm font-medium text-p-10 mb-2'>
                 Username
@@ -64,13 +65,13 @@ export default function RegisterPage() {
                                 placeholder='Create a password'
                             />
                             <p className='text-xs text-p-50 mt-1'>
-                Must be at least 8 characters with letters and numbers
+                Must be at least 3 characters
                             </p>
                         </div>
 
-                        {state?.errors && (
+                        {formState?.errors && (
                             <div className='space-y-2'>
-                                {state.errors.map((error, index) => (
+                                {formState.errors.map((error, index) => (
                                     <div key={index} className='text-a-50 text-sm'>
                                         {error.message}
                                     </div>
