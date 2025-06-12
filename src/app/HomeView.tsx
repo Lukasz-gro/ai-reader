@@ -1,3 +1,5 @@
+'use client';
+
 import { Chat } from '@/contexts/course-mode/interface/web/react/chat/client/Chat';
 import { createNewProjectConversation } from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
 import { NoProjectPlaceholder } from '@/contexts/course-mode/interface/web/react/project/NoProjectPlaceholder';
@@ -5,20 +7,24 @@ import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/gen
 import { Conversation, Mode } from '@/shared/entities/conversation';
 import { Material } from '@/shared/entities/material';
 import { Project } from '@/shared/entities/project';
+import { User } from '@/shared/entities/user';
 import {
     uploadMaterialAction,
     getMaterialsByIds,
     getValidUploadExtensions
 } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
-import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
+import { logoutAction } from '@/shared/interface/web/react/auth/server/auth-actions';
+import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon, LogInIcon, UserPlusIcon, LogOutIcon } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect, useState, useRef } from 'react';
 
 export interface HomeViewProps {
     projects: Project[];
+    currentUser?: User | null;
 }
 
-export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
+export const HomeView: React.FC<HomeViewProps> = ({ projects, currentUser }) => {
     const [activeTab, setActiveTab] = useState<Mode>('course');
     const [activeProject, setActiveProject] = useState<Project>(projects[0]);
     
@@ -37,7 +43,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects }) => {
                 <LeftSideSection projects={projects} onProjectSelect={setActiveProject} />
             </aside>
             <main className='flex-1 flex flex-col'>
-                <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} />
+                <TopMenu activeTab={activeTab} onSelectActiveTab={setActiveTab} currentUser={currentUser} />
                 <section className='flex-1 overflow-y-auto p-6'>
                     <CenterSection
                         activeTab={activeTab}
@@ -124,16 +130,16 @@ const ProjectPicker: React.FC<{
     );
 };
 
-const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void}> = ({ activeTab, onSelectActiveTab }) => {
+const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void, currentUser?: User | null}> = ({ activeTab, onSelectActiveTab, currentUser }) => {
     return (
         <div className={'flex justify-between items-center border-b border-p-80'}>
             <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => onSelectActiveTab(newMode)} />
             <div className={'flex gap-4 mr-8'}>
-                <Tooltip tooltip={'Account'}>
-                    <button>
-                        <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
-                    </button>
-                </Tooltip>
+                {currentUser ? (
+                    <AuthenticatedUserMenu user={currentUser} />
+                ) : (
+                    <UnauthenticatedUserMenu />
+                )}
                 <Tooltip tooltip={'Settings'}>
                     <button>
                         <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
@@ -158,6 +164,43 @@ const ConversationModeSelector: React.FC<{activeTab: Mode, onSelectActiveTab: (m
                 </button>
             ))}
         </nav>
+    );
+};
+
+const AuthenticatedUserMenu: React.FC<{ user: User }> = ({ user }) => {
+    return (
+        <div className={'flex gap-4 items-center'}>
+            <Tooltip tooltip={`Logged in as ${user.username}`}>
+                <Link href='/dashboard' className={'flex items-center gap-2 px-3 py-1 rounded hover:bg-p-80 transition-colors duration-200'}>
+                    <UserIcon className={'w-4 h-4 stroke-p-50'} />
+                    <span className={'text-p-50 text-sm'}>{user.username}</span>
+                </Link>
+            </Tooltip>
+            <Tooltip tooltip={'Logout'}>
+                <form action={logoutAction} className={'inline'}>
+                    <button type='submit'>
+                        <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                    </button>
+                </form>
+            </Tooltip>
+        </div>
+    );
+};
+
+const UnauthenticatedUserMenu: React.FC = () => {
+    return (
+        <div className={'flex gap-4'}>
+            <Tooltip tooltip={'Sign In'}>
+                <Link href='/login'>
+                    <LogInIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                </Link>
+            </Tooltip>
+            <Tooltip tooltip={'Register'}>
+                <Link href='/register'>
+                    <UserPlusIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                </Link>
+            </Tooltip>
+        </div>
     );
 };
 
