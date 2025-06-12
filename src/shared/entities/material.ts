@@ -6,3 +6,8 @@ export interface Material {
     title: string;
     content: ParsedContent;
 }
+
+export interface UiMaterial {
+    id: string;
+    title: string;
+}

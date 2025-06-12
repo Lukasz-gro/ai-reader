@@ -38,6 +38,7 @@ function generateProjectConversation(
     const firstMessage = generateFirstMessage(project);
     return {
         id: uuidv4(),
+        title: 'New conversation',
         messages: [firstMessage],
         mode: mode
     };
