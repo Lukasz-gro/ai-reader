@@ -11,8 +11,21 @@ import {
 } from './states';
 import { QuizSectionState } from './types';
 import { UserAnswer } from './QuizSummary';
+import { User } from '@/shared/entities/user';
+import { AuthProtected } from '@/shared/interface/web/react/auth/AuthProtected';
 
 export const QuizSection: React.FC<{
+    activeProject: Project,
+    currentUser: User | null,
+}> = ({ activeProject, currentUser }) => {
+    return (
+        <AuthProtected user={currentUser}>
+            <QuizSectionContent activeProject={activeProject} />
+        </AuthProtected>
+    );
+};
+
+const QuizSectionContent: React.FC<{
     activeProject: Project,
 }> = ({ activeProject }) => {
     const [sectionState, setSectionState] = useState<QuizSectionState>('initial');

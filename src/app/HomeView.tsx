@@ -48,6 +48,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ projects, currentUser }) => 
                     <CenterSection
                         activeTab={activeTab}
                         activeProject={activeProject}
+                        currentUser={currentUser}
                     />
                 </section>
             </main>
@@ -214,14 +215,15 @@ const UnauthenticatedUserMenu: React.FC = () => {
 
 const CenterSection: React.FC<{
     activeProject: Project | null,
-    activeTab: Mode
-}> = ({ activeProject, activeTab }) => {
+    activeTab: Mode,
+    currentUser: User | null
+}> = ({ activeProject, activeTab, currentUser }) => {
     if (!activeProject) {
         return <NoProjectPlaceholder />;
     }
 
     if (activeTab === 'quiz') {
-        return <QuizSection activeProject={activeProject}></QuizSection>;
+        return <QuizSection activeProject={activeProject} currentUser={currentUser}></QuizSection>;
     }
     return <ConversationSection activeProject={activeProject} activeTab={activeTab}/>;
 };
