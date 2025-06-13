@@ -18,10 +18,8 @@ export class InMemoryUserRepo implements UserRepo {
         const existingIndex = this.users.findIndex(u => u.id === user.id);
         
         if (existingIndex !== -1) {
-            // Update existing user
             this.users[existingIndex] = user;
         } else {
-            // Add new user
             this.users.push(user);
         }
         

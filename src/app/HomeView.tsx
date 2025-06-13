@@ -21,7 +21,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 export interface HomeViewProps {
     projects: Project[];
-    currentUser?: User | null;
+    currentUser: User | null;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ projects, currentUser }) => {
@@ -130,16 +130,24 @@ const ProjectPicker: React.FC<{
     );
 };
 
-const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void, currentUser?: User | null}> = ({ activeTab, onSelectActiveTab, currentUser }) => {
+const UserMenu: React.FC<{ currentUser: User | null }> = ({ currentUser }) => {
+    return (
+        <>
+            {currentUser ? (
+                <AuthenticatedUserMenu user={currentUser} />
+            ) : (
+                <UnauthenticatedUserMenu />
+            )}
+        </>
+    );
+};
+
+const TopMenu: React.FC<{activeTab: Mode, onSelectActiveTab: (m: Mode) => void, currentUser: User | null}> = ({ activeTab, onSelectActiveTab, currentUser }) => {
     return (
         <div className={'flex justify-between items-center border-b border-p-80'}>
             <ConversationModeSelector activeTab={activeTab} onSelectActiveTab={(newMode) => onSelectActiveTab(newMode)} />
             <div className={'flex gap-4 mr-8'}>
-                {currentUser ? (
-                    <AuthenticatedUserMenu user={currentUser} />
-                ) : (
-                    <UnauthenticatedUserMenu />
-                )}
+                <UserMenu currentUser={currentUser} />
                 <Tooltip tooltip={'Settings'}>
                     <button>
                         <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />

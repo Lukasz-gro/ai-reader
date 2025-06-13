@@ -13,7 +13,7 @@ const mockProject: Project = {
         title: 'Mock Project Roadmap',
         checkpoints: []
     },
-    materialIds: ['1dae40e9-a56b-4235-9ec2-18d54ebb2e60'],
+    materialIds: [],
     conversations: [],
     quizes: []
 };
@@ -21,6 +21,7 @@ const mockProject: Project = {
 export default async function Home() {
     const currentUser = await getCurrentUser();
     
+    // TODO projects should be fetched for the logged user
     return (
         <HomeView projects={[mockProject]} currentUser={currentUser} />
     );

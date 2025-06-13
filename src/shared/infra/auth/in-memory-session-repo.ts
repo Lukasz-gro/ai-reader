@@ -5,7 +5,6 @@ export class InMemorySessionRepo implements SessionRepo {
     private sessions: Session[] = [];
 
     async create(session: Session): Promise<Session> {
-        // Clean up expired sessions before adding new one
         this.cleanupExpiredSessions();
         
         this.sessions.push(session);
@@ -13,12 +12,10 @@ export class InMemorySessionRepo implements SessionRepo {
     }
 
     async findById(id: string): Promise<Session | null> {
-        // Clean up expired sessions before searching
         this.cleanupExpiredSessions();
         
         const session = this.sessions.find(s => s.id === id);
         
-        // Double-check if found session is still valid
         if (session && this.isSessionExpired(session)) {
             await this.invalidate(session.id);
             return null;
@@ -28,7 +25,6 @@ export class InMemorySessionRepo implements SessionRepo {
     }
 
     async findByUserId(userId: string): Promise<Session[]> {
-        // Clean up expired sessions before searching
         this.cleanupExpiredSessions();
         
         return this.sessions.filter(s => s.userId === userId && !this.isSessionExpired(s));

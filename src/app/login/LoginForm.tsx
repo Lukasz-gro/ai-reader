@@ -6,7 +6,7 @@ import { loginAction } from '@/shared/interface/web/react/auth/server/auth-actio
 import Link from 'next/link';
 
 interface LoginFormProps {
-  message: string | null;
+  readonly message: string | null;
 }
 
 export default function LoginForm({ message }: LoginFormProps) {
@@ -63,8 +63,8 @@ export default function LoginForm({ message }: LoginFormProps) {
                         </div>
                         {formState?.errors && (
                             <div className='space-y-2'>
-                                {formState.errors.map((error: { field: string; message: string }, index: number) => (
-                                    <div key={index} className='text-a-50 text-sm'>
+                                {formState.errors.map((error: { field: string; message: string }) => (
+                                    <div key={error.field} className='text-a-50 text-sm'>
                                         {error.message}
                                     </div>
                                 ))}
@@ -101,7 +101,7 @@ function SubmitButton() {
     );
 }
 
-function Banner({ children, color }: { children: React.ReactNode; color: 'sd' | 'p' | 'a' }) {
+function Banner({ children, color }: { readonly children: React.ReactNode; readonly color: 'sd' | 'p' | 'a' }) {
     const palette = {
         sd: { bg: 'bg-sd-90/20', border: 'border-sd-50/30', text: 'text-sd-50' },
         p: { bg: 'bg-p-80/20', border: 'border-p-50/30', text: 'text-p-50' },
