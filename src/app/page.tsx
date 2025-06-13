@@ -1,7 +1,8 @@
-'use client';
+export const dynamic = 'force-dynamic';
 
 import { HomeView } from '@/app/HomeView';
 import { Project } from '@/shared/entities/project';
+import { getCurrentUser } from '@/shared/interface/middleware/auth-middleware';
 
 // If you use json db you can add some materialIds to fetch them on initial load
 const mockProject: Project = {
@@ -17,8 +18,11 @@ const mockProject: Project = {
     quizes: []
 };
 
-export default function Home() {
+export default async function Home() {
+    const currentUser = await getCurrentUser();
+    
+    // TODO projects should be fetched for the logged user
     return (
-        <HomeView projects={[mockProject]}/>
+        <HomeView projects={[mockProject]} currentUser={currentUser} />
     );
 }
