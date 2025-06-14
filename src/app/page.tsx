@@ -14,7 +14,7 @@ const mockProject: Project = {
     },
     materialIds: [],
     conversations: [],
-    quizes: []
+    quizzes: []
 };
 
 export default function Home() {
