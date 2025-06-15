@@ -1,4 +1,4 @@
-import { Project } from "@/shared/entities/project";
+import { Project } from '@/shared/entities/project';
 
 export type Action =
   | { type: 'FETCH_START' }

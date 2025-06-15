@@ -7,17 +7,17 @@ import { Quiz } from './Quiz';
 // import { Chat } from './Chat';
 
 export const routes: RouteObject[] = [
-  {
-    path: ROUTES.HOME,
-    element: <Home />,
-  },
-  // TODO: Add more routes as they are implemented
-  // {
-  //   path: ROUTES.CHAT,
-  //   element: <Chat />,
-  // },
-  {
-    path: ROUTES.QUIZ,
-    element: <Quiz />,
-  },
+    {
+        path: ROUTES.HOME,
+        element: <Home />,
+    },
+    // TODO: Add more routes as they are implemented
+    // {
+    //   path: ROUTES.CHAT,
+    //   element: <Chat />,
+    // },
+    {
+        path: ROUTES.QUIZ,
+        element: <Quiz />,
+    },
 ]; 

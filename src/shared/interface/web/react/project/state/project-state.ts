@@ -1,4 +1,4 @@
-import { Project } from "@/shared/entities/project"
+import { Project } from '@/shared/entities/project';
 
 interface SuccessState {
     status: 'success';

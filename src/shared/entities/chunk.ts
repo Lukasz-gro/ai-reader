@@ -30,8 +30,6 @@ export interface TextChunkMeta {
 
 export interface SummarizedChunk extends TextChunk, Summarized { }
 
-export interface LeafChunk extends TextChunk, Embedded { }
-
 export interface LeafChunk extends TextChunk, Embedded, Summarized { }
 
 export interface ParentChunk extends TextChunk, Summarized { }

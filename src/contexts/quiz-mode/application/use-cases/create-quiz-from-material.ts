@@ -1,12 +1,11 @@
 import { Project } from '@/shared/entities/project';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
-import { CreateQuizFromMaterial } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
+import { CreateQuizFromMaterial , QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 import { QuizProvider, QuizGenerationParams } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
 import { v4 as uuidv4 } from 'uuid';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 import { multipleChoiceQuestionSchemaJson, validateMCQSchema } from '../schemas/multiple-choice-question.schema';
 import { openEndedQuestionSchemaJson, validateOEQSchema } from '../schemas/open-ended-question.schema';
-import { QuizCreationParams } from '../ports/in/create-quiz-from-material';
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 
 export class CreateQuizFromMaterialUseCase implements CreateQuizFromMaterial {

@@ -1,5 +1,5 @@
-import { Action } from "./project-actions";
-import { ProjectState } from "./project-state";
+import { Action } from './project-actions';
+import { ProjectState } from './project-state';
 
 export function projectStateReducer(state: ProjectState, action: Action): ProjectState {
     switch (action.type) {
@@ -11,12 +11,12 @@ export function projectStateReducer(state: ProjectState, action: Action): Projec
             return { status: 'error', error: action.payload };
         case 'SELECT':
             if (state.status !== 'success') {
-                throw new Error("Illegal state in SELECT action");
+                throw new Error('Illegal state in SELECT action');
             }
             return { ...state, currentId: action.payload };
         case 'CREATE':
             if (state.status !== 'success') {
-                throw new Error("Illegal state in CREATE action");
+                throw new Error('Illegal state in CREATE action');
             }
             return { ...state, projects: [...state.projects, action.payload] };
         default:
