@@ -9,12 +9,12 @@ export function projectStateReducer(state: ProjectState, action: Action): Projec
             return { status: 'success', projects: action.payload, currentId: null };
         case 'FETCH_ERROR':
             return { status: 'error', error: action.payload };
-        case 'SELECT':
+        case 'PROJECT_SELECTED':
             if (state.status !== 'success') {
                 throw new Error('Illegal state in SELECT action');
             }
             return { ...state, currentId: action.payload };
-        case 'CREATE':
+        case 'PROJECT_CREATED':
             if (state.status !== 'success') {
                 throw new Error('Illegal state in CREATE action');
             }
