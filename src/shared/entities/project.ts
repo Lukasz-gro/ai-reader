@@ -1,10 +1,13 @@
 import { LearningRoadmap } from '@/contexts/course-mode/entities/learning-roadmap';
+import { MaterialPreview } from './material-preview';
+import { ConversationPreview } from './conversation-preview';
+import { QuizPreview } from './quiz-preview';
 
 export interface Project {
     id: string;
     title: string;
-    materialIds: string[];
+    materials: MaterialPreview[];
     roadmap: LearningRoadmap;
-    conversationIds: string[];
-    quizIds: string[];
+    conversations: ConversationPreview[];
+    quizzes: QuizPreview[];
 }
