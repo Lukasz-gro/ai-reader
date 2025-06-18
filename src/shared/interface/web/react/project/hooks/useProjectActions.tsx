@@ -6,12 +6,12 @@ export function useProjectActions() {
     const projectDispatch = useProjectDispatch();
 
     const setSelectedProject = (projectId: string) => {
-        projectDispatch({ type: 'SELECT', payload: projectId });
+        projectDispatch({ type: 'PROJECT_SELECTED', payload: projectId });
     };
 
     const createProject = async (projectTitle: string) => {
         const project = await projectController.createProject(projectTitle);
-        projectDispatch({ type: 'CREATE', payload: project });
+        projectDispatch({ type: 'PROJECT_CREATED', payload: project });
     };
 
     return { setSelectedProject, createProject };

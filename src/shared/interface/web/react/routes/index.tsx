@@ -16,8 +16,8 @@ export const routes: RouteObject[] = [
     //   path: ROUTES.CHAT,
     //   element: <Chat />,
     // },
-    {
-        path: ROUTES.QUIZ,
-        element: <Quiz />,
-    },
+    // {
+    //     path: ROUTES.QUIZ,
+    //     element: <Quiz />,
+    // },
 ]; 
