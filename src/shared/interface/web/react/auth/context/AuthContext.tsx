@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useMemo } from 'react';
 import { User } from '@/shared/entities/user';
 import { UserAuthController } from '@/shared/interface/controllers/user-auth-controller';
 
@@ -36,7 +36,7 @@ export function AuthProvider({
         
         const initializeAuth = async () => {
             try {
-                const user = await controller.initializeUser();
+                const user = await controller.getCurrentUser();
                 if (!ignore) {
                     setState({
                         user,
@@ -62,11 +62,11 @@ export function AuthProvider({
         };
     }, [controller]);
 
-    const authActions: AuthActions = {
+    const authActions: AuthActions = useMemo(() => ({
         setUser: (user) => setState(prev => ({ ...prev, user, error: null })),
         setError: (error) => setState(prev => ({ ...prev, error })),
         setLoading: (isLoading) => setState(prev => ({ ...prev, isLoading }))
-    };
+    }), []);
 
     return (
         <AuthControllerCtx.Provider value={controller}>

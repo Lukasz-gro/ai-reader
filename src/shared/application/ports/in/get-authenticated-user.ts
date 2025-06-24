@@ -1,5 +1,5 @@
 import { User } from "@/shared/entities/user";
 
 export interface GetAuthenticatedUser {
-    execute(): User | null;
+    execute(): Promise<User | null>;
 } 

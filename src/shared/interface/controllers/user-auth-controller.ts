@@ -18,14 +18,8 @@ export class UserAuthController {
         await this.logoutUser.execute();
     }
 
-    getCurrentUser(): User | null {
-        return this.getAuthenticatedUser.execute();
-    }
-
-    async initializeUser(): Promise<User | null> {
-        // For now, just return current user. 
-        // Server initialization will be handled by auth provider directly
-        return this.getAuthenticatedUser.execute();
+    async getCurrentUser(): Promise<User | null> {
+        return await this.getAuthenticatedUser.execute();
     }
 }
 

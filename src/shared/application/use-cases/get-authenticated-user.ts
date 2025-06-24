@@ -5,7 +5,7 @@ import { AuthProvider } from "../ports/out/auth-provider";
 export class GetAuthenticatedUserUseCase implements GetAuthenticatedUser {
     constructor(private readonly authProvider: AuthProvider) {}
 
-    execute(): User | null {
-        return this.authProvider.getAuthenticatedUser();
+    async execute(): Promise<User | null> {
+        return await this.authProvider.getAuthenticatedUser();
     }
 } 

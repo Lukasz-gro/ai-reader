@@ -2,28 +2,22 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { HttpClient, HttpResponse, RequestConfig, HttpError } from '@/shared/application/ports/out/http-client';
 
 export class AxiosHttpClient implements HttpClient {
-    private static instance: AxiosInstance | null = null;
+    private readonly axiosInstance: AxiosInstance;
 
-    private getAxiosInstance(): AxiosInstance {
-        if (!AxiosHttpClient.instance) {
-            AxiosHttpClient.instance = axios.create({
-                baseURL: process.env.VITE_API_BASE_URL ?? '/api',
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    constructor(baseURL: string = process.env.VITE_API_BASE_URL ?? '/api') {
+        this.axiosInstance = axios.create({
+            baseURL,
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-            this.setupInterceptors();
-        }
-
-        return AxiosHttpClient.instance;
+        this.setupInterceptors();
     }
 
     private setupInterceptors(): void {
-        if (!AxiosHttpClient.instance) return;
-
-        AxiosHttpClient.instance.interceptors.response.use(
+        this.axiosInstance.interceptors.response.use(
             (response) => response,
             (error: AxiosError) => {
                 const status = error.response?.status ?? 0;
@@ -42,26 +36,22 @@ export class AxiosHttpClient implements HttpClient {
     }
 
     async get<T = unknown>(url: string, config?: RequestConfig): Promise<HttpResponse<T>> {
-        const response = await this.getAxiosInstance().get<T>(url, config);
+        const response = await this.axiosInstance.get<T>(url, config);
         return this.mapAxiosResponse(response);
     }
 
     async post<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<HttpResponse<T>> {
-        const response = await this.getAxiosInstance().post<T>(url, data, config);
+        const response = await this.axiosInstance.post<T>(url, data, config);
         return this.mapAxiosResponse(response);
     }
 
     async put<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<HttpResponse<T>> {
-        const response = await this.getAxiosInstance().put<T>(url, data, config);
+        const response = await this.axiosInstance.put<T>(url, data, config);
         return this.mapAxiosResponse(response);
     }
 
     async delete<T = unknown>(url: string, config?: RequestConfig): Promise<HttpResponse<T>> {
-        const response = await this.getAxiosInstance().delete<T>(url, config);
+        const response = await this.axiosInstance.delete<T>(url, config);
         return this.mapAxiosResponse(response);
-    }
-
-    static reset(): void {
-        AxiosHttpClient.instance = null;
     }
 } 

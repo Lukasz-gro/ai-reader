@@ -3,22 +3,18 @@ import { AuthProvider } from '@/shared/application/ports/out/auth-provider';
 import { HttpClient, HttpError } from '@/shared/application/ports/out/http-client';
 
 export class HttpCookieAuthProvider implements AuthProvider {
-    private currentUser: User | null = null;
-
     constructor(private readonly httpClient: HttpClient) {}
 
-    private handleAuthError(error: unknown): void {
-        if (this.isUnauthorizedError(error)) {
-            this.currentUser = null;
+    async getAuthenticatedUser(): Promise<User | null> {
+        try {
+            const response = await this.httpClient.get<User>('/auth/me');
+            return response.data;
+        } catch (error) {
+            if (error instanceof HttpError && error.status === 401) {
+                return null;
+            }
+            throw error;
         }
-    }
-
-    private isUnauthorizedError(error: unknown): boolean {
-        return error instanceof HttpError && error.status === 401;
-    }
-
-    getAuthenticatedUser(): User | null {
-        return this.currentUser;
     }
 
     async login(email: string, password: string): Promise<User> {
@@ -27,28 +23,10 @@ export class HttpCookieAuthProvider implements AuthProvider {
             password,
         });
 
-        this.currentUser = response.data;
         return response.data;
     }
 
     async logout(): Promise<void> {
-        try {
-            await this.httpClient.post('/auth/logout');
-            this.currentUser = null;
-        } catch (error) {
-            this.currentUser = null;
-            throw error;
-        }
-    }
-
-    async initializeFromServer(): Promise<User | null> {
-        try {
-            const response = await this.httpClient.get<User>('/auth/me');
-            this.currentUser = response.data;
-            return response.data;
-        } catch (error) {
-            this.handleAuthError(error);
-            return null;
-        }
+        await this.httpClient.post('/auth/logout');
     }
 } 
