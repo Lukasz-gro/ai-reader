@@ -1,5 +1,5 @@
-import { LogoutUser } from "../ports/in/logout-user";
-import { AuthProvider } from "../ports/out/auth-provider";
+import { LogoutUser } from '../ports/in/logout-user';
+import { AuthProvider } from '../ports/out/auth-provider';
 
 export class LogoutUserUseCase implements LogoutUser {
     constructor(private readonly authProvider: AuthProvider) {}

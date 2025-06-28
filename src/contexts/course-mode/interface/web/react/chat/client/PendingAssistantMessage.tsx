@@ -22,7 +22,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
 
         const startStreaming = async () => {
             try {
-                const stream = await streamLLMResponse(conversation);
+                const stream = streamLLMResponse(conversation);
                 const chunks: string[] = [];
 
                 for await (const chunk of stream) {

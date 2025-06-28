@@ -1,4 +1,4 @@
-import { User } from "@/shared/entities/user";
+import { User } from '@/shared/entities/user';
 
 export interface AuthProvider {
     getAuthenticatedUser(): Promise<User | null>;

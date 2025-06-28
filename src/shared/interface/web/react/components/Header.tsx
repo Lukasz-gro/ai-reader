@@ -29,27 +29,27 @@ export const Header: React.FC = () => {
     };
     
     return (
-        <header className="w-full bg-p-90 text-p-10">
+        <header className='w-full bg-p-90 text-p-10'>
             <div className={'flex justify-between items-center border-b border-p-80'}>
-                <div className="flex items-center">
-                    <div className="px-6 py-3">
-                        <h1 className="text-xl font-semibold">AI Reader</h1>
+                <div className='flex items-center'>
+                    <div className='px-6 py-3'>
+                        <h1 className='text-xl font-semibold'>AI Reader</h1>
                     </div>
                     
                     <nav className='flex'>
                         <NavigationButton
-                            label="Home"
+                            label='Home'
                             onClick={goToHome}
                             isActive={isActivePath('/')}
                         />
                         <NavigationButton
-                            label="Chat"
+                            label='Chat'
                             onClick={navigateToChat}
                             isActive={isActivePath('/chat')}
                             disabled={projects.length === 0}
                         />
                         <NavigationButton
-                            label="Quiz"
+                            label='Quiz'
                             onClick={navigateToQuiz}
                             isActive={isActivePath('/quiz')}
                             disabled={projects.length === 0}
@@ -90,7 +90,7 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
     if (disabled) {
         return (
             <Tooltip tooltip={`${label} (requires project)`}>
-                <div className="transition-colors duration-200 focus:outline-none cursor-not-allowed border-y-4 border-transparent opacity-50">
+                <div className='transition-colors duration-200 focus:outline-none cursor-not-allowed border-y-4 border-transparent opacity-50'>
                     <h3 className={'p-[12px] px-8 tracking-wider text-nowrap uppercase text-p-50'}>{label}</h3>
                 </div>
             </Tooltip>

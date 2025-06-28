@@ -1,7 +1,7 @@
-import { User } from "@/shared/entities/user";
-import { LoginUser } from "@/shared/application/ports/in/login-user";
-import { LogoutUser } from "@/shared/application/ports/in/logout-user";
-import { GetAuthenticatedUser } from "@/shared/application/ports/in/get-authenticated-user";
+import { User } from '@/shared/entities/user';
+import { LoginUser } from '@/shared/application/ports/in/login-user';
+import { LogoutUser } from '@/shared/application/ports/in/logout-user';
+import { GetAuthenticatedUser } from '@/shared/application/ports/in/get-authenticated-user';
 
 export class UserAuthController {
     constructor(

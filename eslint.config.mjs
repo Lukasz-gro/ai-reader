@@ -11,6 +11,11 @@ const compat = new FlatCompat({
 });
 
 const config = [
+    {
+        settings: {
+            react: {version: 'detect'}
+        },
+    },
     js.configs.recommended,
     ...compat.extends(
         "plugin:@typescript-eslint/recommended",
@@ -33,9 +38,6 @@ const config = [
             }
         },
         settings: {
-            react: {
-                version: "detect"
-            },
             "import/resolver": {
                 typescript: {
                     alwaysTryTypes: true

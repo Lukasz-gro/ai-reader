@@ -15,20 +15,14 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [],
     "paths": {
       "@/*": ["src/*"]
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
     "node_modules/.pnpm/vitest@3.1.3_@types+node@20.17.45_jsdom@26.1.0/node_modules/vitest/globals.d.ts",
   ],
   "exclude": ["node_modules"]

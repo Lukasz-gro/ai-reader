@@ -2,7 +2,7 @@ export type QuestionValidationResult = { ok: true } | { ok: false; feedback?: st
 
 export interface Answer {
   value: unknown;
-};
+}
 
 export type QuestionType = 'multiple_choice' | 'open_ended';
 

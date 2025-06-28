@@ -5,13 +5,13 @@ import { Conversation, Mode } from '@/shared/entities/conversation';
 import { Material } from '@/shared/entities/material';
 import { Project } from '@/shared/entities/project';
 import {
-    uploadMaterialAction,
     getMaterialsByIds,
-    getValidUploadExtensions
+    getValidUploadExtensions,
+    uploadMaterialAction
 } from '@/shared/interface/web/react/home/server/upload-actions';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
-import { BoltIcon, FileIcon, MessageCircleIcon, PlusIcon, UserIcon } from 'lucide-react';
-import React, { useEffect, useState, useRef } from 'react';
+import { BoltIcon, UserIcon } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface HomeViewProps {
     projects: Project[];

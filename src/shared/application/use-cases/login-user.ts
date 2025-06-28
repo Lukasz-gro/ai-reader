@@ -1,6 +1,6 @@
-import { User } from "@/shared/entities/user";
-import { LoginUser } from "../ports/in/login-user";
-import { AuthProvider } from "../ports/out/auth-provider";
+import { User } from '@/shared/entities/user';
+import { LoginUser } from '../ports/in/login-user';
+import { AuthProvider } from '../ports/out/auth-provider';
 
 export class LoginUserUseCase implements LoginUser {
     constructor(private readonly authProvider: AuthProvider) {}
