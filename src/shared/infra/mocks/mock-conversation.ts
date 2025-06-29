@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Message } from '@/shared/application/ports/out/llm-provider';
 import { Random } from '@/shared/infra/mocks/random';
 import { RandomMessage } from '@/shared/infra/mocks/mock-message';
-import { Conversation, Mode } from '@/shared/entities/conversation';
+import { Conversation, Message, Mode } from '@/shared/entities/conversation';
 
 export class MockConversation {
     private id: string | null = null;
