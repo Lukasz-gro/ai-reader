@@ -1,5 +1,5 @@
 import React from 'react';
-import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/client/general-view/QuizSection';
+import { QuizSection } from '@/contexts/quiz-mode/interface/web/react/general-view/QuizSection';
 import { useProjects } from '../project/hooks/useProjects';
 
 export const Quiz: React.FC = () => {

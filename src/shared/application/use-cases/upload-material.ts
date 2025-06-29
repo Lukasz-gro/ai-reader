@@ -11,6 +11,7 @@ import { LeafChunk, ParentChunk, SummarizedChunk, TextChunk } from '@/shared/ent
 import { Summarizer } from '@/shared/ports/out/summarizer';
 import mime from 'mime-types';
 
+// TODO - adjust interface
 export class UploadMaterialUseCase implements UploadMaterial {
     async execute(
         manager: ParserManager,

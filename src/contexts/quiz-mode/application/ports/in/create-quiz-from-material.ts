@@ -3,6 +3,7 @@ import { Quiz } from '../../../entities/quiz';
 import { QuizProvider } from '../out/quiz-provider';
 import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
 
+// TODO - adjust interface
 export interface CreateQuizFromMaterial {
     execute(
         project: Project,
