@@ -13,6 +13,7 @@ import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
 import { OpenAIStructuredProvider } from '@/shared/infra/llms/open-ai-structured-provider';
 import { OpenAIQuestionService } from '../../infra/llms/open-ai-question-service';
 
+// TODO - adjust the interface
 class QuizModeController {
     constructor(
         private readonly quizProvider: QuizProvider,
