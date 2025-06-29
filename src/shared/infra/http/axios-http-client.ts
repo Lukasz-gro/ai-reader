@@ -10,6 +10,8 @@ export class AxiosHttpClient implements HttpClient {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
+                // TODO what is our auth finally?
+                'Authorization': 'Bearer TOKEN_HERE',
             },
         });
 

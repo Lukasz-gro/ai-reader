@@ -1,4 +1,17 @@
-import { Message } from '../application/ports/out/llm-provider';
+export interface Message {
+    id: string;
+    role: Role
+    previousId: string | null;
+    content: string | string[];
+}
+
+export enum Role {
+    SYSTEM = 'SYSTEM',
+    ASSISTANT = 'ASSISTANT',
+    USER = 'USER',
+}
+
+export type Mode = 'course' | 'explain' | 'quiz' ;
 
 export interface Conversation {
     id: string;
@@ -6,4 +19,7 @@ export interface Conversation {
     mode: Mode;
 }
 
-export type Mode = 'course' | 'explain' | 'quiz' ;
+export interface ConversationPreview {
+    id: string;
+    name: string;
+}
