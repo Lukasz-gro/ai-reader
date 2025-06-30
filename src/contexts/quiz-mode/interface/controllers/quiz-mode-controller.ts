@@ -1,35 +1,29 @@
-import { QuizProvider } from '@/contexts/quiz-mode/application/ports/out/quiz-provider';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
-import { CreateQuizFromMaterial , QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
-import { OpenAIQuizProvider } from '@/contexts/quiz-mode/infra/llms/open-ai-quiz-provider';
+import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 import { Project } from '@/shared/entities/project';
-import { CreateQuizFromMaterialUseCase } from '@/contexts/quiz-mode/application/use-cases/create-quiz-from-material';
+import { QuizGenerator, QuizGenerationRequest } from '@/contexts/quiz-mode/application/ports/out/quiz-generator';
+import { QuizApiService } from '@/contexts/quiz-mode/infra/http/quiz-api-service';
 import { CheckUserAnswer } from '@/contexts/quiz-mode/application/ports/in/check-user-answer';
 import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
 import { Answer, QuestionServices, QuestionValidationResult } from '@/contexts/quiz-mode/entities/question';
 import { CheckUserAnswerUseCase } from '@/contexts/quiz-mode/application/use-cases/check-user-answer';
-import { MaterialRepo } from '@/shared/application/ports/out/material-repo';
-import { JsonMaterialRepo } from '@/shared/infra/uploads/json-materials-repo';
-import { OpenAIStructuredProvider } from '@/shared/infra/llms/open-ai-structured-provider';
-import { OpenAIQuestionService } from '../../infra/llms/open-ai-question-service';
+import { AxiosHttpClient } from '@/shared/infra/http/axios-http-client';
 
-// TODO - adjust the interface
 class QuizModeController {
     constructor(
-        private readonly quizProvider: QuizProvider,
-        private readonly createQuizFromMaterial: CreateQuizFromMaterial,
+        private readonly quizGenerator: QuizGenerator,
         private readonly questionService: QuestionServices,
-        private readonly checkUserAnswer: CheckUserAnswer,
-        private readonly materialRepo: MaterialRepo
+        private readonly checkUserAnswer: CheckUserAnswer
     ) {}
 
     async onCreateCustomizedQuiz(project: Project, params: QuizCreationParams): Promise<Quiz> {
-        return await this.createQuizFromMaterial.execute(
-            project, 
-            this.quizProvider, 
-            this.materialRepo, 
+        const request: QuizGenerationRequest = {
+            projectTitle: project.title,
+            materialIds: project.materials.map(material => material.id),
             params
-        );
+        };
+        
+        return await this.quizGenerator.generateQuiz(request);
     }
 
     async onCheckUserAnswer(question: QuizQuestion, userAnswer: Answer): Promise<QuestionValidationResult> {
@@ -37,25 +31,21 @@ class QuizModeController {
     }
 }
 
-const apiKey = process.env.OPENAI_API_KEY;
-if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
- 
-const openAIStructuredProvider = new OpenAIStructuredProvider(apiKey);
+class MockQuestionService implements QuestionServices {
+    async validate(): Promise<QuestionValidationResult> {
+        return { ok: true };
+    }
+}
 
-const quizProvider = new OpenAIQuizProvider(openAIStructuredProvider);
-
-const createQuizFromMaterialUseCase = new CreateQuizFromMaterialUseCase();
-
-const openAIQuestionService = new OpenAIQuestionService(openAIStructuredProvider);
-
+const httpClient = new AxiosHttpClient();
+const quizApiService = new QuizApiService(httpClient);
 const checkUserAnswerUseCase = new CheckUserAnswerUseCase();
+const mockQuestionService = new MockQuestionService();
 
 const quizModeController = new QuizModeController(
-    quizProvider,
-    createQuizFromMaterialUseCase,
-    openAIQuestionService,
-    checkUserAnswerUseCase,
-    new JsonMaterialRepo(),
+    quizApiService,
+    mockQuestionService,
+    checkUserAnswerUseCase
 );
 
 export {
