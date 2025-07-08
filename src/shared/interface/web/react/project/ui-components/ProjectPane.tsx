@@ -10,6 +10,9 @@ export const ProjectPane: React.FC = () => {
     const { setSelectedProject, createProject } = useProjectActions();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
+    // TODO get current user from auth
+    const userId = 'test-user-id';
+
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
@@ -17,7 +20,7 @@ export const ProjectPane: React.FC = () => {
     const handleNewProject = async () => {
         const projectName = prompt('Enter project name:');
         if (projectName) {
-            await createProject(projectName);
+            await createProject(projectName, userId);
         }
     };
 
