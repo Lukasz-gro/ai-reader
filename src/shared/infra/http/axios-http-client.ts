@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { HttpClient, HttpResponse, RequestConfig, HttpError } from '@/shared/application/ports/out/http-client';
 
-export class AxiosHttpClient implements HttpClient {
+class AxiosHttpClient implements HttpClient {
     private readonly axiosInstance: AxiosInstance;
 
     constructor(baseURL: string = '/api') {
@@ -54,4 +54,6 @@ export class AxiosHttpClient implements HttpClient {
         const response = await this.axiosInstance.delete<T>(url, config);
         return this.mapAxiosResponse(response);
     }
-} 
+}
+
+export const httpClient = new AxiosHttpClient();
