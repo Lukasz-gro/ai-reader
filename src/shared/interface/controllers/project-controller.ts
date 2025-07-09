@@ -4,6 +4,7 @@ import { HttpProjectApi } from '@/shared/infra/projects/http-project-api';
 import { CreateNewProject } from '@/shared/application/ports/in/create-new-project';
 import { GetUserProjects } from '@/shared/application/ports/in/get-user-projects';
 import { GetUserProjectsUseCase } from '@/shared/application/use-cases/get-user-projects';
+import { httpClient } from '@/shared/infra/http/axios-http-client';
 
 export class ProjectController {
     constructor(
@@ -20,7 +21,9 @@ export class ProjectController {
     }
 }
 
+const projectApi = new HttpProjectApi('http://localhost:5000', httpClient);
+
 export const projectController = new ProjectController(
-    new GetUserProjectsUseCase(new HttpProjectApi('http://localhost:5000')),
-    new CreateNewProjectUseCase(new HttpProjectApi('http://localhost:5000'))
+    new GetUserProjectsUseCase(projectApi),
+    new CreateNewProjectUseCase(projectApi)
 );
