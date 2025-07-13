@@ -7,8 +7,8 @@ export class HttpCookieAuthProvider implements AuthProvider {
 
     async getAuthenticatedUser(): Promise<User | null> {
         try {
-            const response = await this.httpClient.get<User>('/auth/me');
-            return response.data;
+            const response = await this.httpClient.get<{ user: User }>('/auth/me');
+            return response.data.user;
         } catch (error) {
             if (error instanceof HttpError && error.status === 401) {
                 return null;
@@ -18,15 +18,24 @@ export class HttpCookieAuthProvider implements AuthProvider {
     }
 
     async login(email: string, password: string): Promise<User> {
-        const response = await this.httpClient.post<User>('/auth/login', {
+        await this.httpClient.post<{ message: string }>('/auth/login', {
             email,
             password,
         });
 
-        return response.data;
+        const userResponse = await this.httpClient.get<{ user: User }>('/auth/me');
+        return userResponse.data.user;
+    }
+
+    async register(email: string, password: string): Promise<void> {
+        await this.httpClient.post<{ message: string }>('/auth/register', {
+            email,
+            password,
+        });
     }
 
     async logout(): Promise<void> {
+        //TODO add on backend
         await this.httpClient.post('/auth/logout');
     }
 } 
