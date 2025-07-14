@@ -3,6 +3,7 @@ import { LoginUser } from '@/shared/application/ports/in/login-user';
 import { LogoutUser } from '@/shared/application/ports/in/logout-user';
 import { RegisterUser } from '@/shared/application/ports/in/register-user';
 import { GetAuthenticatedUser } from '@/shared/application/ports/in/get-authenticated-user';
+import { AsyncResult } from '@/shared/entities/result';
 
 export class UserAuthController {
     constructor(
@@ -12,20 +13,20 @@ export class UserAuthController {
         private readonly getAuthenticatedUser: GetAuthenticatedUser
     ) {}
 
-    async login(email: string, password: string): Promise<User> {
-        return await this.loginUser.execute(email, password);
+    async login(email: string, password: string): AsyncResult<User, Error> {
+        return this.loginUser.execute(email, password);
     }
 
-    async logout(): Promise<void> {
-        await this.logoutUser.execute();
+    async logout(): AsyncResult<void, Error> {
+        return this.logoutUser.execute();
     }
 
-    async register(email: string, password: string): Promise<void> {
-        await this.registerUser.execute(email, password);
+    async register(email: string, password: string): AsyncResult<void, Error> {
+        return this.registerUser.execute(email, password);
     }
 
-    async getCurrentUser(): Promise<User | null> {
-        return await this.getAuthenticatedUser.execute();
+    async getCurrentUser(): AsyncResult<User | null, Error> {
+        return this.getAuthenticatedUser.execute();
     }
 }
 

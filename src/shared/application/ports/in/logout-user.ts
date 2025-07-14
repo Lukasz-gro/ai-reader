@@ -1,3 +1,5 @@
+import { AsyncResult } from "@/shared/entities/result";
+
 export interface LogoutUser {
-    execute(): Promise<void>;
+    execute(): AsyncResult<void, Error>;
 } 
