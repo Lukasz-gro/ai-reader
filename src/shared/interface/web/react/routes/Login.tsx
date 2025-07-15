@@ -17,7 +17,6 @@ export const Login: React.FC = () => {
         login(email, password);
     };
 
-    // Redirect to home if already logged in or after successful login
     React.useEffect(() => {
         if (authState.status === 'success' && authState.data.user) {
             navigate(buildRoute.home());
