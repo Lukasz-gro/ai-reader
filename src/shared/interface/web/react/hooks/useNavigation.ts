@@ -14,9 +14,15 @@ export const useAppNavigation = () => {
         navigate(buildRoute.quiz(projectId));
     };
 
+    const goToLogin = () => navigate(buildRoute.login());
+    
+    const goToRegister = () => navigate(buildRoute.register());
+
     return { 
         goToHome, 
         goToChat, 
-        goToQuiz
+        goToQuiz,
+        goToLogin,
+        goToRegister
     };
 }; 

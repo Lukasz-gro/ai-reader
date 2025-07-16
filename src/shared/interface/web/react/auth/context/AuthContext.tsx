@@ -1,21 +1,12 @@
-import { createContext, useEffect, useState, useMemo } from 'react';
-import { User } from '@/shared/entities/user';
+import { createContext, useEffect, Dispatch, useReducer } from 'react';
 import { UserAuthController } from '@/shared/interface/controllers/user-auth-controller';
-
-export interface AuthState {
-    user: User | null;
-    isLoading: boolean;
-    error: string | null;
-}
-
-export interface AuthActions {
-    setUser: (user: User | null) => void;
-    setError: (error: string | null) => void;
-    setLoading: (loading: boolean) => void;
-}
+import { isOk } from '@/shared/entities/result';
+import { AuthState } from '../state/auth-state';
+import { AuthAction } from '../state/auth-actions';
+import { authStateReducer } from '../state/auth-reducer';
 
 export const AuthStateCtx = createContext<AuthState | null>(null);
-export const AuthActionsCtx = createContext<AuthActions | null>(null);
+export const AuthDispatchCtx = createContext<Dispatch<AuthAction> | null>(null);
 export const AuthControllerCtx = createContext<UserAuthController | null>(null);
 
 export function AuthProvider({ 
@@ -25,33 +16,32 @@ export function AuthProvider({
     readonly children: React.ReactNode;
     readonly controller: UserAuthController;
 }) {
-    const [state, setState] = useState<AuthState>({
-        user: null,
-        isLoading: true,
-        error: null
+    const [state, dispatch] = useReducer(authStateReducer, {
+        status: 'loading',
+        loading: true
     });
 
     useEffect(() => {
         let ignore = false;
         
         const initializeAuth = async () => {
-            try {
-                const user = await controller.getCurrentUser();
-                if (!ignore) {
-                    setState({
-                        user,
-                        isLoading: false,
-                        error: null
-                    });
-                }
-            } catch (error) {
-                if (!ignore) {
-                    setState({
-                        user: null,
-                        isLoading: false,
-                        error: (error as Error).message ?? 'Authentication error'
-                    });
-                }
+            dispatch({ type: 'REQUEST' });
+            const userResult = await controller.getCurrentUser();
+
+            if (ignore) {
+                return;
+            }
+            if (isOk(userResult)) {
+                dispatch({
+                    type: 'SUCCESS',
+                    payload: userResult.value,
+                    source: 'refresh'
+                });
+            } else {
+                dispatch({
+                    type: 'FAILED',
+                    payload: userResult.error.message
+                });
             }
         };
 
@@ -62,19 +52,13 @@ export function AuthProvider({
         };
     }, [controller]);
 
-    const authActions: AuthActions = useMemo(() => ({
-        setUser: (user) => setState(prev => ({ ...prev, user, error: null })),
-        setError: (error) => setState(prev => ({ ...prev, error })),
-        setLoading: (isLoading) => setState(prev => ({ ...prev, isLoading }))
-    }), []);
-
     return (
         <AuthControllerCtx.Provider value={controller}>
-            <AuthActionsCtx.Provider value={authActions}>
+            <AuthDispatchCtx.Provider value={dispatch}>
                 <AuthStateCtx.Provider value={state}>
                     {children}
                 </AuthStateCtx.Provider>
-            </AuthActionsCtx.Provider>
+            </AuthDispatchCtx.Provider>
         </AuthControllerCtx.Provider>
     );
 } 

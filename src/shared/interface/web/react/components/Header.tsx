@@ -2,13 +2,17 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { Tooltip } from '../Tooltip';
-import { BoltIcon, UserIcon } from 'lucide-react';
+import { BoltIcon, LogOutIcon } from 'lucide-react';
 import { useProjects } from '../project/hooks/useProjects';
+import { useAuth } from '../auth/hooks/useAuth';
+import { useAuthActions } from '../auth/hooks/useAuthActions';
 
 export const Header: React.FC = () => {
     const location = useLocation();
-    const { goToHome, goToChat, goToQuiz } = useAppNavigation();
+    const { goToHome, goToChat, goToQuiz, goToLogin, goToRegister } = useAppNavigation();
     const projectState = useProjects();
+    const authState = useAuth();
+    const { logout } = useAuthActions();
     
     const projects = projectState.status === 'success' ? projectState.projects : [];
     const currentProjectId = getCurrentProjectIdFromPath(location.pathname);
@@ -57,12 +61,34 @@ export const Header: React.FC = () => {
                     </nav>
                 </div>
                 
-                <div className={'flex gap-4 mr-8'}>
-                    <Tooltip tooltip={'Account'}>
-                        <button>
-                            <UserIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
-                        </button>
-                    </Tooltip>
+                <div className={'flex gap-4 mr-8 items-center'}>
+                    {authState.status === 'success' && authState.data.user ? (
+                        <>
+                            <span className="text-p-50 text-sm">
+                                {authState.data.user.email}
+                            </span>
+                            <Tooltip tooltip={'Logout'}>
+                                <button onClick={logout}>
+                                    <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                                </button>
+                            </Tooltip>
+                        </>
+                    ) : (
+                        <>
+                            <button 
+                                onClick={goToLogin}
+                                className="text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm"
+                            >
+                                Login
+                            </button>
+                            <button 
+                                onClick={goToRegister}
+                                className="text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm"
+                            >
+                                Register
+                            </button>
+                        </>
+                    )}
                     <Tooltip tooltip={'Settings'}>
                         <button>
                             <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
