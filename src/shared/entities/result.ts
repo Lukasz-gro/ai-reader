@@ -34,5 +34,5 @@ export function tryResult<T>(thunk: () => Promise<T>): AsyncResult<T, Error> {
         .then(ok)
         .catch((e: unknown) =>
             nok(e instanceof Error ? e : new Error(JSON.stringify(e)))
-    );
+        );
 }

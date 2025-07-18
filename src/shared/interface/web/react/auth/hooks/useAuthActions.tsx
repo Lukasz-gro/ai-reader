@@ -22,7 +22,7 @@ export function useAuthActions() {
             dispatch,
             'logout',
             () => null
-        )
+        );
     }, [authController, dispatch]);
 
     const register = useCallback((email: string, password: string) => {
@@ -31,7 +31,7 @@ export function useAuthActions() {
             dispatch,
             'register',
             () => null
-        )
+        );
     }, [authController, dispatch]);
 
     return { login, logout, register };

@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { AuthDispatchCtx } from "../context/AuthContext";
+import { useContext } from 'react';
+import { AuthDispatchCtx } from '../context/AuthContext';
 
 export function useAuthDispatch() {
     const dispatch = useContext(AuthDispatchCtx);

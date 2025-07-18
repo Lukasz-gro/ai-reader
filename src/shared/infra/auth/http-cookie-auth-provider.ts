@@ -13,7 +13,7 @@ export class HttpCookieAuthProvider implements AuthProvider {
         }).then(r => {
             return isNok(r) && r.error instanceof HttpError && r.error.status === 401
                 ? ok(null)
-                : r
+                : r;
         });
     }
 

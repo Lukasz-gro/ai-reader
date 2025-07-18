@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
                 <div className={'flex gap-4 mr-8 items-center'}>
                     {authState.status === 'success' && authState.data.user ? (
                         <>
-                            <span className="text-p-50 text-sm">
+                            <span className='text-p-50 text-sm'>
                                 {authState.data.user.email}
                             </span>
                             <Tooltip tooltip={'Logout'}>
@@ -77,13 +77,13 @@ export const Header: React.FC = () => {
                         <>
                             <button 
                                 onClick={goToLogin}
-                                className="text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm"
+                                className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
                             >
                                 Login
                             </button>
                             <button 
                                 onClick={goToRegister}
-                                className="text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm"
+                                className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
                             >
                                 Register
                             </button>
