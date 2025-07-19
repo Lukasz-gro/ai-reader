@@ -4,14 +4,15 @@ import { Project } from '@/shared/entities/project';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 import { FileIcon, MessageCircleIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import React, { useState } from 'react';
+import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 
 export const ProjectPane: React.FC = () => {
     const projectState = useProjects();
     const { setSelectedProject, createProject } = useProjectActions();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
-    // TODO get current user from auth
-    const userId = 'test-user-id';
+    const authState = useAuth();
+    const userId = authState.status === 'success' ? authState.data.user?.id : '';
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
@@ -19,8 +20,10 @@ export const ProjectPane: React.FC = () => {
 
     const handleNewProject = async () => {
         const projectName = prompt('Enter project name:');
-        if (projectName) {
+        if (projectName && userId) {
             await createProject(projectName, userId);
+        } else {
+            throw 'projectName or userId was null!';
         }
     };
 
@@ -45,11 +48,8 @@ export const ProjectPane: React.FC = () => {
             <aside className='w-12 border-r border-p-80 flex flex-col'>
                 <div className='flex justify-center border-b border-p-80'>
                     <Tooltip tooltip='Show projects'>
-                        <button 
-                            onClick={toggleCollapse}
-                            className='p-4 hover:bg-p-80 transition-colors duration-200'
-                        >
-                            <ChevronRightIcon className='w-4 h-4 stroke-p-50 hover:stroke-p-10' />
+                        <button onClick={toggleCollapse} className='group cursor-pointer'>
+                            <ChevronRightIcon className='m-2 w-6 h-6 stroke-p-50 group-hover:stroke-p-10 transition-colors duration-200'/>
                         </button>
                     </Tooltip>
                 </div>
@@ -64,16 +64,13 @@ export const ProjectPane: React.FC = () => {
                     <h3 className='p-4'>Projects</h3>
                     <div className='flex items-center'>
                         <Tooltip tooltip='New project'>
-                            <button onClick={handleNewProject}>
-                                <PlusIcon className='m-2 w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'/>
+                            <button onClick={handleNewProject} className='group cursor-pointer'>
+                                <PlusIcon className='mr-2 w-6 h-6 stroke-p-50 hover:stroke-p-10 cursor-pointer'/>
                             </button>
                         </Tooltip>
                         <Tooltip tooltip='Hide projects'>
-                            <button 
-                                onClick={toggleCollapse}
-                                className='m-2 p-1 hover:bg-p-80 rounded transition-colors duration-200'
-                            >
-                                <ChevronLeftIcon className='w-4 h-4 stroke-p-50 hover:stroke-p-10' />
+                            <button onClick={toggleCollapse} className='group cursor-pointer'>
+                                <ChevronLeftIcon className='mr-2 w-6 h-6 stroke-p-50 group-hover:stroke-p-10 transition-colors duration-200'/>
                             </button>
                         </Tooltip>
                     </div>

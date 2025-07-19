@@ -21,7 +21,7 @@ export class ProjectController {
     }
 }
 
-const projectApi = new HttpProjectApi('http://localhost:5000', httpClient);
+const projectApi = new HttpProjectApi(httpClient);
 
 export const projectController = new ProjectController(
     new GetUserProjectsUseCase(projectApi),
