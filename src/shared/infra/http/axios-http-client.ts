@@ -4,7 +4,7 @@ import { HttpClient, HttpResponse, RequestConfig, HttpError } from '@/shared/app
 class AxiosHttpClient implements HttpClient {
     private readonly axiosInstance: AxiosInstance;
 
-    constructor(baseURL: string = 'http://localhost:5000/api') {
+    constructor(baseURL: string = '/api') {
         this.axiosInstance = axios.create({
             baseURL,
             withCredentials: true,

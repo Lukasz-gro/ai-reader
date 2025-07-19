@@ -18,11 +18,9 @@ export const Login: React.FC = () => {
         login(email, password);
     };
 
-    useEffect(() => {
-        if (authState.status === 'success' && authState.data?.user) {
-            navigate(buildRoute.home());
-        }
-    }, [authState, navigate]);
+    if (authState.status === 'success' && authState.data.user) {
+        navigate(buildRoute.home());
+    }
 
     const submitLabel = authState.status === 'loading' ? 'Signing in...' : 'Sign in';
 
