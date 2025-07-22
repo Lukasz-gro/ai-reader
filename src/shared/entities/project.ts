@@ -26,6 +26,13 @@ export interface Project {
 
 export interface ProjectPreview {
     id: string;
+    title: string;
+    description: string;
+}
+
+
+export interface ProjectPreview {
+    id: string;
     ownerId: string;
     title: string;
     materials: MaterialPreview[];

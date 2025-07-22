@@ -1,4 +1,5 @@
 import { ProjectPreview } from '@/shared/entities/project';
+import { QuizPreview } from '@/shared/entities/quiz-preview';
 
 export type Action =
   | { type: 'FETCH_START' }
@@ -6,3 +7,4 @@ export type Action =
   | { type: 'FETCH_ERROR'; payload: string }
   | { type: 'PROJECT_SELECTED'; payload: string }
   | { type: 'PROJECT_CREATED'; payload: ProjectPreview }
+  | { type: 'QUIZ_ADDED'; payload: { projectId: string; quiz: QuizPreview } };

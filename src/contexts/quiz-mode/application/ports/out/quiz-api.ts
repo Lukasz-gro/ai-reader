@@ -1,12 +1,9 @@
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
-import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
+import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
+import { Answer, QuestionValidationResult } from '@/contexts/quiz-mode/entities/question';
 
-export interface CreateQuizApiParams {
-    projectTitle: string;
-    materialIds: string[];
-    params: QuizCreationParams;
-}
 
 export interface QuizApi {
-    createQuiz(data: CreateQuizApiParams): Promise<Quiz>;
+    getQuiz(id: string): Promise<Quiz>;
+    checkAnswer(question: QuizQuestion, answer: Answer): Promise<QuestionValidationResult>;
 } 
