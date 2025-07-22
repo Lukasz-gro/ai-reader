@@ -1,6 +1,5 @@
 import { Project } from '@/shared/entities/project';
 import { useState } from 'react';
-import { createCustomizedQuiz } from '../../server/quiz-actions';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 import { 
@@ -11,6 +10,7 @@ import {
 } from './states';
 import { QuizSectionState } from './types';
 import { UserAnswer } from './QuizSummary';
+import { quizController } from '@/contexts/quiz-mode/interface/controllers/quiz-mode-controller';
 
 export const QuizSection: React.FC<{
     activeProject: Project,
@@ -32,7 +32,11 @@ export const QuizSection: React.FC<{
     const handleCreateQuiz = async (params: QuizCreationParams) => {
         setIsCreatingQuiz(true);
         try {
-            const quiz = await createCustomizedQuiz(activeProject, params);
+            const quiz = await quizController.createQuiz(
+                activeProject.title,
+                activeProject.materialIds,
+                params,
+            );
             setActiveQuiz(quiz);
             setLastQuizParams(params);
             setUserAnswers([]);
@@ -50,18 +54,8 @@ export const QuizSection: React.FC<{
     };
 
     const handleRestartQuiz = async () => {
-        if (lastQuizParams && activeQuiz) {
-            setIsCreatingQuiz(true);
-            try {
-                const quiz = await createCustomizedQuiz(activeProject, lastQuizParams);
-                setActiveQuiz(quiz);
-                setUserAnswers([]);
-                setSectionState('taking-quiz');
-            } catch (error) {
-                console.error('Failed to restart quiz:', error);
-            } finally {
-                setIsCreatingQuiz(false);
-            }
+        if (lastQuizParams) {
+            await handleCreateQuiz(lastQuizParams);
         }
     };
 
