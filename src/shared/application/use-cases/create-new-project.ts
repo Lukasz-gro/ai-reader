@@ -8,9 +8,7 @@ export class CreateNewProjectUseCase implements CreateNewProject {
         private readonly api: ProjectApi
     ) { }
 
-    async execute(title: string, ownerId: string): Promise<ProjectPreview> {
-        // TODO initial title form or click to update?
-        void title;
+    async execute(ownerId: string): Promise<ProjectPreview> {
         const newProject = getNewEmptyProject(ownerId);
         const { message } = await this.api.addProject(newProject);
         // TODO toast message

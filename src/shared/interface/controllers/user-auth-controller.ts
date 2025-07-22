@@ -29,4 +29,3 @@ export class UserAuthController {
         return this.getAuthenticatedUser.execute();
     }
 }
-

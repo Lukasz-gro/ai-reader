@@ -1,4 +1,4 @@
-import { createContext, Dispatch, useEffect, useReducer } from 'react';
+import React, { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
 import { ProjectState } from '../state/project-state';
 import { Action } from '../state/project-actions';
 import { projectStateReducer } from '../state/project-reducer';
@@ -8,7 +8,7 @@ export const StateCtx = createContext<ProjectState | null>(null);
 export const DispatchCtx = createContext<Dispatch<Action> | null>(null);
 export const ControllerCtx = createContext<ProjectController | null>(null);
 
-export function ProjectProvider({ children, controller = projectController }: { readonly children: React.ReactNode, readonly controller?: ProjectController }) {
+export function ProjectProvider({ children, controller = projectController }: { readonly children: ReactNode, readonly controller?: ProjectController }) {
     const [state, dispatch] = useReducer(projectStateReducer, {
         status: 'success',
         projects: [],
@@ -30,7 +30,7 @@ export function ProjectProvider({ children, controller = projectController }: { 
                     });
             }
         };
-        load();
+        void load();
         return () => {
             ignore = true;
         };

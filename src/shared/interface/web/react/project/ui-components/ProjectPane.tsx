@@ -1,8 +1,8 @@
 import { useProjects } from '../hooks/useProjects';
 import { useProjectActions } from '../hooks/useProjectActions';
-import { Project } from '@/shared/entities/project';
+import { ProjectPreview } from '@/shared/entities/project';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
-import { FileIcon, MessageCircleIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, FileIcon, MessageCircleIcon, PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 
@@ -12,19 +12,17 @@ export const ProjectPane: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const authState = useAuth();
-    const userId = authState.status === 'success' ? authState.data.user?.id : '';
+    if (authState.status !== 'success' || authState.data.user === null) {
+        return;
+    }
+    const userId = authState.data.user.id;
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
 
     const handleNewProject = async () => {
-        const projectName = prompt('Enter project name:');
-        if (projectName && userId) {
-            await createProject(projectName, userId);
-        } else {
-            throw 'projectName or userId was null!';
-        }
+        await createProject(userId);
     };
 
     if (projectState.status === 'loading') {
@@ -88,16 +86,16 @@ export const ProjectPane: React.FC = () => {
 };
 
 const ProjectPicker: React.FC<{
-    projects: Project[];
+    projects: ProjectPreview[];
     currentProjectId: string | null;
     onProjectSelect: (projectId: string) => void;
 }> = ({ projects, currentProjectId, onProjectSelect }) => {
 
-    const onProjectClick = (project: Project) => {
+    const onProjectClick = (project: ProjectPreview) => {
         onProjectSelect(project.id);
     };
     
-    const isActive = (project: Project) => {
+    const isActive = (project: ProjectPreview) => {
         return project.id === currentProjectId;
     };
 
@@ -111,7 +109,7 @@ const ProjectPicker: React.FC<{
 
     return (
         <div className='flex flex-col gap-2 px-4'>
-            {projects.map((project: Project) => (
+            {projects.map((project: ProjectPreview) => (
                 <button
                     className={`${isActive(project) ? active : inactive} ${hover} w-full text-left px-6 pb-5 pt-3 rounded-lg transition-colors duration-200 cursor-pointer`}
                     key={project.id}

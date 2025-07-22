@@ -4,7 +4,7 @@ const inputFieldClasses = 'block w-full px-3 py-2 border border-p-30 rounded-md 
 
 export const AuthFormContainer = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className='min-h-screen flex items-center justify-center'>
-        <div className='max-w-lg w-full space-y-8 py-8 px-12 bg-p-10 border-2 border-p-90/30 rounded-lg shadow-xl shadow-p-80/30'>
+        <div className='max-w-lg w-full space-y-8 py-8 px-12 bg-p-10 border-4 border-p-90/25 rounded-lg shadow-xl shadow-p-80/30'>
             <h2 className='mt-6 text-center text-p-90 text-3xl font-extrabold'>{title}</h2>
             {children}
         </div>

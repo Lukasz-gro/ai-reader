@@ -1,8 +1,8 @@
-import { Project } from '@/shared/entities/project';
+import { ProjectPreview } from '@/shared/entities/project';
 
 interface SuccessState {
     status: 'success';
-    projects: Project[];
+    projects: ProjectPreview[];
     currentId: string | null;
 }
 

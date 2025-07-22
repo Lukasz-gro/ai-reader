@@ -1,4 +1,4 @@
-import { createContext, useEffect, Dispatch, useReducer } from 'react';
+import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
 import { UserAuthController } from '@/shared/interface/controllers/user-auth-controller';
 import { isOk } from '@/shared/entities/result';
 import { AuthState } from '../state/auth-state';
@@ -13,7 +13,7 @@ export function AuthProvider({
     children, 
     controller 
 }: { 
-    readonly children: React.ReactNode;
+    readonly children: ReactNode;
     readonly controller: UserAuthController;
 }) {
     const [state, dispatch] = useReducer(authStateReducer, {
@@ -23,7 +23,7 @@ export function AuthProvider({
 
     useEffect(() => {
         let ignore = false;
-        
+
         const initializeAuth = async () => {
             dispatch({ type: 'REQUEST' });
             const userResult = await controller.getCurrentUser();
@@ -44,8 +44,7 @@ export function AuthProvider({
                 });
             }
         };
-
-        initializeAuth();
+        void initializeAuth();
 
         return () => {
             ignore = true;
