@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthActions } from '@/shared/interface/web/react/auth/hooks/useAuthActions';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
-import { PrimaryButton } from '@/contexts/course-mode/interface/web/react/components/primary-button';
+import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';
 import { buildRoute } from './routePaths';
 import { AuthFormContainer, AuthFormInputField } from '@/shared/interface/web/react/components/AuthForm';
 
-export const Login: React.FC = () => {
+export const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuthActions();

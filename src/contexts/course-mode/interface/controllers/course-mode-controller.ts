@@ -1,50 +1,32 @@
-import { ProjectRepo } from '../../application/ports/out/project-repo';
-import { LLMProvider, Role } from '@/shared/application/ports/out/llm-provider';
-import { StartProjectConversation } from '../../application/ports/in/start-project-conversation';
-import { Conversation, Mode } from '@/shared/entities/conversation';
-import { AddMessageToChat } from '../../application/ports/in/add-message-to-chat';
-import { StartProjectConversationUseCase } from '../../application/use-cases/start-project-conversation';
-import { AddMessageToChatUseCase } from '../../application/use-cases/add-message-to-chat';
-import { InMemoryProjectRepo } from '../../infra/repo/in-memory-project-repo';
+import { Conversation, Mode, Role } from '@/shared/entities/conversation';
 import { Project } from '@/shared/entities/project';
-import { OpenAIProvider } from '@/shared/infra/llms/open-ai-provider';
 
-export class CourseModeController {
-    constructor(
-        private readonly llmProvider: LLMProvider,
-        private readonly courseRepo: ProjectRepo,
-        private readonly startCourseConversation: StartProjectConversation,
-        private readonly addMessageToChat: AddMessageToChat,
-    ) { }
-
-    onCreateNewProjectConversation = async (project: Project, mode: Mode) => {
-        return await this.startCourseConversation.execute(project, mode, this.llmProvider, this.courseRepo);
-    };
-
-    onNewUserMessage = async (conversation: Conversation, message: string): Promise<Conversation> => {
-        return await this.addMessageToChat.execute(conversation, message, Role.USER);
-    };
-
-    onNewAssistantMessage = async (conversation: Conversation, message: string, id: string): Promise<Conversation> => {
-        return await this.addMessageToChat.execute(conversation, message, Role.ASSISTANT, id);
-    };
-
-    onStreamLLMResponse = (conversation: Conversation): AsyncGenerator<string, void, unknown> => {
-        return this.llmProvider.streamQuery(conversation.messages);
-    };
+export async function addUserMessageToChat(conversation: Conversation, message: string) {
+    console.warn('addUserMessageToChat is mocked - not implemented yet');
+    return conversation;
 }
 
-const startCourseConversation = new StartProjectConversationUseCase();
-const addUserMessageToChat = new AddMessageToChatUseCase();
-const projectRepo = new InMemoryProjectRepo();
+export async function addAssistantMessageToChat(conversation: Conversation, message: string, id: string) {
+    console.warn('addAssistantMessageToChat is mocked - not implemented yet');
+    return conversation;
+}
 
-const apiKey = process.env.OPENAI_API_KEY;
-if (!apiKey) { throw new Error('OPENAI_API_KEY is required'); }
-const llmProvider = new OpenAIProvider(apiKey);
-// const llmProvider = new MockLLMProvider();
+export function streamLLMResponse(conversation: Conversation) {
+    console.warn('streamLLMResponse is mocked - not implemented yet');
+    return (async function* () {
+        yield 'Mock response';
+    })();
+}
 
-const courseController = new CourseModeController(llmProvider, projectRepo, startCourseConversation, addUserMessageToChat);
-
-export {
-    courseController
-};
+export async function createNewProjectConversation(project: Project, mode: Mode): Promise<Conversation> {
+    return {
+        id: 'mock-conversation',
+        messages: [{
+            id: 'mock-message',
+            role: Role.ASSISTANT,
+            content: `Mock ${mode} conversation for project: ${project.title}`,
+            previousId: null
+        }],
+        mode
+    };
+}

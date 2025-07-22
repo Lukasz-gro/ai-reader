@@ -6,7 +6,6 @@ export const ROUTES = {
     QUIZ: '/quiz/:projectId?',
 } as const;
 
-// Helper functions for building routes with parameters
 export const buildRoute = {
     home: () => ROUTES.HOME,
     login: () => ROUTES.LOGIN,

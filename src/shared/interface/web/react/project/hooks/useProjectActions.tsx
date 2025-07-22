@@ -9,8 +9,8 @@ export function useProjectActions() {
         projectDispatch({ type: 'PROJECT_SELECTED', payload: projectId });
     };
 
-    const createProject = async (projectTitle: string, userId: string) => {
-        const project = await projectController.createProject(projectTitle, userId);
+    const createProject = async (userId: string) => {
+        const project = await projectController.createProject(userId);
         projectDispatch({ type: 'PROJECT_CREATED', payload: project });
     };
 

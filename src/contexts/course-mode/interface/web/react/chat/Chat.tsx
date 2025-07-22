@@ -1,11 +1,8 @@
-'use client';
-
 import React, { useState } from 'react';
 import { Conversation } from '@/shared/entities/conversation';
 import { MessageView } from './MessageView';
-import { addUserMessageToChat } from '../server/chat-actions';
-import { PrimaryButton } from '../../components/primary-button';
-import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/client/PendingAssistantMessage';
+import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';
+import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/PendingAssistantMessage';
 
 interface ChatProps {
     conversation: Conversation;

@@ -16,8 +16,8 @@ export class ProjectController {
         return this.getUserProjects.execute('testUserId');
     }
 
-    async createProject(projectTitle: string, userId: string): Promise<ProjectPreview> {
-        return this.createNewProject.execute(projectTitle, userId);
+    async createProject(userId: string): Promise<ProjectPreview> {
+        return this.createNewProject.execute(userId);
     }
 }
 

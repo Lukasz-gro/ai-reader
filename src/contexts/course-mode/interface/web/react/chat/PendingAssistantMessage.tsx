@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Conversation } from '@/shared/entities/conversation';
-import {
-    addAssistantMessageToChat,
-    streamLLMResponse
-} from '@/contexts/course-mode/interface/web/react/chat/server/chat-actions';
-import { Message, Role } from '@/shared/application/ports/out/llm-provider';
+import { Conversation, Message, Role } from '@/shared/entities/conversation';
 
 interface PendingAssistantMessageProps {
     conversation: Conversation;

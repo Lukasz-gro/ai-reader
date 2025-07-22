@@ -29,10 +29,11 @@ export function foldResult<T, E, R> (
     return isOk(r) ? onOk(r.value) : onErr(r.error);
 }
 
-export function tryResult<T>(thunk: () => Promise<T>): AsyncResult<T, Error> {
-    return thunk()
-        .then(ok)
-        .catch((e: unknown) =>
-            nok(e instanceof Error ? e : new Error(JSON.stringify(e)))
-        );
+export async function tryResult<T>(thunk: () => Promise<T>): AsyncResult<T, Error> {
+    try {
+        const value = await thunk();
+        return ok(value);
+    } catch (e) {
+        return nok(e instanceof Error ? e : new Error(JSON.stringify(e)));
+    }
 }
