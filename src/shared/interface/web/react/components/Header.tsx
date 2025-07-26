@@ -7,7 +7,7 @@ import { useProjects } from '../project/hooks/useProjects';
 import { useAuth } from '../auth/hooks/useAuth';
 import { useAuthActions } from '../auth/hooks/useAuthActions';
 
-export const Header: React.FC = () => {
+export const Header: React.FC<{ className: string }> = ({ className }) => {
     const location = useLocation();
     const { goToHome, goToChat, goToQuiz, goToLogin, goToRegister } = useAppNavigation();
     const projectState = useProjects();
@@ -33,70 +33,72 @@ export const Header: React.FC = () => {
     };
     
     return (
-        <header className='w-full bg-p-90 text-p-10'>
-            <div className={'flex justify-between items-center border-b border-p-80'}>
-                <div className='flex items-center'>
-                    <div className='px-6 py-3'>
-                        <h1 className='text-xl font-semibold'>AI Reader</h1>
+        <div className={className}>
+            <header className='w-full min-w-0'>
+                <div className={'flex justify-between items-center border-b border-p-80'}>
+                    <div className='flex items-center'>
+                        <div className='px-6 py-3'>
+                            <h1 className='text-xl font-semibold'>AI Reader</h1>
+                        </div>
+
+                        <nav className='flex'>
+                            <NavigationButton
+                                label='Home'
+                                onClick={goToHome}
+                                isActive={isActivePath('/')}
+                            />
+                            <NavigationButton
+                                label='Chat'
+                                onClick={navigateToChat}
+                                isActive={isActivePath('/chat')}
+                                disabled={projects.length === 0}
+                            />
+                            <NavigationButton
+                                label='Quiz'
+                                onClick={navigateToQuiz}
+                                isActive={isActivePath('/quiz')}
+                                disabled={projects.length === 0}
+                            />
+                        </nav>
                     </div>
-                    
-                    <nav className='flex'>
-                        <NavigationButton
-                            label='Home'
-                            onClick={goToHome}
-                            isActive={isActivePath('/')}
-                        />
-                        <NavigationButton
-                            label='Chat'
-                            onClick={navigateToChat}
-                            isActive={isActivePath('/chat')}
-                            disabled={projects.length === 0}
-                        />
-                        <NavigationButton
-                            label='Quiz'
-                            onClick={navigateToQuiz}
-                            isActive={isActivePath('/quiz')}
-                            disabled={projects.length === 0}
-                        />
-                    </nav>
-                </div>
-                
-                <div className={'flex gap-4 mr-8 items-center'}>
-                    {authState.status === 'success' && authState.data.user ? (
-                        <>
+
+                    <div className={'flex gap-4 mr-8 items-center'}>
+                        {authState.status === 'success' && authState.data.user ? (
+                            <>
                             <span className='text-p-50 text-sm'>
                                 {authState.data.user.email}
                             </span>
-                            <Tooltip tooltip={'Logout'}>
-                                <button onClick={logout}>
-                                    <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                                <Tooltip tooltip={'Logout'}>
+                                    <button onClick={logout}>
+                                        <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                                    </button>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={goToLogin}
+                                    className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
+                                >
+                                    Login
                                 </button>
-                            </Tooltip>
-                        </>
-                    ) : (
-                        <>
-                            <button 
-                                onClick={goToLogin}
-                                className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
-                            >
-                                Login
+                                <button
+                                    onClick={goToRegister}
+                                    className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
+                                >
+                                    Register
+                                </button>
+                            </>
+                        )}
+                        <Tooltip tooltip={'Settings'}>
+                            <button>
+                                <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
                             </button>
-                            <button 
-                                onClick={goToRegister}
-                                className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
-                            >
-                                Register
-                            </button>
-                        </>
-                    )}
-                    <Tooltip tooltip={'Settings'}>
-                        <button>
-                            <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
-                        </button>
-                    </Tooltip>
+                        </Tooltip>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
+        </div>
     );
 };
 

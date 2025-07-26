@@ -5,18 +5,13 @@ import { Conversation } from '@/shared/entities/conversation';
 import { MockConversation } from '@/shared/infra/mocks/mock-conversation';
 
 export const ChatPage: React.FC = () => {
-    const conversation: Conversation = new MockConversation().build();
+    const conversation: Conversation = new MockConversation().withLength(20).build();
+    console.log(conversation);
 
     return (
-        <div className='flex w-full h-screen bg-p-90 text-p-10'>
+        <div className='flex flex-1'>
             <ProjectPane />
-            <main className='flex-1 flex flex-col'>
-                <div className='flex-1 flex items-center justify-center'>
-                    <div className='text-center'>
-                        <Chat conversation={conversation}/>
-                    </div>
-                </div>
-            </main>
+            <Chat conversation={conversation} />
         </div>
     );
 };

@@ -3,6 +3,7 @@ import { Conversation } from '@/shared/entities/conversation';
 import { MessageView } from './MessageView';
 import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';
 import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/PendingAssistantMessage';
+import { handleNewUserMessage } from '@/contexts/course-mode/interface/controllers/course-mode-controller';
 
 interface ChatProps {
     conversation: Conversation;
@@ -11,7 +12,6 @@ interface ChatProps {
 export function Chat({ conversation }: ChatProps) {
     const [message, setMessage] = useState('');
     const [currentConversation, setCurrentConversation] = useState<Conversation>(conversation);
-
     const [isGenerating, setIsGenerating] = useState(false);
     const [streamKey, setStreamKey] = useState(0);
 
@@ -19,7 +19,7 @@ export function Chat({ conversation }: ChatProps) {
         if (e) e.preventDefault();
         if (!message.trim()) return;
 
-        const updatedConversation = await addUserMessageToChat(currentConversation, message);
+        const updatedConversation = await handleNewUserMessage(currentConversation, message);
         setCurrentConversation(updatedConversation);
         setMessage('');
         setIsGenerating(true);
@@ -27,24 +27,30 @@ export function Chat({ conversation }: ChatProps) {
     };
 
     return (
-        <div className='flex flex-col h-full max-h-screen'>
-            <div className='flex-1 overflow-y-auto custom-scrollbar'>
-                <MessageView
-                    conversation={currentConversation}
-                    isGenerating={isGenerating}
-                />
-                {isGenerating && (
-                    <PendingAssistantMessage
-                        key={streamKey}
-                        conversation={currentConversation}
-                        onConversationUpdate={setCurrentConversation}
-                        onDone={() => setIsGenerating(false)}
-                    />
-                )}
+        <section className='flex flex-1 h-full min-h-0 flex-col items-center'>
+            <div className='flex-1 overflow-y-auto w-full custom-scrollbar'>
+                <div className={'flex flex-1 max-w-[1000px] mx-auto'}>
+                    <div className='flex flex-1'>
+                        <MessageView
+                            conversation={currentConversation}
+                            isGenerating={isGenerating}
+                        />
+                        {isGenerating && (
+                            <PendingAssistantMessage
+                                key={streamKey}
+                                conversation={currentConversation}
+                                onConversationUpdate={setCurrentConversation}
+                                onDone={() => setIsGenerating(false)}
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
-            <MessageForm onSubmitAction={handleSubmit}>
+
+            <MessageForm
+                onSubmitAction={handleSubmit}
+            >
                 <MessageInput
-                    type='text'
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder='Ask about anything...'
@@ -54,22 +60,43 @@ export function Chat({ conversation }: ChatProps) {
                     {isGenerating ? 'Generating...' : 'Send'}
                 </PrimaryButton>
             </MessageForm>
-        </div>
+        </section>
     );
 }
 
-const MessageForm: React.FC<{ onSubmitAction: (e: React.FormEvent) => void; children: React.ReactNode }> = ({ onSubmitAction, children }) => (
-    <form onSubmit={onSubmitAction} className='flex gap-4 p-4 border-t-1 border-p-70'>
+const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaElement> > = ({ onKeyDown, className = '', ...rest }) => {
+    const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            e.currentTarget.form?.requestSubmit();
+            return;
+        }
+        onKeyDown?.(e);
+    };
+
+    return (
+        <textarea
+            {...rest}
+            onKeyDown={handleKeyDown}
+            rows={3}
+            className={`
+        flex-1 resize-none px-4 py-3 border border-p-70 rounded text-base
+        bg-p-90 text-p-10 outline-none transition-all duration-200
+        focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
+        ${className}
+      `}
+        />
+    );
+};
+
+const MessageForm: React.FC<{
+    onSubmitAction: (e: React.FormEvent) => void;
+    children: React.ReactNode;
+}> = ({ onSubmitAction, children }) => (
+    <form
+        onSubmit={onSubmitAction}
+        className='flex w-full gap-4 p-4 py-10 max-w-[800px]'
+    >
         {children}
     </form>
-);
-
-const MessageInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (props) => (
-    <input
-        {...props}
-        className={`
-      flex-1 px-4 py-3 border border-p-70 rounded text-base bg-p-90 text-p-10 outline-none transition-all duration-200
-      focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
-      ${props.className}`}
-    />
 );

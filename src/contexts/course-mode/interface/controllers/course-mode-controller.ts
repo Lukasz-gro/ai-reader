@@ -1,9 +1,20 @@
-import { Conversation, Mode, Role } from '@/shared/entities/conversation';
+import { Conversation, Message, Mode, Role } from '@/shared/entities/conversation';
 import { Project } from '@/shared/entities/project';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function addUserMessageToChat(conversation: Conversation, message: string) {
+export async function handleNewUserMessage(conversation: Conversation, message: string) {
     console.warn('addUserMessageToChat is mocked - not implemented yet');
-    return conversation;
+    const userMessage: Message = {
+        id: uuidv4(),
+        role: Role.USER,
+        previousId: conversation.messages[-1]?.id ?? null,
+        content: message,
+    };
+
+    conversation.messages.push(userMessage);
+    return {
+        ...conversation,
+    };
 }
 
 export async function addAssistantMessageToChat(conversation: Conversation, message: string, id: string) {
