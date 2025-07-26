@@ -99,9 +99,9 @@ const ProjectPicker: React.FC<{
         return project.id === currentProjectId;
     };
 
-    const gradientDefault = 'bg-gradient-to-br from-p-80 via-sd-90 to-sd-80';
+    const gradientDefault = 'bg-gradient-to-b from-sd-90/50 to-sd-90/50';
     const borderDefault = 'border border-2 border-sd-50/30';
-    const gradientActive = 'bg-gradient-to-br from-sd-90 to-sd-80';
+    const gradientActive = 'bg-gradient-to-br from-sd-70 to-sd-80';
     const borderActive = 'border border-2 border-sd-50';
     const inactive = `${gradientDefault} ${borderDefault}`;
     const active = `${gradientActive} ${borderActive}`;
@@ -111,7 +111,7 @@ const ProjectPicker: React.FC<{
         <div className='flex flex-col gap-2 px-4'>
             {projects.map((project: ProjectPreview) => (
                 <button
-                    className={`${isActive(project) ? active : inactive} ${hover} w-full text-left px-6 pb-5 pt-3 rounded-lg transition-colors duration-200 cursor-pointer`}
+                    className={`${isActive(project) ? active : inactive} ${isActive(project) || hover} w-full text-left px-6 pb-5 pt-3 rounded-lg transition-colors duration-200 cursor-pointer`}
                     key={project.id}
                     onClick={() => onProjectClick(project)}
                 >
