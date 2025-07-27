@@ -1,6 +1,7 @@
 import { User } from '@/shared/entities/user';
 import { AuthSuccessSource } from './auth-state';
 import { AsyncResult, foldResult } from '@/shared/entities/result';
+import React from 'react';
 
 export type AuthAction =
   | { type: 'REQUEST' }

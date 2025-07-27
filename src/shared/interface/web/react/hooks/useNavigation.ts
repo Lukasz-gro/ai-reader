@@ -6,12 +6,12 @@ export const useAppNavigation = () => {
 
     const goToHome = () => navigate(buildRoute.home());
   
-    const goToChat = (projectId?: string) => {
-        navigate(buildRoute.chat(projectId));
+    const goToChat = () => {
+        navigate(buildRoute.chat());
     };
   
-    const goToQuiz = (projectId?: string) => {
-        navigate(buildRoute.quiz(projectId));
+    const goToQuiz = () => {
+        navigate(buildRoute.quiz());
     };
 
     const goToLogin = () => navigate(buildRoute.login());

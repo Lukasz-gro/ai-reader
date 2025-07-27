@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Conversation, Message, Role } from '@/shared/entities/conversation';
+import { Conversation, ConversationMessage, Role } from '@/shared/entities/conversation';
 import { handleNewAssistantMessage, streamLLMResponse } from '../../../controllers/course-mode-controller';
 
 interface PendingAssistantMessageProps {
     conversation: Conversation;
-    onConversationUpdate: React.Dispatch<React.SetStateAction<Conversation>>;
+    onConversationUpdate: (c: Conversation) => void;
     onDone: () => void;
 }
 
@@ -36,16 +36,15 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
         };
 
         const updatePendingMessage = (chunks: string[]) => {
-            const assistantMessage: Message = {
+            const assistantMessage: ConversationMessage = {
                 id: messageId,
+                conversationId: conversation.id,
                 role: Role.ASSISTANT,
                 previousId: previousMessageId,
                 content: chunks,
             };
 
-            onConversationUpdate((prev) => {
-                return updateMessageInConversation(prev, assistantMessage);
-            });
+            onConversationUpdate(updateMessageInConversation(conversation, assistantMessage));
         };
 
         const finalizeMessage = async (finalContent: string) => {
@@ -54,7 +53,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
             onDone();
         };
 
-        const updateMessageInConversation = (conversation: Conversation, message: Message) => {
+        const updateMessageInConversation = (conversation: Conversation, message: ConversationMessage): Conversation => {
             const index = conversation.messages.findIndex((m) => m.id === messageId);
             const updatedMessages =
                 index === -1

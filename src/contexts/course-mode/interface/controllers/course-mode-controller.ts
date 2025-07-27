@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpClient } from '@/shared/infra/http/fetch-http-client';
 
 // TODO move to useCases
+
+// TODO add conversationApi and use instead of raw calls
 export async function handleNewUserMessage(conversation: Conversation, message: string) {
     const userMessage: ConversationMessage = {
         id: uuidv4(),

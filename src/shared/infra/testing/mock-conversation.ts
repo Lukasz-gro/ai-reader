@@ -27,11 +27,14 @@ export class MockConversation {
     }
 
     build(): Conversation {
+        const id = this.id ?? RandomConversation.id();
+        const messages = this.messages ?? RandomConversation.messages(this.length);
+        const convMessages = messages.map((message) => { return { ...message, conversationId: id }; });
         return {
-            id: this.id ?? RandomConversation.id(),
+            id,
             projectId: 'some-project',
             title: 'mock conversation',
-            messages: this.messages ?? RandomConversation.messages(this.length),
+            messages: convMessages,
             mode: this.mode ?? RandomConversation.mode(),
         };
     }

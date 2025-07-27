@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+    handleNewUserMessage,
+    handleStartNewConversation,
+} from '@/contexts/course-mode/interface/controllers/course-mode-controller';
+import { Conversation } from '@/shared/entities/conversation';
+import { PushButton } from '@/shared/interface/web/react/components/push-button';
+import { ArrowUpIcon } from 'lucide-react';
+import { useActiveProjectId, useRequireProjectId } from '@/shared/interface/web/react/project/hooks/useActiveProjectId';
 
-export const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaElement> > = ({ onKeyDown, className = '', ...rest }) => {
+
+export const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaElement> & { blocked: boolean }> = ({ blocked, onKeyDown, className = '', ...rest }) => {
     const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = e => {
+        if (blocked) { return; }
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             e.currentTarget.form?.requestSubmit();
@@ -25,14 +36,64 @@ export const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaEl
     );
 };
 
-export const MessageForm: React.FC<{
-    onSubmitAction: (e: React.FormEvent) => void;
-    children: React.ReactNode;
-}> = ({ onSubmitAction, children }) => (
-    <form
-        onSubmit={onSubmitAction}
-        className='flex w-full gap-4 p-4 py-10 max-w-[800px]'
-    >
-        {children}
-    </form>
-);
+interface ChatInputProps {
+    conversation: Conversation | null;
+    setConversation: (c: Conversation) => void;
+    generating: boolean;
+    setGenerating: (g: boolean) => void;
+}
+
+export const ChatInput: React.FC<ChatInputProps> = ({ conversation, setConversation, generating, setGenerating, }) => {
+    const [text, setText] = useState('');
+    const [busy, setBusy] = useState(false);
+
+    const projectId = useActiveProjectId();
+    useRequireProjectId(projectId);
+
+    const submit = useCallback(
+        async (e?: React.FormEvent) => {
+            if (e) e.preventDefault();
+            if (!text.trim() || busy) return;
+
+            setBusy(true);
+            try {
+                let updated: Conversation;
+                if (!conversation) {
+                    updated = await handleStartNewConversation(projectId, 'course', text.trim());
+                } else {
+                    updated = await handleNewUserMessage(conversation, text.trim());
+                }
+                setText('');
+                setConversation(updated);
+                setGenerating(true);
+            } finally {
+                setBusy(false);
+            }
+        },
+        [text, busy, conversation, setConversation, setGenerating, projectId]
+    );
+
+    return (
+        <motion.form
+            layout
+            onSubmit={submit}
+            className='relative flex w-full max-w-[800px] mx-auto p-4 py-6'
+        >
+            <MessageInput
+                blocked={busy || generating}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder='Say something…'
+                className='flex-1 pr-16'
+            />
+
+            <PushButton
+                type='submit'
+                disabled={busy || generating}
+                className='ml-4 h-12 w-12 flex items-center justify-center rounded-full bg-primary text-white disabled:opacity-50'
+            >
+                <ArrowUpIcon className='h-5 w-5'/>
+            </PushButton>
+        </motion.form>
+    );
+};
