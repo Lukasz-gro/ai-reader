@@ -7,6 +7,7 @@ export class MockConversation {
     private id: string | null = null;
     private messages: Message[] | null = null;
     private mode: Mode | null = null;
+    private length: number | null = null;
 
     withId(id: string) {
         this.id = id;
@@ -20,11 +21,15 @@ export class MockConversation {
         this.mode = mode;
         return this;
     }
+    withLength(length: number) {
+        this.length = length;
+        return this;
+    }
 
     build(): Conversation {
         return {
             id: this.id ?? RandomConversation.id(),
-            messages: this.messages ?? RandomConversation.messages(),
+            messages: this.messages ?? RandomConversation.messages(this.length),
             mode: this.mode ?? RandomConversation.mode(),
         };
     }
@@ -35,9 +40,9 @@ export class RandomConversation {
         return uuidv4();
     }
 
-    static messages(): Message[] {
-        const count = Random.int();
-        return RandomMessage.generateSequence(count);
+    static messages(length?: number | null): Message[] {
+        const nMessages = length ?? Random.int();
+        return RandomMessage.generateSequence(nMessages);
     }
 
     static mode(): Mode {
