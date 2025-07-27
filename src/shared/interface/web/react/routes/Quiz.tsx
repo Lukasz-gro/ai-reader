@@ -37,7 +37,7 @@ export const Quiz: React.FC = () => {
                     <p className='text-sm text-p-50'>Project: {projects[0].title}</p>
                 </header>
                 <section className='flex-1 overflow-y-auto p-6'>
-                    <QuizSection activeProject={projects[0]} />
+                    <QuizSection />
                 </section>
             </div>
         </div>
