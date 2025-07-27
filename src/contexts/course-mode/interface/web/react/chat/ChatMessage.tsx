@@ -25,13 +25,25 @@ export const AnimatedChatMessage: React.FC<{ message: Message }> = ({ message })
 );
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
-    const content: React.ReactNode = Array.isArray(message.content)
-        ? message.content.map((chunk, i) => <AnimatedText key={i} content={chunk} />)
-        : <Markdown>{message.content}</Markdown>;
+    const isAssistant = message.role === 'ASSISTANT';
 
-    return message.role === 'USER'
-        ? <UserMessage>{content}</UserMessage>
-        : <AssistantMessage>{content}</AssistantMessage>;
+    const renderContent = () => {
+        const { content } = message;
+
+        if (!content || (Array.isArray(content) && content.length === 0)) {
+            return isAssistant ? <Spinner /> : null;
+        }
+
+        if (Array.isArray(content)) {
+            return content.map((chunk, i) => (
+                <AnimatedText key={i} content={chunk} />
+            ));
+        }
+        return <Markdown>{content}</Markdown>;
+    };
+
+    const Container = isAssistant ? AssistantMessage : UserMessage;
+    return <Container>{renderContent()}</Container>;
 };
 
 const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
@@ -56,4 +68,8 @@ const AnimatedText: React.FC<{ content: string }> = ({ content }) => (
     >
         {content}
     </motion.span>
+);
+
+const Spinner: React.FC = () => (
+    <div className='w-6 h-6 border-2 border-p-50 border-t-transparent rounded-full animate-spin' />
 );

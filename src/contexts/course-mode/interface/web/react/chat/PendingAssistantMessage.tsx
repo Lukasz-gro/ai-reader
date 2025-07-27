@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Conversation, ConversationMessage, Role } from '@/shared/entities/conversation';
-import { handleNewAssistantMessage, streamLLMResponse } from '../../../controllers/course-mode-controller';
+import { conversationController } from '../../../controllers/conversation-controller';
 
 interface PendingAssistantMessageProps {
     conversation: Conversation;
@@ -17,8 +17,9 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
         let isCancelled = false;
         const startStreaming = async () => {
             try {
-                const stream = streamLLMResponse(conversation.id);
+                const stream = await conversationController.streamLLMResponse(conversation.id);
                 const chunks: string[] = [];
+                updatePendingMessage(chunks);
 
                 for await (const data of stream) {
                     if (isCancelled) break;
@@ -44,11 +45,12 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
                 content: chunks,
             };
 
-            onConversationUpdate(updateMessageInConversation(conversation, assistantMessage));
+            const updatedConversation = updateMessageInConversation(conversation, assistantMessage);
+            onConversationUpdate(updatedConversation);
         };
 
         const finalizeMessage = async (finalContent: string) => {
-            const updated = await handleNewAssistantMessage(conversation, finalContent, messageId);
+            const updated = await conversationController.handleNewAssistantMessage(conversation, finalContent, messageId);
             onConversationUpdate(updated);
             onDone();
         };

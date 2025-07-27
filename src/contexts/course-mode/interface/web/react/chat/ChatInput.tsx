@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-    handleNewUserMessage,
-    handleStartNewConversation,
-} from '@/contexts/course-mode/interface/controllers/course-mode-controller';
+import { conversationController } from '@/contexts/course-mode/interface/controllers/conversation-controller';
 import { Conversation } from '@/shared/entities/conversation';
 import { PushButton } from '@/shared/interface/web/react/components/push-button';
 import { ArrowUpIcon } from 'lucide-react';
@@ -59,9 +56,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ conversation, setConversat
             try {
                 let updated: Conversation;
                 if (!conversation) {
-                    updated = await handleStartNewConversation(projectId, 'course', text.trim());
+                    updated = await conversationController.handleStartNewConversation(projectId, 'course', text.trim());
                 } else {
-                    updated = await handleNewUserMessage(conversation, text.trim());
+                    updated = await conversationController.handleNewUserMessage(conversation, text.trim());
                 }
                 setText('');
                 setConversation(updated);
