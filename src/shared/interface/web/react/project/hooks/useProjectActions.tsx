@@ -1,5 +1,6 @@
 import { useProjectController } from './useProjectController';
 import { useProjectDispatch } from './useProjectDispatch';
+import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 
 export function useProjectActions() {
     const { projectController } = useProjectController();
@@ -14,5 +15,10 @@ export function useProjectActions() {
         projectDispatch({ type: 'PROJECT_CREATED', payload: project });
     };
 
-    return { setSelectedProject, createProject };
+    const createQuizForProject = async (projectId: string, params: QuizCreationParams) => {
+        const newQuizPreview = await projectController.createQuizForProject(projectId, params);
+        projectDispatch({ type: 'QUIZ_ADDED', payload: { projectId, quiz: newQuizPreview } });
+    };
+
+    return { setSelectedProject, createProject, createQuizForProject };
 }

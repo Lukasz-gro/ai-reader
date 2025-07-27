@@ -19,6 +19,18 @@ export function projectStateReducer(state: ProjectState, action: Action): Projec
                 throw new Error('Illegal state in CREATE action');
             }
             return { ...state, projects: [...state.projects, action.payload] };
+        case 'QUIZ_ADDED':
+            if (state.status !== 'success') {
+                throw new Error('Illegal state in QUIZ_ADDED action');
+            }
+            return {
+                ...state,
+                projects: state.projects.map(p =>
+                    p.id === action.payload.projectId
+                        ? { ...p, quizzes: [...p.quizzes, action.payload.quiz] }
+                        : p
+                ),
+            };
         default:
             return state;
     }

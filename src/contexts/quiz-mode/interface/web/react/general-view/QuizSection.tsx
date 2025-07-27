@@ -1,6 +1,5 @@
 import { Project } from '@/shared/entities/project';
-import { useState } from 'react';
-import { createCustomizedQuiz } from '../../server/quiz-actions';
+import { useState, useEffect } from 'react';
 import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
 import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/in/create-quiz-from-material';
 import { 
@@ -11,15 +10,15 @@ import {
 } from './states';
 import { QuizSectionState } from './types';
 import { UserAnswer } from './QuizSummary';
+import { useProjectActions } from '@/shared/interface/web/react/project/hooks/useProjectActions';
 
 export const QuizSection: React.FC<{
     activeProject: Project,
 }> = ({ activeProject }) => {
     const [sectionState, setSectionState] = useState<QuizSectionState>('initial');
     const [activeQuiz, setActiveQuiz] = useState<Quiz | null>(null);
-    const [isCreatingQuiz, setIsCreatingQuiz] = useState(false);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
-    const [lastQuizParams, setLastQuizParams] = useState<QuizCreationParams | null>(null);
+    const { createQuizForProject } = useProjectActions();
 
     const handleCreateQuizClick = () => {
         setSectionState('configuring');
@@ -30,18 +29,8 @@ export const QuizSection: React.FC<{
     };
 
     const handleCreateQuiz = async (params: QuizCreationParams) => {
-        setIsCreatingQuiz(true);
-        try {
-            const quiz = await createCustomizedQuiz(activeProject, params);
-            setActiveQuiz(quiz);
-            setLastQuizParams(params);
-            setUserAnswers([]);
-            setSectionState('taking-quiz');
-        } catch (error) {
-            console.error('Failed to create quiz:', error);
-        } finally {
-            setIsCreatingQuiz(false);
-        }
+        await createQuizForProject(activeProject.id, params);
+        setSectionState('initial');
     };
 
     const handleQuizComplete = (answers: UserAnswer[]) => {
@@ -50,25 +39,12 @@ export const QuizSection: React.FC<{
     };
 
     const handleRestartQuiz = async () => {
-        if (lastQuizParams && activeQuiz) {
-            setIsCreatingQuiz(true);
-            try {
-                const quiz = await createCustomizedQuiz(activeProject, lastQuizParams);
-                setActiveQuiz(quiz);
-                setUserAnswers([]);
-                setSectionState('taking-quiz');
-            } catch (error) {
-                console.error('Failed to restart quiz:', error);
-            } finally {
-                setIsCreatingQuiz(false);
-            }
-        }
+        // This will be handled by the useQuizSession hook later
     };
 
     const handleNewQuiz = () => {
         setActiveQuiz(null);
         setUserAnswers([]);
-        setLastQuizParams(null);
         setSectionState('configuring');
     };
 
@@ -81,7 +57,7 @@ export const QuizSection: React.FC<{
                 <QuizConfiguringState
                     onCreateQuiz={handleCreateQuiz}
                     onCancel={handleCancelConfiguration}
-                    isCreating={isCreatingQuiz}
+                    isCreating={false} // This will be handled by a new hook for the quiz list
                 />
             );
 
