@@ -17,6 +17,7 @@ export class HttpError extends Error {
 
 export interface HttpClient {
     get<T = unknown>(url: string, config?: RequestConfig): Promise<HttpResponse<T>>;
+    stream<T = unknown>(url: string, config?: RequestConfig): AsyncGenerator<T>;
     post<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<HttpResponse<T>>;
     put<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<HttpResponse<T>>;
     delete<T = unknown>(url: string, config?: RequestConfig): Promise<HttpResponse<T>>;

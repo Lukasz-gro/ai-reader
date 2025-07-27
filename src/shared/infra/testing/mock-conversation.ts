@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Random } from '@/shared/infra/mocks/random';
-import { RandomMessage } from '@/shared/infra/mocks/mock-message';
+import { Random } from '@/shared/infra/testing/random';
+import { RandomMessage } from '@/shared/infra/testing/mock-message';
 import { Conversation, Message, Mode } from '@/shared/entities/conversation';
 
 export class MockConversation {
@@ -29,6 +29,8 @@ export class MockConversation {
     build(): Conversation {
         return {
             id: this.id ?? RandomConversation.id(),
+            projectId: 'some-project',
+            title: 'mock conversation',
             messages: this.messages ?? RandomConversation.messages(this.length),
             mode: this.mode ?? RandomConversation.mode(),
         };

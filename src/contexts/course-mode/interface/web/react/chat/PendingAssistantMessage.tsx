@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Conversation, Message, Role } from '@/shared/entities/conversation';
+import { handleNewAssistantMessage, streamLLMResponse } from '../../../controllers/course-mode-controller';
 
 interface PendingAssistantMessageProps {
     conversation: Conversation;
@@ -14,15 +15,14 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
 
     useEffect(() => {
         let isCancelled = false;
-
         const startStreaming = async () => {
             try {
-                const stream = streamLLMResponse(conversation);
+                const stream = streamLLMResponse(conversation.id);
                 const chunks: string[] = [];
 
-                for await (const chunk of stream) {
+                for await (const data of stream) {
                     if (isCancelled) break;
-                    chunks.push(chunk);
+                    chunks.push(data.chunk);
                     updatePendingMessage(chunks);
                 }
 
@@ -49,7 +49,7 @@ export const PendingAssistantMessage: React.FC<PendingAssistantMessageProps> = (
         };
 
         const finalizeMessage = async (finalContent: string) => {
-            const updated = await addAssistantMessageToChat(conversation, finalContent, messageId);
+            const updated = await handleNewAssistantMessage(conversation, finalContent, messageId);
             onConversationUpdate(updated);
             onDone();
         };

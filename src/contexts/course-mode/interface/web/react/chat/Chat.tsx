@@ -4,6 +4,7 @@ import { MessageView } from './MessageView';
 import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';
 import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/PendingAssistantMessage';
 import { handleNewUserMessage } from '@/contexts/course-mode/interface/controllers/course-mode-controller';
+import { MessageForm, MessageInput } from './ChatInput';
 
 interface ChatProps {
     conversation: Conversation;
@@ -54,49 +55,11 @@ export function Chat({ conversation }: ChatProps) {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder='Ask about anything...'
-                    disabled={isGenerating}
                 />
-                <PrimaryButton type='submit' disabled={isGenerating}>
+                <PrimaryButton type='submit' className={'rounded-[20px]'} disabled={isGenerating}>
                     {isGenerating ? 'Generating...' : 'Send'}
                 </PrimaryButton>
             </MessageForm>
         </section>
     );
 }
-
-const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaElement> > = ({ onKeyDown, className = '', ...rest }) => {
-    const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = e => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            e.currentTarget.form?.requestSubmit();
-            return;
-        }
-        onKeyDown?.(e);
-    };
-
-    return (
-        <textarea
-            {...rest}
-            onKeyDown={handleKeyDown}
-            rows={3}
-            className={`
-        flex-1 resize-none px-4 py-3 border border-p-70 rounded text-base
-        bg-p-90 text-p-10 outline-none transition-all duration-200
-        focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
-        ${className}
-      `}
-        />
-    );
-};
-
-const MessageForm: React.FC<{
-    onSubmitAction: (e: React.FormEvent) => void;
-    children: React.ReactNode;
-}> = ({ onSubmitAction, children }) => (
-    <form
-        onSubmit={onSubmitAction}
-        className='flex w-full gap-4 p-4 py-10 max-w-[800px]'
-    >
-        {children}
-    </form>
-);

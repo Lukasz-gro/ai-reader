@@ -40,6 +40,12 @@ class AxiosHttpClient implements HttpClient {
         return this.mapAxiosResponse(response);
     }
 
+    stream<T = unknown>(url: string, config?: RequestConfig): AsyncGenerator<T> {
+        void url;
+        void config;
+        throw new Error('Axios does not support stream from browser');
+    }
+
     async post<T = unknown>(url: string, data?: unknown, config?: RequestConfig): Promise<HttpResponse<T>> {
         const response = await this.axiosInstance.post<T>(url, data, config);
         return this.mapAxiosResponse(response);

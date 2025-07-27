@@ -1,4 +1,4 @@
-import { httpClient } from '@/shared/infra/http/axios-http-client';
+import { httpClient } from '@/shared/infra/http/fetch-http-client';
 import { HttpCookieAuthProvider } from '@/shared/infra/auth/http-cookie-auth-provider';
 import { LoginUserUseCase } from '@/shared/application/use-cases/login-user';
 import { LogoutUserUseCase } from '@/shared/application/use-cases/logout-user';

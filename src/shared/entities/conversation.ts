@@ -5,6 +5,10 @@ export interface Message {
     content: string | string[];
 }
 
+export interface ConversationMessage extends Message {
+    conversationId: string;
+}
+
 export enum Role {
     SYSTEM = 'SYSTEM',
     ASSISTANT = 'ASSISTANT',
@@ -15,7 +19,9 @@ export type Mode = 'course' | 'explain' | 'quiz' ;
 
 export interface Conversation {
     id: string;
-    messages: Message[];
+    projectId: string;
+    title: string;
+    messages: ConversationMessage[];
     mode: Mode;
 }
 
