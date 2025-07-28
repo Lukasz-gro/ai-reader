@@ -1,7 +1,7 @@
 import React from 'react';
 import { Conversation } from '@/shared/entities/conversation';
 import { MessageView } from './MessageView';
-import { PendingAssistantMessage } from '@/contexts/course-mode/interface/web/react/chat/PendingAssistantMessage';
+import { PendingAssistantMessage } from '@/contexts/conversations/interface/web/react/chat/PendingAssistantMessage';
 
 interface ChatProps {
     conversation: Conversation;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ProjectPane } from '@/shared/interface/web/react/project/ui-components/ProjectPane';
-import { Chat } from '@/contexts/course-mode/interface/web/react/chat/Chat';
+import { Chat } from '@/contexts/conversations/interface/web/react/chat/Chat';
 import { Conversation } from '@/shared/entities/conversation';
-import { ChatInput } from '@/contexts/course-mode/interface/web/react/chat/ChatInput';
+import { ChatInput } from '@/contexts/conversations/interface/web/react/chat/ChatInput';
 
 export const ChatPage: React.FC = () => {
     const [conversation, setConversation] = useState<Conversation | null>(null);

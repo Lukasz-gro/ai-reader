@@ -2,7 +2,7 @@
 import { Conversation } from '@/shared/entities/conversation';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
-import { AnimatedChatMessage } from '@/contexts/course-mode/interface/web/react/chat/ChatMessage';
+import { AnimatedChatMessage } from '@/contexts/conversations/interface/web/react/chat/ChatMessage';
 
 interface ChatViewProps {
     conversation: Conversation;

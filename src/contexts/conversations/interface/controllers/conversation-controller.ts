@@ -1,7 +1,7 @@
 import { Conversation, ConversationMessage, Mode, Role } from '@/shared/entities/conversation';
 import { v4 as uuidv4 } from 'uuid';
-import { ConversationApi } from '@/contexts/course-mode/application/ports/out/conversation-api';
-import { ConversationHttpApi } from '@/contexts/course-mode/infra/conversation-http-api';
+import { ConversationApi } from '@/contexts/conversations/application/ports/out/conversation-api';
+import { ConversationHttpApi } from '@/contexts/conversations/infra/conversation-http-api';
 import { FetchHttpClient } from '@/shared/infra/http/fetch-http-client';
 
 // TODO move to useCases

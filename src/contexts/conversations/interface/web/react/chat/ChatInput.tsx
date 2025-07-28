@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import { conversationController } from '@/contexts/course-mode/interface/controllers/conversation-controller';
+import { conversationController } from '@/contexts/conversations/interface/controllers/conversation-controller';
 import { Conversation } from '@/shared/entities/conversation';
 import { PushButton } from '@/shared/interface/web/react/components/push-button';
 import { ArrowUpIcon } from 'lucide-react';

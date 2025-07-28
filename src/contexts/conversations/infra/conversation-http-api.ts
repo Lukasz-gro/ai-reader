@@ -1,4 +1,4 @@
-import { ConversationApi, StringChunk } from '@/contexts/course-mode/application/ports/out/conversation-api';
+import { ConversationApi, StringChunk } from '@/contexts/conversations/application/ports/out/conversation-api';
 import { HttpClient } from '@/shared/application/ports/out/http-client';
 import { Conversation, ConversationMessage, Mode } from '@/shared/entities/conversation';
 import { MockConversation } from '@/shared/infra/testing/mock-conversation';
