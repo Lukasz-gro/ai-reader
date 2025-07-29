@@ -6,6 +6,7 @@ import { BoltIcon, LogOutIcon } from 'lucide-react';
 import { useProjects } from '../project/hooks/useProjects';
 import { useAuth } from '../auth/hooks/useAuth';
 import { useAuthActions } from '../auth/hooks/useAuthActions';
+import { useActiveProjectId } from '@/shared/interface/web/react/project/hooks/useActiveProjectId';
 
 export const Header: React.FC<{ className: string }> = ({ className }) => {
     const location = useLocation();
@@ -15,14 +16,14 @@ export const Header: React.FC<{ className: string }> = ({ className }) => {
     const { logout } = useAuthActions();
     
     const projects = projectState.status === 'success' ? projectState.projects : [];
-    const currentProjectId = getCurrentProjectIdFromPath(location.pathname);
-    
+    const currentProjectId = useActiveProjectId();
+
     const navigateToChat = () => {
-        goToChat(currentProjectId);
+        goToChat();
     };
     
     const navigateToQuiz = () => {
-        goToQuiz(currentProjectId);
+        goToQuiz();
     };
     
     const isActivePath = (path: string) => {
@@ -51,13 +52,13 @@ export const Header: React.FC<{ className: string }> = ({ className }) => {
                                 label='Chat'
                                 onClick={navigateToChat}
                                 isActive={isActivePath('/chat')}
-                                disabled={projects.length === 0}
+                                disabled={currentProjectId === null}
                             />
                             <NavigationButton
                                 label='Quiz'
                                 onClick={navigateToQuiz}
                                 isActive={isActivePath('/quiz')}
-                                disabled={projects.length === 0}
+                                disabled={currentProjectId === null}
                             />
                         </nav>
                     </div>

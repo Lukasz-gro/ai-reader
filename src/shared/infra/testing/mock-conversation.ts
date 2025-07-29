@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Random } from '@/shared/infra/mocks/random';
-import { RandomMessage } from '@/shared/infra/mocks/mock-message';
+import { Random } from '@/shared/infra/testing/random';
+import { RandomMessage } from '@/shared/infra/testing/mock-message';
 import { Conversation, Message, Mode } from '@/shared/entities/conversation';
 
 export class MockConversation {
@@ -27,9 +27,14 @@ export class MockConversation {
     }
 
     build(): Conversation {
+        const id = this.id ?? RandomConversation.id();
+        const messages = this.messages ?? RandomConversation.messages(this.length);
+        const convMessages = messages.map((message) => { return { ...message, conversationId: id }; });
         return {
-            id: this.id ?? RandomConversation.id(),
-            messages: this.messages ?? RandomConversation.messages(this.length),
+            id,
+            projectId: 'some-project',
+            title: 'mock conversation',
+            messages: convMessages,
             mode: this.mode ?? RandomConversation.mode(),
         };
     }

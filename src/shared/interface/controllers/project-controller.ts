@@ -4,7 +4,7 @@ import { HttpProjectApi } from '@/shared/infra/projects/http-project-api';
 import { CreateNewProject } from '@/shared/application/ports/in/create-new-project';
 import { GetUserProjects } from '@/shared/application/ports/in/get-user-projects';
 import { GetUserProjectsUseCase } from '@/shared/application/use-cases/get-user-projects';
-import { httpClient } from '@/shared/infra/http/axios-http-client';
+import { httpClient } from '@/shared/infra/http/fetch-http-client';
 
 export class ProjectController {
     constructor(

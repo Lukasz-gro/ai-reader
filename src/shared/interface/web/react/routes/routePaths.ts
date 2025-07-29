@@ -2,16 +2,16 @@ export const ROUTES = {
     HOME: '/',
     LOGIN: '/login',
     REGISTER: '/register',
-    CHAT: '/chat/:projectId?',
-    QUIZ: '/quiz/:projectId?',
+    CHAT: '/chat',
+    QUIZ: '/quiz',
 } as const;
 
 export const buildRoute = {
     home: () => ROUTES.HOME,
     login: () => ROUTES.LOGIN,
     register: () => ROUTES.REGISTER,
-    chat: (projectId?: string) => projectId ? `/chat/${projectId}` : '/chat',
-    quiz: (projectId?: string) => projectId ? `/quiz/${projectId}` : '/quiz',
+    chat: () => ROUTES.CHAT,
+    quiz: () => ROUTES.QUIZ,
 } as const;
 
 export type RouteKey = keyof typeof ROUTES; 
