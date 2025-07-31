@@ -1,16 +1,6 @@
-import { UserUpload } from '@/shared/entities/user-upload';
-import { Material } from '@/shared/entities/material';
+import { MaterialPreview } from '@/shared/entities/material';
+import { Result } from '@/shared/entities/result';
 
 export interface UploadMaterial {
-    execute(
-        upload: UserUpload,
-    ): Promise<Material>;
-
-    // getAvailableMimeTypes(
-    //     parsers: ParserManager
-    // ): string[];
-    //
-    // getAvailableFileExtensions(
-    //     parsers: ParserManager
-    // ): string[];
+    execute(file: File, projectId: string): Promise<Result<MaterialPreview, string>>;
 }

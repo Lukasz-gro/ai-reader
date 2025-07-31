@@ -1,6 +1,9 @@
-// TODO - adjust interface
-export interface UserUpload {
-    name: string;
+export interface UploadMetadata {
+    projectId: string;
+    title: string;
     mimeType: string;
-    data: Buffer;
+}
+
+export interface UploadPayload extends UploadMetadata {
+    file: File;
 }

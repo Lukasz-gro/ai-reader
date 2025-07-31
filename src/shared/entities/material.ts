@@ -19,14 +19,15 @@ export type ParsedContent = TextContent | BinaryContent;
 
 export interface Material {
     id: string;
-    // TODO userId ?
+    projectId: string;
     title: string;
     content: ParsedContent;
 }
 
 export interface MaterialPreview {
     id: string;
-    name: string;
-    description: string;
+    projectId: string;
+    title: string;
     type: 'image' | 'video' | 'audio' | 'text';
+    metadata: Record<string, unknown>;
 }

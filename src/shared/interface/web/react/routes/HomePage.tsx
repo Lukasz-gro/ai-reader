@@ -1,4 +1,4 @@
-import { HomeView } from '@/contexts/home/HomeView';
+import { HomeView } from '@/contexts/home/interface/web/react/HomeView';
 import React from 'react';
 
 

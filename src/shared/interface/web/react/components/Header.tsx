@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { Tooltip } from '../Tooltip';
 import { BoltIcon, LogOutIcon } from 'lucide-react';
-import { useProjects } from '../project/hooks/useProjects';
 import { useAuth } from '../auth/hooks/useAuth';
 import { useAuthActions } from '../auth/hooks/useAuthActions';
 import { useActiveProjectId } from '@/shared/interface/web/react/project/hooks/useActiveProjectId';
@@ -11,28 +10,26 @@ import { useActiveProjectId } from '@/shared/interface/web/react/project/hooks/u
 export const Header: React.FC<{ className: string }> = ({ className }) => {
     const location = useLocation();
     const { goToHome, goToChat, goToQuiz, goToLogin, goToRegister } = useAppNavigation();
-    const projectState = useProjects();
     const authState = useAuth();
     const { logout } = useAuthActions();
-    
-    const projects = projectState.status === 'success' ? projectState.projects : [];
+
     const currentProjectId = useActiveProjectId();
 
     const navigateToChat = () => {
         goToChat();
     };
-    
+
     const navigateToQuiz = () => {
         goToQuiz();
     };
-    
+
     const isActivePath = (path: string) => {
         if (path === '/') {
             return location.pathname === '/';
         }
         return location.pathname.startsWith(path);
     };
-    
+
     return (
         <div className={className}>
             <header className='w-full min-w-0'>
@@ -66,12 +63,12 @@ export const Header: React.FC<{ className: string }> = ({ className }) => {
                     <div className={'flex gap-4 mr-8 items-center'}>
                         {authState.status === 'success' && authState.data.user ? (
                             <>
-                            <span className='text-p-50 text-sm'>
-                                {authState.data.user.email}
-                            </span>
+                                <span className='text-p-50 text-sm'>
+                                    {authState.data.user.email}
+                                </span>
                                 <Tooltip tooltip={'Logout'}>
                                     <button onClick={logout}>
-                                        <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-colors duration-200 cursor-pointer'} />
+                                        <LogOutIcon className={'w-6 h-6 stroke-p-50 hover:stroke-a-30 transition-colors cursor-pointer'} />
                                     </button>
                                 </Tooltip>
                             </>
@@ -79,13 +76,13 @@ export const Header: React.FC<{ className: string }> = ({ className }) => {
                             <>
                                 <button
                                     onClick={goToLogin}
-                                    className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
+                                    className='text-p-50 hover:text-a-30 transition-colors cursor-pointer text-sm'
                                 >
                                     Login
                                 </button>
                                 <button
                                     onClick={goToRegister}
-                                    className='text-p-50 hover:text-p-10 transition-colors duration-200 cursor-pointer text-sm'
+                                    className='text-p-50 hover:text-a-30 transition-colors cursor-pointer text-sm'
                                 >
                                     Register
                                 </button>
@@ -93,7 +90,7 @@ export const Header: React.FC<{ className: string }> = ({ className }) => {
                         )}
                         <Tooltip tooltip={'Settings'}>
                             <button>
-                                <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-p-10 transition-all duration-200 cursor-pointer hover:rotate-45'} />
+                                <BoltIcon className={'w-6 h-6 stroke-p-50 hover:stroke-a-30 transition-all cursor-pointer hover:rotate-45'} />
                             </button>
                         </Tooltip>
                     </div>
@@ -110,11 +107,11 @@ interface NavigationButtonProps {
     disabled?: boolean;
 }
 
-const NavigationButton: React.FC<NavigationButtonProps> = ({ 
-    label, 
-    onClick, 
-    isActive, 
-    disabled = false 
+const NavigationButton: React.FC<NavigationButtonProps> = ({
+    label,
+    onClick,
+    isActive,
+    disabled = false
 }) => {
     if (disabled) {
         return (
@@ -136,11 +133,3 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
         </button>
     );
 };
-
-const getCurrentProjectIdFromPath = (pathname: string): string | undefined => {
-    const segments = pathname.split('/');
-    if (segments.length >= 3 && (segments[1] === 'chat' || segments[1] === 'quiz')) {
-        return segments[2];
-    }
-    return undefined;
-}; 
