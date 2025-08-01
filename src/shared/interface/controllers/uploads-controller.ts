@@ -1,5 +1,5 @@
 import { MaterialPreview } from '@/shared/entities/material';
-import { FetchHttpClient } from '@/shared/infra/http/fetch-http-client';
+import { httpClient } from '@/shared/infra/http/fetch-http-client';
 import { AsyncResult, nok } from '@/shared/entities/result';
 import { UploadsHttpApi } from '@/shared/infra/uploads/uploads-http-api';
 import { UploadMaterial } from '@/shared/application/ports/in/upload-material';
@@ -31,7 +31,6 @@ export class UploadsController {
     }
 }
 
-const httpClient = new FetchHttpClient();
 const uploadsApi = new UploadsHttpApi(httpClient);
 const uploadMaterial = new UploadMaterialUseCase(uploadsApi);
 export const uploadsController = new UploadsController(uploadsApi, uploadMaterial);

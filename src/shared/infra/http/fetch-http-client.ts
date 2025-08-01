@@ -2,14 +2,15 @@ import {
     HttpClient,
     HttpResponse,
     RequestConfig,
-    HttpError
+    HttpError, AutoRefreshDecorator
 } from '@/shared/application/ports/out/http-client';
+import { GenericResponse } from '@/shared/entities/generic-repsonse';
 
 type FetchRequestConfig = RequestConfig & {
     signal?: AbortSignal;
 };
 
-export class FetchHttpClient implements HttpClient {
+class FetchHttpClient implements HttpClient {
     private readonly baseURL: string;
     private readonly defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' };
 
@@ -145,4 +146,8 @@ export class FetchHttpClient implements HttpClient {
     }
 }
 
-export const httpClient = new FetchHttpClient();
+async function refresh(httpClient: HttpClient): Promise<HttpResponse<GenericResponse>> {
+    return httpClient.get<GenericResponse>('/auth/refresh');
+}
+
+export const httpClient = new AutoRefreshDecorator(new FetchHttpClient(), refresh);
