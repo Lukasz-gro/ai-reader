@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuthActions } from '@/shared/interface/web/react/auth/hooks/useAuthActions';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';
@@ -11,15 +11,14 @@ export const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const { login } = useAuthActions();
     const authState = useAuth();
-    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         login(email, password);
     };
 
-    if (authState.status === 'success' && authState.data.user) {
-        navigate(buildRoute.home());
+    if (authState.status === 'success' && authState.data?.user) {
+        return <Navigate to={buildRoute.home()} replace />;
     }
 
     const submitLabel = authState.status === 'loading' ? 'Signing in...' : 'Sign in';

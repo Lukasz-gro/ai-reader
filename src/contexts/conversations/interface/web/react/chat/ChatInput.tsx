@@ -19,17 +19,21 @@ export const MessageInput: React.FC< React.TextareaHTMLAttributes<HTMLTextAreaEl
     };
 
     return (
-        <textarea
-            {...rest}
-            onKeyDown={handleKeyDown}
-            rows={3}
-            className={`
-        flex-1 resize-none px-4 py-3 border border-p-70 rounded-[20px] text-base
-        bg-p-90 text-p-10 outline-none transition-all duration-200
-        focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
-        ${className}
-      `}
-        />
+        <div className='flex flex-1 rounded-[22px] p-[2px] bg-gradient-to-b from-sd-70 to-sd-60'>
+            <div className='flex flex-1 rounded-[20px] bg-p-90'>
+                <textarea
+                    {...rest}
+                    onKeyDown={handleKeyDown}
+                    rows={3}
+                    className={`
+                flex-1 resize-none px-4 py-3 rounded-[20px] text-base
+                bg-p-90 text-p-10 outline-none transition-all duration-200
+                focus:border-sd-50 focus:shadow-md focus:shadow-sd-50/30
+                ${className}
+              `}
+                />
+            </div>
+        </div>
     );
 };
 

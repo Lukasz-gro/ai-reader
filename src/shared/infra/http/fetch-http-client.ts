@@ -11,9 +11,7 @@ type FetchRequestConfig = RequestConfig & {
 
 export class FetchHttpClient implements HttpClient {
     private readonly baseURL: string;
-    private readonly defaultHeaders: HeadersInit = {
-        'Content-Type': 'application/json'
-    };
+    private readonly defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' };
 
     constructor(baseURL: string = '/api') {
         this.baseURL = baseURL;
@@ -98,11 +96,25 @@ export class FetchHttpClient implements HttpClient {
         body?: unknown,
         config?: FetchRequestConfig
     ): Promise<HttpResponse<T>> {
+        const isFormData = body instanceof FormData;
+        const headers: HeadersInit = { ...config?.headers };
+        let parsedBody: BodyInit | undefined;
+
+        if (body !== undefined) {
+            parsedBody = isFormData
+                ? (body as FormData)
+                : JSON.stringify(body);
+        }
+
+        if (!isFormData) {
+            headers['Content-Type'] ??= 'application/json';
+        }
+
         try {
             const res = await fetch(this.resolve(url), {
                 method,
-                body: body !== undefined ? JSON.stringify(body) : undefined,
-                headers: { ...this.defaultHeaders, ...config?.headers },
+                body: parsedBody,
+                headers: { ...headers, ...config?.headers },
                 credentials: 'include',
                 signal: config?.signal
             });

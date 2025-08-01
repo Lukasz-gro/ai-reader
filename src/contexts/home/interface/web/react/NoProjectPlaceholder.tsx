@@ -3,7 +3,7 @@ import React from 'react';
 export const NoProjectPlaceholder: React.FC = () => {
     return (
         <div>
-            <h1 className={'text-p-70 text-center'}>
+            <h1 className={'text-p-70 text-center mt-[33vh]'}>
                 No project selected.
             </h1>
             <p className={'text-p-70 text-center'}>
