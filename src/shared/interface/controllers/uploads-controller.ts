@@ -1,6 +1,6 @@
 import { MaterialPreview } from '@/shared/entities/material';
 import { FetchHttpClient } from '@/shared/infra/http/fetch-http-client';
-import { nok, Result } from '@/shared/entities/result';
+import { AsyncResult, nok } from '@/shared/entities/result';
 import { UploadsHttpApi } from '@/shared/infra/uploads/uploads-http-api';
 import { UploadMaterial } from '@/shared/application/ports/in/upload-material';
 import { UploadsApi } from '@/shared/application/ports/out/uploads-api';
@@ -12,7 +12,7 @@ export class UploadsController {
         private readonly uploadMaterial: UploadMaterial,
     ) { }
 
-    async handleTriggerUpload(projectId: string, formData: FormData): Promise<Result<MaterialPreview, string>> {
+    async handleTriggerUpload(projectId: string, formData: FormData): AsyncResult<MaterialPreview, string> {
         const file = formData.get('file') as File | null;
         if (!file) {
             return nok('No file to upload');
@@ -21,8 +21,9 @@ export class UploadsController {
         return this.uploadMaterial.execute(file, projectId);
     }
 
-    async listValidUploadFiletypes(): Promise<string[]> {
-        return this.uploadsApi.listValidUploadFiletypes();
+    async listValidUploadFiletypes(): Promise<string> {
+        const list = await this.uploadsApi.listValidUploadFiletypes();
+        return list.join(',');
     }
 
     async listProjectMaterials(projectId: string): Promise<MaterialPreview[]> {

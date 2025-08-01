@@ -9,7 +9,7 @@ export class UploadsHttpApi implements UploadsApi {
         private readonly httpClient: HttpClient,
     ) { }
 
-    async upload(payload: UploadPayload): Promise<Result<MaterialPreview, string>> {
+    async upload(payload: UploadPayload): AsyncResult<MaterialPreview, string> {
         const formData = new FormData();
         formData.append('file', payload.file);
         formData.append('projectId', payload.projectId);

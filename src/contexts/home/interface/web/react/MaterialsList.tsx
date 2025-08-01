@@ -11,7 +11,7 @@ export const MaterialsList: React.FC = () => {
     useRequireProjectId(projectId);
 
     const [materials, setMaterials] = useState<MaterialPreview[]>([]);
-    const [acceptedTypes, setAcceptedTypes] = useState<string[]>(['application/pdf']);
+    const [acceptedTypes, setAcceptedTypes] = useState<string>('application/pdf');
 
     const onUpload = async (projectId: string, formData: FormData): Promise<MaterialPreview | null> => {
         const result = await uploadsController.handleTriggerUpload(projectId, formData);

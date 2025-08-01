@@ -11,9 +11,7 @@ type FetchRequestConfig = RequestConfig & {
 
 export class FetchHttpClient implements HttpClient {
     private readonly baseURL: string;
-    private readonly defaultHeaders: HeadersInit = {
-        'Content-Type': 'application/json'
-    };
+    private readonly defaultHeaders: HeadersInit = { 'Content-Type': 'application/json' };
 
     constructor(baseURL: string = '/api') {
         this.baseURL = baseURL;

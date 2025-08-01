@@ -9,7 +9,7 @@ export class UploadMaterialUseCase implements UploadMaterial {
         private readonly api: UploadsApi
     ) { }
 
-    async execute(file: File, projectId: string): Promise<Result<MaterialPreview, string>> {
+    async execute(file: File, projectId: string): AsyncResult<MaterialPreview, string> {
         const payload: UploadPayload = {
             projectId: projectId,
             title: file.name,

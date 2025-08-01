@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MaterialPreview } from '@/shared/entities/material';
 
-export const MaterialUploadForm: React.FC<{ acceptedTypes: string[], handleUpload: (formData: FormData) => Promise<MaterialPreview | null>}> = ({ acceptedTypes, handleUpload }) => {
+export const MaterialUploadForm: React.FC<{ acceptedTypes: string, handleUpload: (formData: FormData) => Promise<MaterialPreview | null>}> = ({ acceptedTypes, handleUpload }) => {
     const [pending, setPending] = useState(false);
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -32,7 +32,7 @@ export const MaterialUploadForm: React.FC<{ acceptedTypes: string[], handleUploa
                         name='file'
                         type='file'
                         className='hidden'
-                        accept={acceptedTypes.join(', ')}
+                        accept={acceptedTypes}
                         required
                         disabled={pending}
                         onChange={e => { e.currentTarget.form?.requestSubmit(); }}
