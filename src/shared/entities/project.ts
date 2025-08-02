@@ -1,7 +1,3 @@
-import { QuizPreview } from './quiz-preview';
-import { MaterialPreview } from '@/shared/entities/material';
-import { ConversationPreview } from '@/shared/entities/conversation';
-
 export interface LearningCheckpoint {
     id: string;
     title: string;
@@ -19,17 +15,4 @@ export interface Project {
     ownerId: string;
     title: string;
     roadmap: LearningRoadmap;
-    materialIds: string[];
-    quizIds: string[];
-    conversationIds: string[];
-}
-
-export interface ProjectPreview {
-    id: string;
-    ownerId: string;
-    title: string;
-    materials: MaterialPreview[];
-    roadmap: LearningRoadmap;
-    conversations: ConversationPreview[];
-    quizzes: QuizPreview[];
 }

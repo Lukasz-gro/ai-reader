@@ -116,12 +116,6 @@ const ProjectPicker: React.FC<{
                     onClick={() => onProjectClick(project)}
                 >
                     <p className='font-semibold'>{project.title}</p>
-                    <div className='flex flex-row gap-4'>
-                        <div className='flex gap-1 items-center'>
-                            <MessageCircleIcon className='w-[1rem] h-[1rem] stroke-sd-30'/>
-                            <span className='text-sd-30 relative top-[1px]'>{project.conversations.length}</span>
-                        </div>
-                    </div>
                 </button>
             ))}
         </div>
