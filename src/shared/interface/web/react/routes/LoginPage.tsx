@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuthActions } from '@/shared/interface/web/react/auth/hooks/useAuthActions';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 import { PrimaryButton } from '@/shared/interface/web/react/components/primary-button';

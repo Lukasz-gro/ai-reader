@@ -13,7 +13,7 @@ export const ProjectPane: React.FC = () => {
 
     const authState = useAuth();
     if (authState.status !== 'success' || authState.data.user === null) {
-        return;
+        return null;
     }
     const userId = authState.data.user.id;
 
