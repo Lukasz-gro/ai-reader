@@ -1,8 +1,7 @@
-'use client';
 import { motion } from 'framer-motion';
 import React from 'react';
 import Markdown from 'react-markdown';
-import { Message } from '@/shared/entities/conversation';
+import { Message, Role } from '@/shared/entities/conversation';
 
 const messageVariants = {
     hidden: { opacity: 0, y: 16 },
@@ -18,20 +17,24 @@ export const AnimatedChatMessage: React.FC<{ message: Message }> = ({ message })
         animate='visible'
         exit='exit'
         transition={{ duration: 0.2, type: 'easeInOut' }}
-        layout='position'
+        layout
     >
         <ChatMessage message={message} />
     </motion.div>
 );
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
-    const isAssistant = message.role === 'ASSISTANT';
+    const roleToContainer = {
+        [Role.SYSTEM]: SystemMessage,
+        [Role.ASSISTANT]: AssistantMessage,
+        [Role.USER]: UserMessage,
+    };
 
     const renderContent = () => {
         const { content } = message;
 
         if (!content || (Array.isArray(content) && content.length === 0)) {
-            return isAssistant ? <Spinner /> : null;
+            return message.role === Role.ASSISTANT ? <Spinner /> : null;
         }
 
         if (Array.isArray(content)) {
@@ -42,14 +45,23 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
         return <Markdown>{content}</Markdown>;
     };
 
-    const Container = isAssistant ? AssistantMessage : UserMessage;
+    const Container = roleToContainer[message.role];
     return <Container>{renderContent()}</Container>;
 };
+
+const SystemMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+    <div className='bg-p-90 text-p-50 px-5 py-3 rounded-[18px_18px_18px_18px] border-1 border-p-80 text-base shadow-sm mx-16'>
+        <CollapsibleClamp>
+            {children}
+        </CollapsibleClamp>
+    </div>;
 
 const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <div className={'max-w-[85%] ml-auto'}>
         <div className='bg-sd-70 text-p-10 px-5 py-3 rounded-[18px_18px_6px_18px] text-base shadow-sm shadow-black/20'>
-            {children}
+            <CollapsibleClamp clampHeight={160} bgColor={'sd-70'}>
+                {children}
+            </CollapsibleClamp>
         </div>
     </div>;
 
@@ -73,3 +85,42 @@ const AnimatedText: React.FC<{ content: string }> = ({ content }) => (
 const Spinner: React.FC = () => (
     <div className='w-6 h-6 border-2 border-p-50 border-t-transparent rounded-full animate-spin' />
 );
+
+export const CollapsibleClamp: React.FC<{
+    children: React.ReactNode;
+    clampHeight?: number;
+    bgColor?: string;
+}> = ({ children, clampHeight = 50, bgColor = 'p-90' }) => {
+    const [open, setOpen] = React.useState(false);
+    const [contentH, setContentH] = React.useState<number | null>(null);
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    React.useLayoutEffect(() => {
+        if (ref.current) {
+            setContentH(ref.current.scrollHeight);
+        }
+    }, [children]);
+    const expandedH = contentH ?? clampHeight;
+
+    return (
+        <motion.div
+            ref={ref}
+            onClick={() => setOpen(v => !v)}
+            initial={false}
+            animate={{ maxHeight: open ? expandedH : clampHeight }}
+            transition={{ type: 'tween', ease: 'easeOut', duration: 0.1 }}
+            style={{
+                overflow: 'hidden',
+                cursor: contentH && contentH > clampHeight ? 'pointer' : 'default',
+                position: 'relative',
+            }}
+            aria-expanded={open}
+        >
+            {children}
+
+            {!open && contentH && contentH > clampHeight && (
+                <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-${bgColor} via-transparent to-transparent`} />
+            )}
+        </motion.div>
+    );
+};

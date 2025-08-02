@@ -1,4 +1,3 @@
-'use client';
 import { Conversation } from '@/shared/entities/conversation';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
