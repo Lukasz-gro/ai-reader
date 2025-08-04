@@ -1,10 +1,9 @@
 import { QuizList } from "./QuizList";
-import { UpdateQuizStateFn } from "./QuizSection";
 
 export interface QuizListViewProps {
     readonly projectId: string;
-    readonly startTakingQuiz: UpdateQuizStateFn;
-    readonly startCreatingQuiz: UpdateQuizStateFn;
+    readonly startTakingQuiz: () => void;
+    readonly startCreatingQuiz: () => void;
 }
 
 export function QuizListView({ projectId }: QuizListViewProps) {

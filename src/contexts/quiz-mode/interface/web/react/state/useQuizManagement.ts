@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useMemo } from 'react';
 import { quizManagementReducer, initialQuizManagementState } from './quiz-management-reducer';
 import { QuizManagementAction } from './quiz-management-actions';
 import { QuizCreationParams } from '@/contexts/quiz-mode/application/ports/out/QuizApi';
@@ -24,16 +24,16 @@ function runQuizAction<T>(
 export function useQuizManagement() {
     const [state, dispatch] = useReducer(quizManagementReducer, initialQuizManagementState);
 
-    const actions = {
-        setView: useCallback((view: QuizViewMode) => {
+    const actions = useMemo(() => ({
+        setView: (view: QuizViewMode) => {
             dispatch({ type: 'SET_VIEW', payload: view });
-        }, []),
+        },
 
-        resetState: useCallback(() => {
+        resetState: () => {
             dispatch({ type: 'RESET_QUIZ_MANAGEMENT' });
-        }, []),
+        },
 
-        fetchQuizzes: useCallback((projId: string) => {
+        fetchQuizzes: (projId: string) => {
             dispatch({ type: 'FETCH_QUIZZES_START' });
             runQuizAction(
                 () => quizController.getQuizzesForProject(projId),
@@ -41,9 +41,9 @@ export function useQuizManagement() {
                 (quizzes) => ({ type: 'FETCH_QUIZZES_SUCCESS', payload: quizzes }),
                 (error) => ({ type: 'FETCH_QUIZZES_ERROR', payload: error })
             );
-        }, []),
+        },
 
-        createQuiz: useCallback((params: QuizCreationParams) => {
+        createQuiz: (params: QuizCreationParams) => {
             dispatch({ type: 'SUBMIT_QUIZ_CREATION', payload: params });
             runQuizAction(
                 () => quizController.createNewQuiz(params),
@@ -51,8 +51,8 @@ export function useQuizManagement() {
                 (quiz) => ({ type: 'QUIZ_CREATION_SUCCESS', payload: quiz }),
                 (error) => ({ type: 'QUIZ_CREATION_ERROR', payload: error })
             );
-        }, [])
-    };
+        }
+    }), [dispatch]);
 
     return { state, actions };
 }

@@ -119,11 +119,11 @@ const ProjectPicker: React.FC<{
                     <div className='flex flex-row gap-4'>
                         <div className='flex gap-1 items-center'>
                             <FileIcon className='w-[1rem] h-[1rem] stroke-sd-30'/>
-                            <span className='text-sd-30 relative top-[1px]'>{project.materials.length}</span>
+                            <span className='text-sd-30 relative top-[1px]'>{project.materials?.length ?? 0}</span>
                         </div>
                         <div className='flex gap-1 items-center'>
                             <MessageCircleIcon className='w-[1rem] h-[1rem] stroke-sd-30'/>
-                            <span className='text-sd-30 relative top-[1px]'>{project.conversations.length}</span>
+                            <span className='text-sd-30 relative top-[1px]'>{project.conversations?.length ?? 0}</span>
                         </div>
                     </div>
                 </button>
