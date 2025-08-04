@@ -1,23 +1,19 @@
 import { useProjects } from "@/shared/interface/web/react/project/hooks/useProjects"
 import NoActiveProject from "../quiz-section/NoActiveProject"
-import { useCallback, useState } from "react";
-import { QuizStates } from "../state/quiz-states";
+import { useEffect } from "react";
 import { QuizListView } from "./QuizListView";
 import { QuizCreationForm } from "./QuizCreationForm";
-
-export type UpdateQuizStateFn = () => void;
+import { useQuizManagement } from "../state/useQuizManagement";
 
 export function QuizSection() {
-    const [quizState, setQuizState] = useState<QuizStates>("VIEWING");
     const project = useProjects();
+    const { state, actions } = useQuizManagement();
     
-    const startCreatingQuiz = useCallback(() => {
-        setQuizState("CREATING");
-    }, [setQuizState]);
-
-    const startTakingQuiz = useCallback(() => {
-        setQuizState("TAKING");
-    }, [setQuizState]);
+    useEffect(() => {
+        if (project.status === 'success' && project.currentId) {
+            actions.fetchQuizzes(project.currentId);
+        }
+    }, [project, actions]);
 
     if (project.status !== 'success' || !project.currentId) {
         return <NoActiveProject project={project} />;
@@ -25,15 +21,27 @@ export function QuizSection() {
     
     const projectId = project.currentId;
 
-    if (quizState === 'VIEWING') {
-        return <QuizListView projectId={projectId} startCreatingQuiz={startCreatingQuiz} startTakingQuiz={startTakingQuiz}/>
+    if (state.currentView === 'list') {
+        return <QuizListView 
+            projectId={projectId} 
+            startCreatingQuiz={() => actions.setView('creation')} 
+            startTakingQuiz={() => actions.setView('starting')}
+        />
     }
 
-    if (quizState === 'CREATING') { 
-        return <QuizCreationForm projectId={projectId} />
+    if (state.currentView === 'creation') { 
+        return <QuizCreationForm 
+            projectId={projectId} 
+        />
     }
 
-    if (quizState === 'TAKING') {
+    if (state.currentView === 'creating') {
+        return <div>Creating quiz...</div>
+    }
+
+    if (state.currentView === 'starting') {
         return <>TODO section with taking quiz</>
     }
+
+    return null;
 }
