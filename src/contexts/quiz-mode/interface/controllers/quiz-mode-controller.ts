@@ -1,11 +1,12 @@
-import { Quiz } from '@/contexts/quiz-mode/entities/quiz';
-import { Project } from '@/shared/entities/project';
-import { QuizQuestion } from '@/contexts/quiz-mode/entities/quiz-question';
-import { Answer, QuestionServices, QuestionValidationResult } from '@/contexts/quiz-mode/entities/question';
+import { QuizApi } from "../../application/ports/out/QuizApi";
+import { QuizDescription } from "../../entities/quiz";
 
 class QuizModeController {
-    constructor() {}
+    constructor(
+        private readonly quizApi: QuizApi;
+    ) {}
 }
+
 
 const quizModeController = new QuizModeController(
 );
