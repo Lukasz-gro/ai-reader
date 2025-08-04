@@ -5,7 +5,7 @@ import { HomePage } from './HomePage';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
 import { ChatPage } from './ChatPage';
-// TODO: Add other route components as they are created
+import { Quiz } from './Quiz';
 
 export const routes: RouteObject[] = [
     {
@@ -24,9 +24,8 @@ export const routes: RouteObject[] = [
         path: ROUTES.CHAT,
         element: <ChatPage />,
     },
-    // TODO: Add more routes as they are implemented
-    // {
-    //     path: ROUTES.QUIZ,
-    //     element: <Quiz />,
-    // },
+    {
+        path: ROUTES.QUIZ,
+        element: <Quiz />,
+    },
 ]; 
