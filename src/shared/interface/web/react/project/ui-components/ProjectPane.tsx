@@ -2,7 +2,7 @@ import { useProjects } from '../hooks/useProjects';
 import { useProjectActions } from '../hooks/useProjectActions';
 import { ProjectPreview } from '@/shared/entities/project';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
-import { ChevronLeftIcon, ChevronRightIcon, FileIcon, MessageCircleIcon, PlusIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, MessageCircleIcon, PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 
@@ -13,7 +13,7 @@ export const ProjectPane: React.FC = () => {
 
     const authState = useAuth();
     if (authState.status !== 'success' || authState.data.user === null) {
-        return;
+        return null;
     }
     const userId = authState.data.user.id;
 
@@ -100,7 +100,7 @@ const ProjectPicker: React.FC<{
     };
 
     const gradientDefault = 'bg-gradient-to-b from-sd-90/50 to-sd-90/50';
-    const borderDefault = 'border border-2 border-sd-50/30';
+    const borderDefault = 'border border-2 border-sd-70';
     const gradientActive = 'bg-gradient-to-br from-sd-70 to-sd-80';
     const borderActive = 'border border-2 border-sd-50';
     const inactive = `${gradientDefault} ${borderDefault}`;
@@ -116,16 +116,6 @@ const ProjectPicker: React.FC<{
                     onClick={() => onProjectClick(project)}
                 >
                     <p className='font-semibold'>{project.title}</p>
-                    <div className='flex flex-row gap-4'>
-                        <div className='flex gap-1 items-center'>
-                            <FileIcon className='w-[1rem] h-[1rem] stroke-sd-30'/>
-                            <span className='text-sd-30 relative top-[1px]'>{project.materials?.length ?? 0}</span>
-                        </div>
-                        <div className='flex gap-1 items-center'>
-                            <MessageCircleIcon className='w-[1rem] h-[1rem] stroke-sd-30'/>
-                            <span className='text-sd-30 relative top-[1px]'>{project.conversations?.length ?? 0}</span>
-                        </div>
-                    </div>
                 </button>
             ))}
         </div>
