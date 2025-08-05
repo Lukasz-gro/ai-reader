@@ -104,6 +104,7 @@ export const CollapsibleClamp: React.FC<{
 
     return (
         <motion.div
+            className={'bg-inherit'}
             ref={ref}
             onClick={() => setOpen(v => !v)}
             initial={false}
@@ -119,7 +120,7 @@ export const CollapsibleClamp: React.FC<{
             {children}
 
             {!open && contentH && contentH > clampHeight && (
-                <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-${bgColor} via-transparent to-transparent`} />
+                <div className='pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-inherit z-10 [mask-image:linear-gradient(to_top,rgba(0,0,0,1),rgba(0,0,0,0))] [-webkit-mask-image:linear-gradient(to_top,rgba(0,0,0,1),rgba(0,0,0,0))]' />
             )}
         </motion.div>
     );
