@@ -1,6 +1,6 @@
 import { CreateNewProject } from '@/shared/application/ports/in/create-new-project';
 import { ProjectApi } from '@/shared/application/ports/out/project-api';
-import { LearningRoadmap, Project, ProjectPreview } from '@/shared/entities/project';
+import { LearningRoadmap, Project } from '@/shared/entities/project';
 import { v4 as uuidv4 } from 'uuid';
 
 export class CreateNewProjectUseCase implements CreateNewProject {
@@ -8,13 +8,12 @@ export class CreateNewProjectUseCase implements CreateNewProject {
         private readonly api: ProjectApi
     ) { }
 
-    async execute(ownerId: string): Promise<ProjectPreview> {
+    async execute(ownerId: string): Promise<Project> {
         const newProject = getNewEmptyProject(ownerId);
         const { message } = await this.api.addProject(newProject);
         // TODO toast message
         console.log(message);
-
-        return emptyProjectPreview(newProject);
+        return newProject;
     }
 }
 
@@ -24,9 +23,6 @@ function getNewEmptyProject(ownerId: string): Project {
         ownerId: ownerId,
         title: generateProjectTitle(),
         roadmap: generateEmptyRoadmap(),
-        materialIds: [],
-        conversationIds: [],
-        quizIds: [],
     };
 }
 
@@ -56,17 +52,5 @@ function generateEmptyRoadmap(): LearningRoadmap {
     return {
         id: uuidv4(),
         checkpoints: [],
-    };
-}
-
-function emptyProjectPreview(project: Project): ProjectPreview {
-    return {
-        id: project.id,
-        ownerId: project.ownerId,
-        title: project.title,
-        roadmap: project.roadmap,
-        materials: [],
-        quizzes: [],
-        conversations: [],
     };
 }

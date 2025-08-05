@@ -1,5 +1,5 @@
-import { ProjectPreview } from '@/shared/entities/project';
+import { Project } from '@/shared/entities/project';
 
 export interface GetUserProjects {
-    execute(userId: string): Promise<ProjectPreview[]>;
+    execute(userId: string): Promise<Project[]>;
 }

@@ -1,4 +1,4 @@
-import { ProjectPreview } from '@/shared/entities/project';
+import { Project } from '@/shared/entities/project';
 import { CreateNewProjectUseCase } from '@/shared/application/use-cases/create-new-project';
 import { HttpProjectApi } from '@/shared/infra/projects/http-project-api';
 import { CreateNewProject } from '@/shared/application/ports/in/create-new-project';
@@ -12,11 +12,11 @@ export class ProjectController {
         private readonly createNewProject: CreateNewProject,
     ) { }
 
-    async getAllProjects(): Promise<ProjectPreview[]> {
+    async getAllProjects(): Promise<Project[]> {
         return this.getUserProjects.execute('testUserId');
     }
 
-    async createProject(userId: string): Promise<ProjectPreview> {
+    async createProject(userId: string): Promise<Project> {
         return this.createNewProject.execute(userId);
     }
 }

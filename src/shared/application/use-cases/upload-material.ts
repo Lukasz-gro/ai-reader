@@ -2,6 +2,7 @@ import { UploadMaterial } from '../ports/in/upload-material';
 import { MaterialPreview } from '@/shared/entities/material';
 import { UploadsApi } from '@/shared/application/ports/out/uploads-api';
 import { UploadPayload } from '@/shared/entities/user-upload';
+import { AsyncResult } from '@/shared/entities/result';
 
 export class UploadMaterialUseCase implements UploadMaterial {
     constructor(

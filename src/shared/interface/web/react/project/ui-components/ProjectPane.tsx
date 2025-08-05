@@ -1,6 +1,6 @@
 import { useProjects } from '../hooks/useProjects';
 import { useProjectActions } from '../hooks/useProjectActions';
-import { ProjectPreview } from '@/shared/entities/project';
+import { Project } from '@/shared/entities/project';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
@@ -86,16 +86,16 @@ export const ProjectPane: React.FC = () => {
 };
 
 const ProjectPicker: React.FC<{
-    projects: ProjectPreview[];
+    projects: Project[];
     currentProjectId: string | null;
     onProjectSelect: (projectId: string) => void;
 }> = ({ projects, currentProjectId, onProjectSelect }) => {
 
-    const onProjectClick = (project: ProjectPreview) => {
+    const onProjectClick = (project: Project) => {
         onProjectSelect(project.id);
     };
     
-    const isActive = (project: ProjectPreview) => {
+    const isActive = (project: Project) => {
         return project.id === currentProjectId;
     };
 
@@ -109,7 +109,7 @@ const ProjectPicker: React.FC<{
 
     return (
         <div className='flex flex-col gap-2 px-4'>
-            {projects.map((project: ProjectPreview) => (
+            {projects.map((project: Project) => (
                 <button
                     className={`${isActive(project) ? active : inactive} ${isActive(project) || hover} w-full text-left px-6 pb-5 pt-3 rounded-lg transition-colors duration-200 cursor-pointer`}
                     key={project.id}
