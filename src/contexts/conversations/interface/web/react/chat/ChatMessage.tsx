@@ -59,7 +59,7 @@ const SystemMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 const UserMessage: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <div className={'max-w-[85%] ml-auto'}>
         <div className='bg-sd-70 text-p-10 px-5 py-3 rounded-[18px_18px_6px_18px] text-base shadow-sm shadow-black/20'>
-            <CollapsibleClamp clampHeight={160} bgColor={'sd-70'}>
+            <CollapsibleClamp clampHeight={160}>
                 {children}
             </CollapsibleClamp>
         </div>
@@ -89,8 +89,7 @@ const Spinner: React.FC = () => (
 export const CollapsibleClamp: React.FC<{
     children: React.ReactNode;
     clampHeight?: number;
-    bgColor?: string;
-}> = ({ children, clampHeight = 50, bgColor = 'p-90' }) => {
+}> = ({ children, clampHeight = 50 }) => {
     const [open, setOpen] = React.useState(false);
     const [contentH, setContentH] = React.useState<number | null>(null);
     const ref = React.useRef<HTMLDivElement>(null);

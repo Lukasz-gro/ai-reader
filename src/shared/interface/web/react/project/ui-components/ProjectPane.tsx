@@ -2,7 +2,7 @@ import { useProjects } from '../hooks/useProjects';
 import { useProjectActions } from '../hooks/useProjectActions';
 import { ProjectPreview } from '@/shared/entities/project';
 import { Tooltip } from '@/shared/interface/web/react/Tooltip';
-import { ChevronLeftIcon, ChevronRightIcon, MessageCircleIcon, PlusIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useAuth } from '@/shared/interface/web/react/auth/hooks/useAuth';
 

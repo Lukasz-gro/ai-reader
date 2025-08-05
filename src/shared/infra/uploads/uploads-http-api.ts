@@ -2,7 +2,7 @@ import { UploadsApi } from '@/shared/application/ports/out/uploads-api';
 import { MaterialPreview } from '@/shared/entities/material';
 import { HttpClient } from '@/shared/application/ports/out/http-client';
 import { UploadPayload } from '@/shared/entities/user-upload';
-import { nok, ok, Result } from '@/shared/entities/result';
+import { AsyncResult, nok, ok } from '@/shared/entities/result';
 
 export class UploadsHttpApi implements UploadsApi {
     constructor(
